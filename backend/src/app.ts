@@ -1,34 +1,11 @@
 import express, { Request, Response } from "express";
-import passport from "passport";
-import { Strategy as GithubStrategy } from "passport-github";
-const app = express();
+require("./services/passport");
+import authRouter from "./routes/auth.routes";
 
-passport.use(
-  new GithubStrategy(
-    {
-      clientID: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      callbackURL: "/auth/github/callback",
-    },
-    (
-      accessToken: string,
-      refreshToken: string,
-      profile: GithubStrategy.Profile,
-      done
-    ) => {
-      console.log("access", accessToken);
-      console.log("refresh", refreshToken);
-      console.log("profile", profile);
-    }
-  )
-);
+const app = express();
 
 app.use(express.json());
 
-app.get(
-  "/auth/github",
-  passport.authenticate("github", { scope: ["profile", "email"] })
-);
+app.use("/auth/github", authRouter);
 
-app.get("/auth/github/callback", passport.authenticate("github"));
 export default app;
