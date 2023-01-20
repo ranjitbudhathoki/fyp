@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const Login: React.FC = () => {
   return (
     <section className="h-full flex text-white">
@@ -12,7 +13,7 @@ const Login: React.FC = () => {
         />
       </div>
       {/* right */}
-      <div className="w-[32rem] flex flex-col gap-6 items-center justify-center">
+      <div className="w-[32rem] flex flex-col gap-6 items-center justify-center" onClick={login}>
         <h1 className="text-2xl ">Signup to Date.now()</h1>
         <button className="flex items-center gap-2 bg-[#27292a] px-3 py-2 rounded-md shadow-sm hover:shadow-md hover:bg-opacity-90">
           <img
