@@ -4,10 +4,18 @@ import authRouter from "./routes/auth.routes";
 import passport from "passport";
 import checkLoggedIn from "./utils/checkLoggedIn";
 import cookieSession from "cookie-session";
+import cors from "cors";
 
 const app = express();
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http:localhost:3000",
+    credentials: true,
+  })
+);
 
 app.use(
   cookieSession({
