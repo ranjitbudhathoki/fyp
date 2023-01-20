@@ -11,23 +11,22 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(uuid())
-  githubId          String?   @unique
-  username          String?   @unique
-  displayName       String?
-  bio               String?
-  gender            String?
-  preferredGender   String?
-  birthday          DateTime?
-  photoUrl          String
-  githubAccessToken String?
-  posts             Post[]
-  comments          Comment[]
-  matches1          Match[]   @relation(name: "user1")
-  matches2          Match[]   @relation(name: "user2")
-  msgSender         Message[] @relation(name: "sender")
-  receiver          Message[] @relation(name: "receiver")
-  Profile           Profile?
+  id              String    @id @default(uuid())
+  githubId        String?   @unique
+  username        String?   @unique
+  displayName     String?
+  bio             String?
+  gender          String?
+  preferredGender String?
+  birthday        DateTime?
+  photoUrl        String?
+  posts           Post[]
+  comments        Comment[]
+  matches1        Match[]   @relation(name: "user1")
+  matches2        Match[]   @relation(name: "user2")
+  msgSender       Message[] @relation(name: "sender")
+  receiver        Message[] @relation(name: "receiver")
+  Profile         Profile?
 }
 
 model Profile {
