@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/404";
 import Chat from "./pages/Chat";
@@ -6,8 +6,29 @@ import CodingBuddy from "./pages/CodingBuddy";
 import Date from "./pages/Date";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import { useDispatch } from "react-redux";
+import { useQuery } from "react-query";
+import { updateUser } from "./redux/slice/authSlice";
+import axios from "./utils/axios-instance";
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const { data } = useQuery(
+    "user-data",
+    async function () {
+      const res = await axios.get("/auth/user");
+      console.log(res);
+      return res.data;
+    },
+    {}
+  );
+
+  useEffect(() => {
+    if (data?.user) {
+      dispatch(updateUser(data?.user));
+    }
+  }, [data?.user, dispatch]);
+
   return (
     <main
       className="h-screen 

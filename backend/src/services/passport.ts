@@ -27,12 +27,14 @@ passport.use(
     },
 
     async function (accessToken: string, _: any, profile: any, done: Function) {
-      const user = await prisma.user.findUnique({
+      const existingUser = await prisma.user.findUnique({
         where: { githubId: profile.id },
       });
 
-      if (!user) {
-        await prisma.user.create({
+      if (existingUser) {
+        done(null, existingUser);
+      } else {
+        const user = await prisma.user.create({
           data: {
             githubId: profile.id,
             displayName: profile.displayName,
@@ -42,8 +44,8 @@ passport.use(
             githubAccessToken: accessToken,
           },
         });
+        done(null, user);
       }
-      done(null, user);
     }
   )
 );
