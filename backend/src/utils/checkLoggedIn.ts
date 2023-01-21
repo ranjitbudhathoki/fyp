@@ -4,7 +4,7 @@ const checkLoggedIn = (req: Request, res: Response, next: any) => {
   const isLoggedIn = req.isAuthenticated() && req.user;
   if (!isLoggedIn) {
     return res.status(401).json({
-      error: "you must lon in!",
+      error: "you must log in!",
     });
   }
   next();

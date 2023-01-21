@@ -10,14 +10,15 @@ import { useDispatch } from "react-redux";
 import { useQuery } from "react-query";
 import { updateUser } from "./redux/slice/authSlice";
 import axios from "./utils/axios-instance";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
+
   const { data } = useQuery(
     "user-data",
     async function () {
       const res = await axios.get("/auth/user");
-      console.log(res);
       return res.data;
     },
     {}
@@ -36,9 +37,16 @@ const App: React.FC = () => {
     >
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Home />}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        >
           <Route path="date" element={<Date />} />
-          <Route path="date" element={<CodingBuddy />} />
+          <Route path="coding-buddy" element={<CodingBuddy />} />
           <Route path="chat" element={<Chat />} />
           <Route path="*" element={<NotFound />} />
         </Route>
