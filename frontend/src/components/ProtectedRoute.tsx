@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useAppSelector } from "../redux/store/hooks";
+import { useSelector } from "react-redux";
 
 interface Props {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface Props {
 
 const ProtectedRoute: React.FC<Props> = ({ children }) => {
   const location = useLocation();
-  const { user } = useAppSelector((state) => state.auth);
+  const { user } = useSelector((state: any) => state.auth);
 
   if (!user)
     return (

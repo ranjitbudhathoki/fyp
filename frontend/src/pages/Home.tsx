@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-
 import axios from "../utils/axios-instance";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../redux/slice/authSlice";
