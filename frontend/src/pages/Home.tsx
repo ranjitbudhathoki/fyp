@@ -3,7 +3,7 @@ import { Link, useLocation, Outlet } from "react-router-dom";
 import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 import axios from "../utils/axios-instance";
-import { useAppDispatch } from "../redux/store/hooks";
+import { useDispatch } from "react-redux";
 import { updateUser } from "../redux/slice/authSlice";
 
 const SideNavLink = ({
@@ -30,7 +30,7 @@ const SideNavLink = ({
 
 const Home: React.FC = () => {
   const [showLogout, setShowLogout] = useState(false);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const logoutHandler = async () => {};
   return (

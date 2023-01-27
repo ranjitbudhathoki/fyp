@@ -1,10 +1,9 @@
 import React from "react";
-
-import { useAppSelector } from "../redux/store/hooks";
+import { useSelector } from "react-redux";
 import { useLocation, Navigate } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const { user } = useAppSelector((state) => state.auth);
+  const { user } = useSelector((state: any) => state.auth);
   const location = useLocation();
 
   const redirectPath = location.state?.from?.pathname || "/";
