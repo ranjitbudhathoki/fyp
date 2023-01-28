@@ -4,7 +4,6 @@ import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import axios from "../utils/axios-instance";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../redux/store/store";
-import { idText } from "typescript";
 
 const SideNavLink = ({
   url,
@@ -46,12 +45,16 @@ const Home: React.FC = () => {
           <li>
             <BellIcon className="h-6 w-6" />
           </li>
-          {/* <li>
-            <UserCircleIcon className="h-6 w-6" />
-          </li> */}
+
           <li>
             <div onClick={() => setShowLogout(!showLogout)}>
-              <UserCircleIcon className="h-6 w-6" />
+              {user ? (
+                <div>
+                  <img className="h-8 w-8 rounded-full" src={user?.photoUrl} />
+                </div>
+              ) : (
+                <UserCircleIcon className="h-6 w-6" />
+              )}
             </div>
             {showLogout && (
               <ul className="absolute right-0 mt-2 py-2 rounded-md bg-white ">
