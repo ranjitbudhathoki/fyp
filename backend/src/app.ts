@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 require("./services/passport");
 import authRouter from "./routes/auth.routes";
+import userRouter from "./routes/user.routes";
 import passport from "passport";
 import checkLoggedIn from "./utils/checkLoggedIn";
 import cookieSession from "cookie-session";
@@ -29,5 +30,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRouter);
+
+app.use(checkLoggedIn);
+app.use("/api/user", userRouter);
 
 export default app;

@@ -41,7 +41,6 @@ passport.use(
             username: profile.username,
             bio: (profile._json as any)?.bio,
             photoUrl: (profile._json as any)?.avatar_url,
-            githubAccessToken: accessToken,
           },
         });
         done(null, user);

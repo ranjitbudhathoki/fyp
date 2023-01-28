@@ -18,7 +18,7 @@ const App: React.FC = () => {
   const { data } = useQuery(
     "user-data",
     async function () {
-      const res = await axios.get("/auth/user");
+      const res = await axios.get("/api/user/current-user");
       return res.data;
     },
     {}
