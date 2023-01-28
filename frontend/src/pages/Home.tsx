@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link, useLocation, Outlet } from "react-router-dom";
+import { Link, useLocation, Outlet, Navigate } from "react-router-dom";
 import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import axios from "../utils/axios-instance";
-import { useDispatch } from "react-redux";
-import { updateUser } from "../redux/slice/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../redux/store/store";
+import { idText } from "typescript";
 
 const SideNavLink = ({
   url,
@@ -30,8 +31,13 @@ const SideNavLink = ({
 const Home: React.FC = () => {
   const [showLogout, setShowLogout] = useState(false);
   const dispatch = useDispatch();
+  const { user } = useSelector((state: any) => state.auth);
 
-  const logoutHandler = async () => {};
+  const logoutHandler = async () => {
+    await axios.get("/auth/logout");
+    dispatch(updateUser(null));
+  };
+
   return (
     <section className="h-full w-full overflow-hidden flex flex-col text-white">
       <nav className="flex items-center justify-between px-4 py-4  bg-[#27292a] border-b-4 border-[#333]">

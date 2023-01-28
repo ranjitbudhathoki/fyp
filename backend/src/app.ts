@@ -19,7 +19,7 @@ app.use(
 
 app.use(
   cookieSession({
-    name: "heh",
+    name: "session",
     maxAge: 30 * 24 * 60 * 60 * 1000,
     keys: [process.env.COOKIE_KEY as string],
   })

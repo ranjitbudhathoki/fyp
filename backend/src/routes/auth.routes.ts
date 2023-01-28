@@ -28,9 +28,10 @@ router.get("/user", async (req, res) => {
 
 router.get("/logout", (req, res) => {
   (req as any).logout();
-  return res.status(200).json({
+  res.status(200).json({
     msg: "Logged out successfully",
   });
+  res.redirect(`${CLIENT_URL}/login`);
 });
 
 export default router;

@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { useQuery } from "react-query";
 import { updateUser } from "./redux/slice/authSlice";
 import axios from "./utils/axios-instance";
-import ProtectedRoute from "./utils/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,10 +25,11 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
+    console.log(" use effect");
     if (data?.user) {
       dispatch(updateUser(data?.user));
     }
-  }, [data?.user, dispatch]);
+  }, [data?.user]);
 
   return (
     <main
