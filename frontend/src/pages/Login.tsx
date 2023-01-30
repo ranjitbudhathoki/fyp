@@ -14,6 +14,9 @@ const Login: React.FC = () => {
   };
 
   if (user) {
+    if (!user.gender) {
+      return <Navigate to="/profile" replace={true} />;
+    }
     return <Navigate to={redirectPath} replace={true} />;
   }
 

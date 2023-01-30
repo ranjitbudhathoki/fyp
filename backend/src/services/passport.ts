@@ -27,6 +27,7 @@ passport.use(
     },
 
     async function (accessToken: string, _: any, profile: any, done: Function) {
+      console.log(profile);
       const existingUser = await prisma.user.findUnique({
         where: { githubId: profile.id },
       });
@@ -41,6 +42,8 @@ passport.use(
             username: profile.username,
             bio: (profile._json as any)?.bio,
             photoUrl: (profile._json as any)?.avatar_url,
+            createdAt: new Date(),
+            updatedAt: new Date(),
           },
         });
         done(null, user);

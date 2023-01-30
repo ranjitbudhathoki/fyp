@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import NotFound from "./pages/404";
 import Chat from "./pages/Chat";
 import CodingBuddy from "./pages/CodingBuddy";
@@ -7,16 +7,17 @@ import Date from "./pages/Date";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import { useDispatch } from "react-redux";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { updateUser } from "./redux/slice/authSlice";
 import axios from "./utils/axios-instance";
 import ProtectedRoute from "./components/ProtectedRoute";
+// import Profile from "./pages/Profile";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
 
   const { data } = useQuery(
-    "user-data",
+    ["user-data"],
     async function () {
       const res = await axios.get("/api/user/current-user");
       return res.data;
@@ -25,11 +26,13 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log(" use effect");
     if (data?.user) {
       dispatch(updateUser(data?.user));
     }
   }, [data?.user]);
+
+  if (data?.user.is_first_time) {
+  }
 
   return (
     <main
@@ -38,6 +41,8 @@ const App: React.FC = () => {
     >
       <Routes>
         <Route path="/login" element={<Login />} />
+        {/* <Route path="/profile" element={<Profile />} /> */}
+
         <Route
           path="/"
           element={

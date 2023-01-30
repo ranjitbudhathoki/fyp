@@ -18,8 +18,10 @@ model User {
   bio             String?
   gender          String?
   preferredGender String?
-  age             DateTime?
+  birthDate       DateTime?
   photoUrl        String?
+  createdAt       DateTime
+  updatedAt       DateTime
   posts           Post[]
   comments        Comment[]
   matches1        Match[]   @relation(name: "user1")
