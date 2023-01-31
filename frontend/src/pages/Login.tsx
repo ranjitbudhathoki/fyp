@@ -5,6 +5,8 @@ import { useLocation, Navigate } from "react-router-dom";
 const Login: React.FC = () => {
   const { user } = useSelector((state: any) => state.auth);
 
+  console.log("login");
+
   const location = useLocation();
 
   const redirectPath = location.state?.from?.pathname || "/";
@@ -14,9 +16,6 @@ const Login: React.FC = () => {
   };
 
   if (user) {
-    if (!user.gender) {
-      return <Navigate to="/profile" replace={true} />;
-    }
     return <Navigate to={redirectPath} replace={true} />;
   }
 

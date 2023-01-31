@@ -6,42 +6,47 @@ import CodingBuddy from "./pages/CodingBuddy";
 import Date from "./pages/Date";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { updateUser } from "./redux/slice/authSlice";
 import axios from "./utils/axios-instance";
 import ProtectedRoute from "./components/ProtectedRoute";
-// import Profile from "./pages/Profile";
+import Profile from "./pages/Profile";
+import Header from "./components/Header";
 
 const App: React.FC = () => {
+  console.log("app");
   const dispatch = useDispatch();
 
-  const { data } = useQuery(
-    ["user-data"],
-    async function () {
-      const res = await axios.get("/api/user/current-user");
-      return res.data;
-    },
-    {}
-  );
+  const { data, isLoading } = useQuery(["user-data"], async function () {
+    const res = await axios.get("/api/user/current-user");
+    return res.data;
+  });
 
   useEffect(() => {
     if (data?.user) {
       dispatch(updateUser(data?.user));
     }
-  }, [data?.user]);
+  }, [data?.user, dispatch]);
 
-  if (data?.user.is_first_time) {
+  if (isLoading) {
+    return (
+      <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black ">
+        <div
+          className="w-12 h-12 rounded-full animate-spin
+                    border-4 border-solid border-green-500 border-t-transparent"
+        ></div>
+      </div>
+    );
   }
 
   return (
     <main
       className="h-screen 
-     bg-[#18191a] font-poppins"
+      bg-[#18191a] font-poppins"
     >
       <Routes>
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/profile" element={<Profile />} /> */}
 
         <Route
           path="/"

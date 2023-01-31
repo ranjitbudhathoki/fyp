@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useLocation, Outlet, Navigate } from "react-router-dom";
 import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-import axios from "../utils/axios-instance";
-import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "../redux/store/store";
+import Header from "../components/Header";
+import { useSelector } from "react-redux";
+import Profile from "./Profile";
 
 const SideNavLink = ({
   url,
@@ -28,49 +28,24 @@ const SideNavLink = ({
 };
 
 const Home: React.FC = () => {
-  const [showLogout, setShowLogout] = useState(false);
-  const dispatch = useDispatch();
+  console.log("home");
+
   const { user } = useSelector((state: any) => state.auth);
 
-  const logoutHandler = async () => {
-    await axios.get("/auth/logout");
-    dispatch(updateUser(null));
-  };
+  if (user?.createdAt === user?.updatedAt) {
+    return (
+      <>
+        <section className="h-full w-full overflow-hidden flex flex-col text-white">
+          <Header />
+          <Profile />
+        </section>
+      </>
+    );
+  }
 
   return (
     <section className="h-full w-full overflow-hidden flex flex-col text-white">
-      <nav className="flex items-center justify-between px-4 py-4  bg-[#27292a] border-b-4 border-[#333]">
-        <h1 className="text-xl">Date.now()</h1>
-        <ul className="flex items-center gap-3">
-          <li>
-            <BellIcon className="h-6 w-6" />
-          </li>
-
-          <li>
-            <div onClick={() => setShowLogout(!showLogout)}>
-              {user ? (
-                <div>
-                  <img className="h-8 w-8 rounded-full" src={user?.photoUrl} />
-                </div>
-              ) : (
-                <UserCircleIcon className="h-6 w-6" />
-              )}
-            </div>
-            {showLogout && (
-              <ul className="absolute right-0 mt-2 py-2 rounded-md bg-white ">
-                <li>
-                  <button
-                    className="block w-full text-left px-4 text-sm font-medium leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                    onClick={logoutHandler}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            )}
-          </li>
-        </ul>
-      </nav>
+      <Header />
       <div className="flex flex-grow">
         <aside className="basis-60 bg-[#27292a]">
           <ul className="flex flex-col gap-2 p-2">
