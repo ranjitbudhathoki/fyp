@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation, Outlet, Navigate } from "react-router-dom";
-import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Header from "../components/Header";
 import { useSelector } from "react-redux";
 import Profile from "../components/Profile";
@@ -28,8 +27,6 @@ const SideNavLink = ({
 };
 
 const Home: React.FC = () => {
-  console.log("home");
-
   const { user } = useSelector((state: any) => state.auth);
 
   if (user?.createdAt === user?.updatedAt) {
@@ -51,12 +48,13 @@ const Home: React.FC = () => {
           <ul className="flex flex-col gap-2 p-2">
             <SideNavLink url="/date">Date</SideNavLink>
             <SideNavLink url="/coding-buddy">Coding Buddy</SideNavLink>
+            {/* <SideNavLink url="/collaborator">Projects</SideNavLink> */}
             <SideNavLink url="/collaborator">Collaborator</SideNavLink>
+
             <SideNavLink url="/chat">Chat</SideNavLink>
           </ul>
         </aside>
         <div className="p-2 flex-grow">
-          <p>{user.gender}</p>
           <Outlet />
         </div>
       </div>

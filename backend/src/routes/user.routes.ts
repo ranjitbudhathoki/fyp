@@ -17,7 +17,7 @@ router.post("/update-profile", async (req: any, res) => {
     data: {
       birthDate: new Date(req.body.birthDate),
       gender: req.body.gender,
-      preferredGender: req.body.gender,
+      preferredGender: req.body.preferredGender,
       updatedAt: new Date(),
     },
   });

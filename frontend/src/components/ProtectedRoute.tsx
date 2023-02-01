@@ -7,8 +7,6 @@ interface Props {
 }
 
 const ProtectedRoute: React.FC<Props> = ({ children }) => {
-  console.log("protected");
-
   const location = useLocation();
 
   const { user } = useSelector((state: any) => state.auth);

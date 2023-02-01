@@ -55,12 +55,14 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex  items-center  flex-col col-2">
+      <h2 className="text-lg  mt-5 mb-50 text-center font-bold  font-poppins">
+        Create Your Profile
+      </h2>
       <form
         onSubmit={submitHandler}
-        className=" p-6 rounded-lg mt-32 w-1/2 bg-[#434242] text-white"
+        className=" p-6 rounded-lg mt-3 w-1/2 bg-[#434242] text-white"
       >
-        <h2 className="text-lg font-medium mb-4">Create Your Profile</h2>
         <div className="mb-4">
           <label className="block font-medium mb-2 ">Birthday</label>
           <input
@@ -125,7 +127,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
         <div className="text-center mt-6">
-          <button className="bg-purple-500 px-4 py-2 rounded-lg hover:bg-purple-600">
+          <button className="bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600">
             Create Profile
           </button>
         </div>

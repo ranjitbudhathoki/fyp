@@ -1,21 +1,19 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/404";
 import Chat from "./pages/Chat";
 import CodingBuddy from "./pages/CodingBuddy";
 import Date from "./pages/Date";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { updateUser } from "./redux/slice/authSlice";
 import axios from "./utils/axios-instance";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Profile from "./components/Profile";
-import Header from "./components/Header";
+import Collaborator from "./pages/Collaborator";
 
 const App: React.FC = () => {
-  console.log("app");
   const dispatch = useDispatch();
 
   const { data, isLoading } = useQuery({
@@ -31,6 +29,7 @@ const App: React.FC = () => {
       dispatch(updateUser(data?.user));
     }
   }, [data?.user, dispatch]);
+
   if (isLoading) {
     return (
       <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black ">
@@ -48,7 +47,6 @@ const App: React.FC = () => {
       bg-[#18191a] font-poppins"
     >
       <Routes>
-        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/login" element={<Login />} />
 
         <Route
@@ -62,6 +60,8 @@ const App: React.FC = () => {
           <Route path="date" element={<Date />} />
           <Route path="coding-buddy" element={<CodingBuddy />} />
           <Route path="chat" element={<Chat />} />
+          <Route path="collaborator" element={<Collaborator />} />
+
           <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="*" element={<NotFound />} />
