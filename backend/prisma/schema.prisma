@@ -42,15 +42,16 @@ model Like {
 }
 
 model Post {
-  id         Int       @id @default(autoincrement())
-  author     User?     @relation(fields: [authorID], references: [id])
-  authorID   String
-  title      String
-  body       String
-  tech_stack String[]
-  comment    Comment[]
-  createdAt  DateTime
-  updatedAt  DateTime
+  id           Int       @id @default(autoincrement())
+  author       User?     @relation(fields: [authorID], references: [id])
+  authorID     String
+  title        String
+  body         String?
+  tech_stack   String[]
+  project_link String?
+  comment      Comment[]
+  createdAt    DateTime
+  updatedAt    DateTime
 }
 
 model Comment {
