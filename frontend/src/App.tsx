@@ -11,16 +11,19 @@ import { useQuery } from "@tanstack/react-query";
 import { updateUser } from "./redux/slice/authSlice";
 import axios from "./utils/axios-instance";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Profile from "./pages/Profile";
+import Profile from "./components/Profile";
 import Header from "./components/Header";
 
 const App: React.FC = () => {
   console.log("app");
   const dispatch = useDispatch();
 
-  const { data, isLoading } = useQuery(["user-data"], async function () {
-    const res = await axios.get("/api/user/current-user");
-    return res.data;
+  const { data, isLoading } = useQuery({
+    queryKey: ["user-data"],
+    queryFn: async function () {
+      const res = await axios.get("/api/user/current-user");
+      return res.data;
+    },
   });
 
   useEffect(() => {
@@ -28,7 +31,6 @@ const App: React.FC = () => {
       dispatch(updateUser(data?.user));
     }
   }, [data?.user, dispatch]);
-
   if (isLoading) {
     return (
       <div className="fixed top-0 left-0 bottom-0 right-0 flex items-center justify-center bg-black ">
@@ -46,6 +48,7 @@ const App: React.FC = () => {
       bg-[#18191a] font-poppins"
     >
       <Routes>
+        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/login" element={<Login />} />
 
         <Route

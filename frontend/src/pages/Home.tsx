@@ -3,7 +3,7 @@ import { Link, useLocation, Outlet, Navigate } from "react-router-dom";
 import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Header from "../components/Header";
 import { useSelector } from "react-redux";
-import Profile from "./Profile";
+import Profile from "../components/Profile";
 
 const SideNavLink = ({
   url,
@@ -56,6 +56,7 @@ const Home: React.FC = () => {
           </ul>
         </aside>
         <div className="p-2 flex-grow">
+          <p>{user.gender}</p>
           <Outlet />
         </div>
       </div>

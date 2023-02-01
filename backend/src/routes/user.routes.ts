@@ -8,14 +8,17 @@ router.get("/current-user", async (req, res) => {
   });
 });
 
-router.get("/profile", async (req: any, res) => {
+router.post("/update-profile", async (req: any, res) => {
+  console.log(req);
   const updatedUser = await prisma.user.update({
     where: {
       id: req.user.id,
     },
     data: {
-      gender: req.gender,
-      preferredGender: req.gender,
+      birthDate: new Date(req.body.birthDate),
+      gender: req.body.gender,
+      preferredGender: req.body.gender,
+      updatedAt: new Date(),
     },
   });
 
