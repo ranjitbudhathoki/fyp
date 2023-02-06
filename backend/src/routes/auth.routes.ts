@@ -1,17 +1,17 @@
-import Express from "express";
-import passport from "passport";
+import Express from 'express';
+import passport from 'passport';
 
 const router = Express.Router();
-const CLIENT_URL = "http://localhost:3000/";
+const CLIENT_URL = 'http://localhost:3000/';
 
 router.get(
-  "/github",
-  passport.authenticate("github", { scope: ["user:email"] })
+  '/github',
+  passport.authenticate('github', { scope: ['user:email'] })
 );
 
 router.get(
-  "/github/callback",
-  passport.authenticate("github", {
+  '/github/callback',
+  passport.authenticate('github', {
     failureRedirect: `${CLIENT_URL}/login`,
   }),
   function (req, res) {
@@ -20,10 +20,10 @@ router.get(
   }
 );
 
-router.get("/logout", (req, res) => {
+router.get('/logout', (req, res) => {
   (req as any).logout();
   return res.status(200).json({
-    msg: "Logged out successfully",
+    msg: 'Logged out successfully',
   });
 });
 

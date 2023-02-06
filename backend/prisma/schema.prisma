@@ -20,7 +20,7 @@ model User {
   preferredGender String?
   birthDate       DateTime?
   photoUrl        String?
-  createdAt       DateTime
+  createdAt       DateTime  @default(now())
   updatedAt       DateTime
   posts           Post[]
   comments        Comment[]
@@ -28,6 +28,19 @@ model User {
   matches2        Match[]   @relation(name: "user2")
   msgSender       Message[] @relation(name: "sender")
   receiver        Message[] @relation(name: "receiver")
+}
+
+model Post {
+  id           Int       @id @default(autoincrement())
+  user         User?     @relation(fields: [userId], references: [id])
+  userId       String
+  title        String
+  body         String?
+  tech_stack   String[]
+  project_link String?
+  comment      Comment[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime
 }
 
 model Feed {
@@ -39,19 +52,6 @@ model Like {
   id     Int  @id @default(autoincrement())
   feed   Feed @relation(fields: [feedId], references: [id])
   feedId Int
-}
-
-model Post {
-  id           Int       @id @default(autoincrement())
-  author       User?     @relation(fields: [authorID], references: [id])
-  authorID     String
-  title        String
-  body         String?
-  tech_stack   String[]
-  project_link String?
-  comment      Comment[]
-  createdAt    DateTime
-  updatedAt    DateTime
 }
 
 model Comment {

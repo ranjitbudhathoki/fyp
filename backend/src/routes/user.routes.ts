@@ -1,30 +1,17 @@
-import Express from "express";
-import prisma from "../services/prisma";
-const router = Express.Router();
+import express from 'express';
 
-router.get("/current-user", async (req, res) => {
-  res.status(200).json({
-    user: req.user,
-  });
-});
+import {
+  updateProfile,
+  getPostByUserId,
+  getCurrentUser,
+} from '../controllers/user.controllers';
 
-router.post("/update-profile", async (req: any, res) => {
-  console.log(req);
-  const updatedUser = await prisma.user.update({
-    where: {
-      id: req.user.id,
-    },
-    data: {
-      birthDate: new Date(req.body.birthDate),
-      gender: req.body.gender,
-      preferredGender: req.body.preferredGender,
-      updatedAt: new Date(),
-    },
-  });
+const router = express.Router();
 
-  res.status(200).json({
-    updatedUser,
-  });
-});
+router.get('/:id', getCurrentUser);
+
+router.patch(':id/', updateProfile);
+
+router.get('/:id/posts/', getPostByUserId);
 
 export default router;

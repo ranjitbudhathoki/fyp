@@ -1,4 +1,4 @@
-import prisma from "../services/prisma";
+import prisma from '../services/prisma';
 
 const getAllPost = async (req: any, res: any) => {
   try {
@@ -47,13 +47,13 @@ const updatePost = async (req: any, res: any) => {
     const { id } = req.params;
     const post = await prisma.post.findFirst({ where: { id } });
     if (!post) {
-      return res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ error: 'Post not found' });
     }
 
     if (post.authorID !== req.user.id) {
       return res
         .status(403)
-        .json({ error: "You are not authorized to update this post" });
+        .json({ message: 'You are not authorized to update this post' });
     }
     const updatedPost = await prisma.post.update({
       where: {
@@ -77,13 +77,13 @@ const deletePost = async (req: any, res: any) => {
     const { id } = req.params;
     const post = await prisma.post.findFirst({ where: { id } });
     if (!post) {
-      return res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ message: 'Post not found' });
     }
 
     if (post.authorID !== req.user.id) {
       return res
         .status(403)
-        .json({ error: "You are not authorized to delete this post" });
+        .json({ message: 'You are not authorized to delete this post' });
     }
     await prisma.post.delete({
       where: {
@@ -91,11 +91,11 @@ const deletePost = async (req: any, res: any) => {
       },
     });
     res.status(204).json({
-      status: "success",
+      status: 'success',
       data: null,
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({ message: err });
   }
 };
 
