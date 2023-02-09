@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import axios from '../utils/axios-instance';
+import { useSelector } from 'react-redux';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const Collaborator: React.FC = () => {
+  const queryClient = useQueryClient();
+
+  const { user } = useSelector((state: any) => state.auth);
   const [showModal, setShowModal] = useState(false);
   const [posts, setPosts] = useState(
     [] as {
@@ -11,10 +17,37 @@ const Collaborator: React.FC = () => {
     }[]
   );
 
-  const handleCreatePost = (event: any) => {
+  const { data } = useQuery({
+    queryKey: ['user-posts'],
+    queryFn: async () => {
+      const response = await axios.get('/api/posts');
+      return response.data;
+    },
+  });
+
+  console.log(data);
+
+  const createPostMutation = useMutation({
+    mutationFn: async (form: any) => {
+      await axios.post('/api/posts/', {
+        authorID: user.id,
+        title: form.elements.name.value,
+        body: form.elements.description.value,
+        tech_stack: [form.elements.techStack.value],
+        project_link: form.elements.link.value,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['user-posts']);
+    },
+  });
+
+  const handleCreatePost = async (event: any) => {
     event.preventDefault();
 
     const form = event.currentTarget;
+    createPostMutation.mutate(form);
+
     const name = form.elements.name.value;
     const description = form.elements.description.value;
     const link = form.elements.link.value;
@@ -36,6 +69,29 @@ const Collaborator: React.FC = () => {
     setShowModal(!showModal);
   };
 
+  const renderedPosts = data?.data?.posts.map((post, index) => (
+    <div className="rounded-lg p-6 shadow-lg m-4 bg-gray-400">
+      <div className="flex items-center mb-4">
+        <img
+          src={post.user.photoUrl}
+          alt={post.user.username}
+          className="w-10 h-10 rounded-full mr-2"
+        />
+        <div className="text-sm ">
+          <p className="font-bold text-gray-900">{post.user.username}</p>
+          <p className="text-gray-600">
+            {new Date(post.updatedAt).toLocaleString()}.
+          </p>
+        </div>
+      </div>
+      <p className="text-gray-700 mb-4  font-bold">{post.title}</p>
+      <p className="text-gray-700 ">Link: {post.project_link}</p>
+      <br />
+
+      <p className="text-gray-700">{post.body}</p>
+    </div>
+  ));
+
   return (
     <>
       <div className="flex align-center justify-center">
@@ -47,10 +103,10 @@ const Collaborator: React.FC = () => {
           Create Post
         </button>
       </div>
-      <div className="flex flex-col col-2">
+      <div className="flex flex-col ">
         <div
           className={`fixed top-0 left-0 bottom-0 right-0 z-50 ${
-            showModal ? "flex" : "hidden"
+            showModal ? 'flex' : 'hidden'
           }`}
         >
           <div
@@ -142,26 +198,10 @@ const Collaborator: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-row row-span-2">
-          {posts.map((post, index) => (
-            <div className="flex flex-col align-center m-12 p-4 bg-gray-300 rounded-lg mt-2">
-              <img
-                src="https://avatars.githubusercontent.com/u/99970842?v=4"
-                alt="ram"
-                className="w-16 h-16 rounded-full"
-              />
-              <h2 className="text-lg font-bold mt-2">{post.name}</h2>
-              <p className="text-gray-700">{post.description}</p>
-              <a href={post.link} className="text-blue-500 underline">
-                {post.link}
-              </a>
-              <p className="text-gray-700 mt-2">Tech Stack: {post.techStack}</p>
-              <h3 className="text-sm font-medium mt-2 text-gray-700">
-                by ranjit
-              </h3>
-            </div>
-          ))}
+        <div className="flex flex-col overflow-y-auto h-[700px]">
+          {renderedPosts}
         </div>
+        <hr />
       </div>
     </>
   );

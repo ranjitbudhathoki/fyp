@@ -1,6 +1,7 @@
-import React, { useReducer } from "react";
-import axios from "../utils/axios-instance";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useReducer } from 'react';
+import axios from '../../utils/axios-instance';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 
 type ProfileForm = {
   birthday: string;
@@ -9,43 +10,44 @@ type ProfileForm = {
 };
 
 const initialState: ProfileForm = {
-  birthday: "",
-  gender: "",
-  preferredGender: "",
+  birthday: '',
+  gender: '',
+  preferredGender: '',
 };
 
 type Action =
-  | { type: "UPDATE_BIRTHDAY"; payload: string }
-  | { type: "UPDATE_GENDER"; payload: string }
-  | { type: "UPDATE_PREFERRED_GENDER"; payload: string };
+  | { type: 'UPDATE_BIRTHDAY'; payload: string }
+  | { type: 'UPDATE_GENDER'; payload: string }
+  | { type: 'UPDATE_PREFERRED_GENDER'; payload: string };
 
 const profileFormReducer = (state: ProfileForm, action: Action) => {
   switch (action.type) {
-    case "UPDATE_BIRTHDAY":
+    case 'UPDATE_BIRTHDAY':
       return { ...state, birthday: action.payload };
-    case "UPDATE_GENDER":
+    case 'UPDATE_GENDER':
       return { ...state, gender: action.payload };
-    case "UPDATE_PREFERRED_GENDER":
+    case 'UPDATE_PREFERRED_GENDER':
       return { ...state, preferredGender: action.payload };
     default:
       return state;
   }
 };
 
-const Profile: React.FC = () => {
+const ProfileForm: React.FC = () => {
+  const { user } = useSelector((state: any) => state.auth);
   const queryClient = useQueryClient();
   const [formData, dispatch] = useReducer(profileFormReducer, initialState);
 
   const updateUserMutation = useMutation({
     mutationFn: async (formData: any) => {
-      await axios.post("/api/user/update-profile", {
+      await axios.patch(`/api/users/${user.id}`, {
         birthDate: formData.birthday,
         gender: formData.gender,
         preferredGender: formData.preferredGender,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["user-data"]);
+      queryClient.invalidateQueries(['user-data']);
     },
   });
 
@@ -67,7 +69,7 @@ const Profile: React.FC = () => {
           <label className="block font-medium mb-2 ">Birthday</label>
           <input
             onChange={(e) =>
-              dispatch({ type: "UPDATE_BIRTHDAY", payload: e.target.value })
+              dispatch({ type: 'UPDATE_BIRTHDAY', payload: e.target.value })
             }
             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded-lg py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
             type="date"
@@ -78,7 +80,7 @@ const Profile: React.FC = () => {
           <div className="relative">
             <select
               onChange={(e) =>
-                dispatch({ type: "UPDATE_GENDER", payload: e.target.value })
+                dispatch({ type: 'UPDATE_GENDER', payload: e.target.value })
               }
               className="block appearance-none w-full bg-gray-200 border-2 border-gray-200 rounded-lg py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
             >
@@ -104,7 +106,7 @@ const Profile: React.FC = () => {
             <select
               onChange={(e) =>
                 dispatch({
-                  type: "UPDATE_PREFERRED_GENDER",
+                  type: 'UPDATE_PREFERRED_GENDER',
                   payload: e.target.value,
                 })
               }
@@ -136,4 +138,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default ProfileForm;

@@ -1,25 +1,25 @@
-import React, { RefObject, useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from 'react';
 import {
   FaceSmileIcon,
   PaperAirplaneIcon,
   PhotoIcon,
-} from "@heroicons/react/24/solid";
+} from '@heroicons/react/24/solid';
 import EmojiPicker, {
   EmojiClickData,
   EmojiStyle,
   Theme,
-} from "emoji-picker-react";
+} from 'emoji-picker-react';
 
 function Chat() {
   const emojiRef = useRef(null) as RefObject<HTMLDivElement>;
   const [messages, setMessages] = useState<string[]>([]);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>('');
   const [showPicker, setShowPicker] = useState<boolean>(false);
 
   const handleMessageSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!message) return;
-    setMessage("");
+    setMessage('');
     setMessages([...messages, message]);
   };
 
@@ -32,9 +32,9 @@ function Chat() {
   };
 
   return (
-    <div className="h-full flex rounded-md  ">
-      <div className="flex-grow flex flex-col">
-        <div className="flex flex-col gap-2 flex-grow p-3 overflow-y-auto">
+    <div className="h-full flex rounded-md   ">
+      <div className="flex-grow flex flex-col  ">
+        <div className="flex flex-col gap-2 flex-grow p-3 overflow-y-scroll h-96 ">
           {messages.map((mssg, index) => (
             <div
               className="flex text-base max-w-[300px] shadow-sm rounded-md odd:self-start even:self-end"

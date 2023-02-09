@@ -1,30 +1,10 @@
-import React from "react";
-import { Link, useLocation, Outlet, Navigate } from "react-router-dom";
-import Header from "../components/Header";
-import { useSelector } from "react-redux";
-import Profile from "../components/Profile";
-
-const SideNavLink = ({
-  url,
-  children,
-}: {
-  url: string;
-  children: React.ReactNode;
-}) => {
-  const location = useLocation();
-  const activeLink = location.pathname === url;
-  return (
-    <button
-      className={`${
-        activeLink ? "bg-[#434343]" : ""
-      } overflow-hidden rounded-md`}
-    >
-      <Link className="flex gap-2 items-center px-6 py-3" to={url}>
-        {children}
-      </Link>
-    </button>
-  );
-};
+import React from 'react';
+import { Link, useLocation, Outlet } from 'react-router-dom';
+import Header from '../components/Header';
+import { useSelector } from 'react-redux';
+import Profile from '../components/Profile/ProfileForm';
+import SideNavLink from '../components/SideBar/SideNavLink';
+import { FaFire } from 'react-icons/fa';
 
 const Home: React.FC = () => {
   const { user } = useSelector((state: any) => state.auth);
@@ -46,12 +26,12 @@ const Home: React.FC = () => {
       <div className="flex flex-grow">
         <aside className="basis-60 bg-[#27292a]">
           <ul className="flex flex-col gap-2 p-2">
-            <SideNavLink url="/date">Date</SideNavLink>
-            <SideNavLink url="/coding-buddy">Coding Buddy</SideNavLink>
-            {/* <SideNavLink url="/collaborator">Projects</SideNavLink> */}
+            <SideNavLink url="/home">Home</SideNavLink>
+            {/* <SideNavLink url="/coding-buddy">Coding Buddy</SideNavLink> */}
+            {/* <SideNavLink url="/posts">Projects</SideNavLink> */}
             <SideNavLink url="/collaborator">Collaborator</SideNavLink>
-
             <SideNavLink url="/chat">Chat</SideNavLink>
+            <SideNavLink url="/profile">Profile</SideNavLink>
           </ul>
         </aside>
         <div className="p-2 flex-grow">
