@@ -77,16 +77,19 @@ const updatePost = catchAsync(async (req, res, next) => {
 
 const deletePost = async (req, res, next) => {
   const { id } = req.params;
+  const parsedId = parseInt(id);
+
   const post = await prisma.post.findFirst({
-    where: { id, userId: req.user.id },
+    where: { id: parsedId, userId: req.user.id },
   });
+
   if (!post) {
     return next(new AppError('Post not found', 404));
   }
 
   const deletedPost = await prisma.post.delete({
     where: {
-      id,
+      id: parsedId,
     },
   });
   res.status(204).json({

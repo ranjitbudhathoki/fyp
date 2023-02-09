@@ -41,12 +41,18 @@ const getPostByUserId = catchAsync(async (req, res, next) => {
 
   const posts = await prisma.post.findMany({
     where: {
-      userId: id,
+      userId: req.user.id,
+    },
+    include: {
+      user: true,
     },
   });
 
   res.status(200).json({
-    posts,
+    status: 'success',
+    data: {
+      posts,
+    },
   });
 });
 

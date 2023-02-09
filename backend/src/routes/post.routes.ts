@@ -10,7 +10,7 @@ import {
 
 router.route('/').get(getAllPost).post(createPost);
 
-router.route('/id').patch(updatePost).delete(deletePost);
+router.route('/:id').patch(updatePost).delete(deletePost);
 
 router.route('/:id/comments').post().get();
 
