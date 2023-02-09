@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, urlencoded } from 'express';
 require('./services/passport');
 import authRouter from './routes/auth.routes';
 import userRouter from './routes/user.routes';
@@ -9,7 +9,7 @@ import cookieSession from 'cookie-session';
 import cors from 'cors';
 import { globalErrorHandler } from './utils/globalErrorHandler';
 import AppError from './utils/appError';
-
+import socket from 'socket.io';
 const app = express();
 
 app.use(express.json());

@@ -50,4 +50,16 @@ const getPostByUserId = catchAsync(async (req, res, next) => {
   });
 });
 
+const getUserImages = catchAsync(async (req, res, next) => {
+  const userImages = await prisma.user.findMany({
+    select: {
+      photoUrl: true,
+    },
+  });
+
+  res.status(200).json({
+    userImages,
+  });
+});
+
 export { updateProfile, getPostByUserId, getCurrentUser };

@@ -13,11 +13,8 @@ router.get(
   '/github/callback',
   passport.authenticate('github', {
     failureRedirect: `${CLIENT_URL}/login`,
-  }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect(`${CLIENT_URL}`);
-  }
+    successRedirect: `${CLIENT_URL}/home`,
+  })
 );
 
 router.get('/logout', (req, res) => {

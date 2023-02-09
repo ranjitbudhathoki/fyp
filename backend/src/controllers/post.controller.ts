@@ -1,102 +1,200 @@
 import prisma from '../services/prisma';
+import { catchAsync } from '../utils/catchAsnyc';
+import AppError from '../utils/appError';
 
-const getAllPost = async (req: any, res: any) => {
-  try {
-    const posts = await prisma.post.findMany();
-    res.status(200).json({
+const getAllPost = catchAsync(async (req, res, next) => {
+  const posts = await prisma.post.findMany({
+    where: {
+      userId: {
+        not: req.user.id,
+      },
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
       posts,
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: error,
-    });
-  }
-};
+    },
+  });
+});
 
-const createPost = async (req: any, res: any) => {
-  try {
-    const { authorID, title, body, tech_stack, project_link } = req.body;
-    const post = await prisma.post.create({
-      data: {
-        author: {
-          connect: { id: authorID },
-        },
-        title,
-        body,
-        tech_stack,
-        project_link,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+const createPost = catchAsync(async (req, res, next) => {
+  const { title, body, tech_stack, project_link } = req.body;
 
-    console.log(post);
+  const post = await prisma.post.create({
+    data: {
+      title,
+      body,
+      tech_stack,
+      project_link,
+      userId: req.user.id,
+      updatedAt: new Date(),
+    },
+  });
 
-    res.status(201).json({
+  res.status(201).json({
+    status: 'success',
+    data: {
       post,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error,
-    });
+    },
+  });
+});
+
+const updatePost = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const post = await prisma.post.findFirst({
+    where: {
+      id,
+      userId: req.user.id,
+    },
+  });
+
+  if (!post) {
+    return next(new AppError('Post not found', 404));
   }
+
+  const updatedPost = await prisma.post.update({
+    where: {
+      id,
+    },
+    data: {
+      ...req.body,
+    },
+  });
+
+  res.status(204).json({
+    status: 'success',
+    data: {
+      post: updatedPost,
+    },
+  });
+});
+
+const deletePost = async (req, res, next) => {
+  const { id } = req.params;
+  const post = await prisma.post.findFirst({
+    where: { id, userId: req.user.id },
+  });
+  if (!post) {
+    return next(new AppError('Post not found', 404));
+  }
+
+  const deletedPost = await prisma.post.delete({
+    where: {
+      id,
+    },
+  });
+  res.status(204).json({
+    status: 'success',
+    data: deletedPost,
+  });
 };
 
-const updatePost = async (req: any, res: any) => {
-  try {
-    const { id } = req.params;
-    const post = await prisma.post.findFirst({ where: { id } });
-    if (!post) {
-      return res.status(404).json({ error: 'Post not found' });
-    }
+const getPostComment = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const posts = await prisma.comment.findMany({
+    where: {
+      id,
+    },
+  });
 
-    if (post.authorID !== req.user.id) {
-      return res
-        .status(403)
-        .json({ message: 'You are not authorized to update this post' });
-    }
-    const updatedPost = await prisma.post.update({
-      where: {
-        id,
-      },
-      data: {
-        ...req.body,
-      },
-    });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      posts,
+    },
+  });
+});
 
-    res.status(204).json({
-      updatedPost,
-    });
-  } catch (error) {
-    return res.status(500).json({ error: error });
+const createComment = catchAsync(async (req, res, next) => {
+  const { body } = req.body;
+  const { id } = req.params;
+
+  const comment = await prisma.comment.create({
+    data: {
+      body,
+      updatedAt: new Date(),
+      userId: req.user.id,
+      postId: id,
+    },
+  });
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      comment,
+    },
+  });
+});
+
+const updateComment = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const comment = await prisma.comment.findFirst({
+    where: {
+      id,
+      userId: req.user.id,
+    },
+  });
+
+  if (!comment) {
+    return next(new AppError('Comment not found', 404));
   }
+
+  const updatedComment = await prisma.post.update({
+    where: {
+      id,
+    },
+    data: {
+      ...req.body,
+    },
+  });
+
+  res.status(204).json({
+    status: 'success',
+    data: {
+      post: updatedComment,
+    },
+  });
+});
+
+const deletedComment = async (req, res, next) => {
+  const { id } = req.params;
+  const comment = await prisma.comment.findFirst({
+    where: {
+      id,
+      userId: req.user.id,
+    },
+  });
+
+  if (!comment) {
+    return next(new AppError('Comment not found', 404));
+  }
+
+  const deletedComment = await prisma.comment.delete({
+    where: {
+      id,
+    },
+  });
+
+  res.status(204).json({
+    status: 'success',
+    data: deletedComment,
+  });
 };
 
-const deletePost = async (req: any, res: any) => {
-  try {
-    const { id } = req.params;
-    const post = await prisma.post.findFirst({ where: { id } });
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-
-    if (post.authorID !== req.user.id) {
-      return res
-        .status(403)
-        .json({ message: 'You are not authorized to delete this post' });
-    }
-    await prisma.post.delete({
-      where: {
-        id,
-      },
-    });
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
+export {
+  getAllPost,
+  createPost,
+  updatePost,
+  deletePost,
+  getPostComment,
+  createComment,
+  updateComment,
+  deletedComment,
 };
-
-export { getAllPost, createPost, updatePost, deletePost };

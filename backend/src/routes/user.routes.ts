@@ -8,9 +8,9 @@ import {
 
 const router = express.Router();
 
-router.get('/:id', getCurrentUser);
+router.get('/user', getCurrentUser);
 
-router.patch(':id/', updateProfile);
+router.patch('/:id', updateProfile);
 
 router.get('/:id/posts/', getPostByUserId);
 
