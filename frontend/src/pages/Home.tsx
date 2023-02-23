@@ -27,6 +27,8 @@ const Home: React.FC = () => {
         <aside className="basis-60 bg-[#27292a]">
           <ul className="flex flex-col gap-2 p-2">
             <SideNavLink url="/home">Home</SideNavLink>
+            <SideNavLink url="/feed">Feed</SideNavLink>
+
             {/* <SideNavLink url="/coding-buddy">Coding Buddy</SideNavLink> */}
             {/* <SideNavLink url="/posts">Projects</SideNavLink> */}
             <SideNavLink url="/collaborator">Collaborator</SideNavLink>

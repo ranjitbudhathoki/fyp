@@ -32,7 +32,8 @@ function Chat() {
   };
 
   return (
-    <div className="h-full flex rounded-md   ">
+    <div className="h-full flex rounded-md ">
+      {/* <ChatList /> */}
       <div className="flex-grow flex flex-col  ">
         <div className="flex flex-col gap-2 flex-grow p-3 overflow-y-scroll h-96 ">
           {messages.map((mssg, index) => (

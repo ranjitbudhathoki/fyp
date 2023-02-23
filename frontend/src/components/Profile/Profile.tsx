@@ -144,7 +144,7 @@ const Profile = () => {
       </div>
 
       <div className=" h-64 overflow-y-scroll">
-        {renderedPosts.length !== 0 ? (
+        {renderedPosts?.length !== 0 ? (
           <div>
             <h1 className="text-lg font-medium mb-1 text-center mt-5">
               My Posts
