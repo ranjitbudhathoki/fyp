@@ -1,11 +1,17 @@
+import React from 'react';
+
 import Editor from '@monaco-editor/react';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const FileUploader = ({ onFileLoad }) => {
-  return <input type="file" onChange={(e) => onFileLoad(e.target.files[0])} />;
-};
+import SnippetForm from './CodeSnippet';
 
 function CodeEditor() {
+  const FileUploader = ({ onFileLoad }) => {
+    return (
+      <input type="file" onChange={(e) => onFileLoad(e.target.files[0])} />
+    );
+  };
   const [file, setFile] = useState<File>();
   const [value, setValue] = useState();
   const [language, setLanguage] = useState('javascript');
@@ -30,8 +36,7 @@ function CodeEditor() {
 
   return (
     <>
-      <FileUploader onFileLoad={setFile} />
-
+      {/* <FileUploader onFileLoad={setFile} />
       <div className="flex flex-col justify-self-center">
         <Editor
           height="90vh"
@@ -45,7 +50,8 @@ function CodeEditor() {
         >
           Submit
         </button>
-      </div>
+      </div> */}
+      <SnippetForm />
     </>
   );
 }

@@ -22,6 +22,21 @@ const getAllPost = catchAsync(async (req, res, next) => {
   });
 });
 
+const getPostById = catchAsync(async (req, res, next) => {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: req.params.id,
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      post,
+    },
+  });
+});
+
 const createPost = catchAsync(async (req, res, next) => {
   const { title, body, tech_stack, project_link } = req.body;
 
@@ -77,10 +92,9 @@ const updatePost = catchAsync(async (req, res, next) => {
 
 const deletePost = async (req, res, next) => {
   const { id } = req.params;
-  const parsedId = parseInt(id);
 
   const post = await prisma.post.findFirst({
-    where: { id: parsedId, userId: req.user.id },
+    where: { id, userId: req.user.id },
   });
 
   if (!post) {
@@ -89,7 +103,7 @@ const deletePost = async (req, res, next) => {
 
   const deletedPost = await prisma.post.delete({
     where: {
-      id: parsedId,
+      id,
     },
   });
   res.status(204).json({
@@ -115,7 +129,7 @@ const getPostComment = catchAsync(async (req, res, next) => {
 });
 
 const createComment = catchAsync(async (req, res, next) => {
-  const { body } = req.body;
+  const { body, parentId } = req.body;
   const { id } = req.params;
 
   const comment = await prisma.comment.create({
@@ -124,6 +138,7 @@ const createComment = catchAsync(async (req, res, next) => {
       updatedAt: new Date(),
       userId: req.user.id,
       postId: id,
+      parentId,
     },
   });
 
@@ -193,6 +208,7 @@ const deletedComment = async (req, res, next) => {
 
 export {
   getAllPost,
+  getPostById,
   createPost,
   updatePost,
   deletePost,

@@ -6,11 +6,12 @@ import {
   createPost,
   updatePost,
   deletePost,
+  getPostById,
 } from '../controllers/post.controller';
 
 router.route('/').get(getAllPost).post(createPost);
 
-router.route('/:id').patch(updatePost).delete(deletePost);
+router.route('/:id').patch(updatePost).delete(deletePost).get(getPostById);
 
 router.route('/:id/comments').post().get();
 

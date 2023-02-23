@@ -68,11 +68,9 @@ const Collaborator: React.FC = () => {
     setShowModal(!showModal);
   };
 
-  const onPostClick = () => {};
-
   const renderedPosts = data?.data?.posts.map((post, index) => {
     return (
-      <div className="bg-neutral-400 m-4 p-5 text-black">
+      <div className="bg-neutral-400 m-4 p-5 text-black" key={post.id}>
         <div className="w-11/12 pt-2">
           <div className="flex items-center text-xs mb-2">
             <a
