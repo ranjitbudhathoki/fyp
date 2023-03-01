@@ -28,8 +28,9 @@ model User {
   matches2        Match[]     @relation(name: "user2")
   msgSender       Message[]   @relation(name: "sender")
   receiver        Message[]   @relation(name: "receiver")
-  UpVote          UpVote[]
   questions       MatchPost[]
+
+  likes Like[]
 }
 
 model HelpPost {
@@ -44,6 +45,7 @@ model HelpPost {
   comments     Comment[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime
+  likes        Like[]
 }
 
 model MatchPost {
@@ -67,7 +69,22 @@ model Comment {
   children  Comment[] @relation("ParentChild")
   createdAt DateTime  @default(now())
   updatedAt DateTime
-  upVotes   UpVote[]
+  likes     Like[]
+}
+
+model Like {
+  id        String    @id @default(uuid())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  post      HelpPost? @relation(fields: [postId], references: [id])
+  postId    String?
+  comment   Comment?  @relation(fields: [commentId], references: [id])
+  commentId String?
+  Feed      Feed?     @relation(fields: [feedId], references: [id])
+  feedId    Int?
+
+  @@unique([userId, postId])
+  @@unique([userId, commentId])
 }
 
 model Solution {
@@ -76,24 +93,18 @@ model Solution {
   createdAt DateTime @default(now())
 }
 
-model UpVote {
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  comment   Comment @relation(fields: [commentId], references: [id])
-  commentId String
+// model UpVote {
+//   user      User    @relation(fields: [userId], references: [id])
+//   userId    String
+//   comment   Comment @relation(fields: [commentId], references: [id])
+//   commentId String
 
-  @@id([userId, commentId])
-}
+//   @@id([userId, commentId])
+// }
 
 model Feed {
   id   Int    @id @default(autoincrement())
   Like Like[]
-}
-
-model Like {
-  id     Int  @id @default(autoincrement())
-  feed   Feed @relation(fields: [feedId], references: [id])
-  feedId Int
 }
 
 model Match {
