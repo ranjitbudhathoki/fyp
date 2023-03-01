@@ -41,6 +41,7 @@ const getHelpPostById = catchAsync(async (req, res, next) => {
 });
 
 const createHelpPost = catchAsync(async (req, res, next) => {
+  console.log(req.body)
   const { title, body, tech_stack, project_link } = req.body;
 
   const post = await prisma.helpPost.create({

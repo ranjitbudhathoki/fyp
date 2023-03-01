@@ -6,7 +6,6 @@ import HelpPost from '../components/collaborator/HelpPost';
 
 const Collaborator: React.FC = () => {
   const queryClient = useQueryClient();
-
   const { user } = useSelector((state: any) => state.auth);
   const [showModal, setShowModal] = useState(false);
   const [posts, setPosts] = useState(
@@ -22,14 +21,14 @@ const Collaborator: React.FC = () => {
     queryKey: ['posts'],
     queryFn: async () => {
       const response = await axios.get('/api/help-posts/');
+
       return response.data;
     },
   });
 
-  console.log(data);
-
   const createPostMutation = useMutation({
     mutationFn: async (form: any) => {
+      console.log(form);
       await axios.post('/api/help-posts/', {
         authorID: user.id,
         title: form.elements.topic.value,
@@ -45,15 +44,13 @@ const Collaborator: React.FC = () => {
 
   const handleCreatePost = async (event: any) => {
     event.preventDefault();
-
     const form = event.currentTarget;
+    console.log(form);
     createPostMutation.mutate(form);
-
     const title = form.elements.topic.value;
     const body = form.elements.problem_description.value;
     const project_link = form.elements.project_link.value;
     const tech_stack = form.elements.tech_stack.value;
-
     setPosts([
       ...posts,
       {
@@ -107,6 +104,10 @@ const Collaborator: React.FC = () => {
           showModal ? 'flex' : 'hidden'
         }`}
       >
+        <div
+          className="bg-gray-900 opacity-75 w-full h-full"
+          onClick={() => setShowModal(false)}
+        />
         <div className="fixed inset-y-0 right-0 w-1/3 bg-black shadow-lg p-3 h-[650px] overflow-y-scroll">
           <form onSubmit={handleCreatePost}>
             <div className="px-4 py-5 m-0">
@@ -128,7 +129,7 @@ const Collaborator: React.FC = () => {
                     rows={3}
                     name="topic"
                     id="topic"
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full bg-gray-700 border-gray-600 rounded-md text-gray-200"
+                    className=" p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   />
                 </div>
               </div>
@@ -144,7 +145,7 @@ const Collaborator: React.FC = () => {
                     name="problem_description"
                     id="problem_description"
                     rows={8}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
+                    className="p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   ></textarea>
                 </div>
               </div>
@@ -176,7 +177,7 @@ const Collaborator: React.FC = () => {
                     type="text"
                     name="project_link"
                     id="project_link"
-                    className="shadow-sm focus:ring-blue-500 h-10 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
+                    className=" p-2 shadow-sm focus:ring-blue-500 h-10 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   />
                 </div>
               </div>
@@ -192,15 +193,14 @@ const Collaborator: React.FC = () => {
                     type="text"
                     name="tech_stack"
                     id="project_link"
-                    className="shadow-sm focus:ring-blue-500 h-10 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
+                    className=" p-2 shadow-sm focus:ring-blue-500 h-10 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   />
                 </div>
               </div>
             </div>
             <div className="px-4 py-3 flex justify-center">
               <button
-                onClick={handleCreatePost}
-                type="button"
+                type="submit"
                 className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
               >
                 Submit
