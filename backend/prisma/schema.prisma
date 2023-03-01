@@ -40,6 +40,7 @@ model HelpPost {
   body         String?
   tech_stack   String[]
   project_link String?
+  image        String?
   comments     Comment[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime

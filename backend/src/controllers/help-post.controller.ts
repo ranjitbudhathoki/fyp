@@ -27,6 +27,9 @@ const getHelpPostById = catchAsync(async (req, res, next) => {
     where: {
       id: req.params.id,
     },
+    select: {
+      comments: true,
+    },
   });
 
   res.status(200).json({
@@ -112,22 +115,6 @@ const deleteHelpPost = async (req, res, next) => {
   });
 };
 
-const getPostComment = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const posts = await prisma.comment.findMany({
-    where: {
-      id,
-    },
-  });
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      posts,
-    },
-  });
-});
-
 const createComment = catchAsync(async (req, res, next) => {
   const { body, parentId } = req.body;
   const { id } = req.params;
@@ -212,7 +199,6 @@ export {
   createHelpPost,
   updatehelpPost,
   deleteHelpPost,
-  getPostComment,
   createComment,
   updateComment,
   deletedComment,

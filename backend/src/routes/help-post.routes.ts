@@ -2,17 +2,22 @@ import Express from 'express';
 
 const router = Express.Router();
 import {
-  getAllPost,
-  createPost,
-  updatePost,
-  deletePost,
-  getPostById,
+  getAllHelpPost,
+  getHelpPostById,
+  createHelpPost,
+  updatehelpPost,
+  deleteHelpPost,
+  createComment,
 } from '../controllers/help-post.controller';
 
-router.route('/').get(getAllPost).post(createPost);
+router.route('/').get(getAllHelpPost).post(createHelpPost);
 
-router.route('/:id').patch(updatePost).delete(deletePost).get(getPostById);
+router
+  .route('/:id')
+  .patch(updatehelpPost)
+  .delete(deleteHelpPost)
+  .get(getHelpPostById);
 
-router.route('/:id/comments').post().get();
+router.route('/:id/comments').post(createComment);
 
 export default router;

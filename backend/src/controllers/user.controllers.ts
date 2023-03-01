@@ -39,7 +39,7 @@ const getPostByUserId = catchAsync(async (req, res, next) => {
     );
   }
 
-  const posts = await prisma.post.findMany({
+  const posts = await prisma.helpPost.findMany({
     where: {
       userId: req.user.id,
     },

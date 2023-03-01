@@ -2,16 +2,20 @@ import { Router } from 'express';
 const router = Router();
 
 import {
-  getAllPost,
-  createPost,
-  updatePost,
-  deletePost,
-  getPostById,
-} from '../controllers/help-post.controller';
+  getAllMatchPost,
+  getMatchPostById,
+  createMatchPost,
+  deleteMatchPost,
+  updateMatchPost,
+} from '../controllers/match-post.controller';
 
-router.route('/').get(getAllPost).post(createPost);
+router.route('/').get(getAllMatchPost).post(createMatchPost);
 
-router.route('/:id').patch(updatePost).delete(deletePost).get(getPostById);
+router
+  .route('/:id')
+  .patch(updateMatchPost)
+  .delete(deleteMatchPost)
+  .get(getMatchPostById);
 
 router.route('/:id/comments').post().get();
 

@@ -12,8 +12,8 @@ import { writeFile } from 'fs/promises';
 import { nanoid } from 'nanoid';
 import authRouter from './routes/auth.routes';
 import userRouter from './routes/user.routes';
-import helpPostRouter from './routes/post.routes';
-import matchPostRouter from './routes/post.routes';
+import helpPostRouter from './routes/help-post.routes';
+import matchPostRouter from './routes/help-post.routes';
 
 const app = express();
 
