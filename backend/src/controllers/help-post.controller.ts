@@ -2,8 +2,8 @@ import prisma from '../services/prisma';
 import { catchAsync } from '../utils/catchAsnyc';
 import AppError from '../utils/appError';
 
-const getAllPost = catchAsync(async (req, res, next) => {
-  const posts = await prisma.post.findMany({
+const getAllHelpPost = catchAsync(async (req, res, next) => {
+  const posts = await prisma.helpPost.findMany({
     where: {
       userId: {
         not: req.user.id,
@@ -22,8 +22,8 @@ const getAllPost = catchAsync(async (req, res, next) => {
   });
 });
 
-const getPostById = catchAsync(async (req, res, next) => {
-  const post = await prisma.post.findUnique({
+const getHelpPostById = catchAsync(async (req, res, next) => {
+  const post = await prisma.helpPost.findUnique({
     where: {
       id: req.params.id,
     },
@@ -37,10 +37,10 @@ const getPostById = catchAsync(async (req, res, next) => {
   });
 });
 
-const createPost = catchAsync(async (req, res, next) => {
+const createHelpPost = catchAsync(async (req, res, next) => {
   const { title, body, tech_stack, project_link } = req.body;
 
-  const post = await prisma.post.create({
+  const post = await prisma.helpPost.create({
     data: {
       title,
       body,
@@ -59,10 +59,10 @@ const createPost = catchAsync(async (req, res, next) => {
   });
 });
 
-const updatePost = catchAsync(async (req, res, next) => {
+const updatehelpPost = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const post = await prisma.post.findFirst({
+  const post = await prisma.helpPost.findFirst({
     where: {
       id,
       userId: req.user.id,
@@ -73,7 +73,7 @@ const updatePost = catchAsync(async (req, res, next) => {
     return next(new AppError('Post not found', 404));
   }
 
-  const updatedPost = await prisma.post.update({
+  const updatedPost = await prisma.helpPost.update({
     where: {
       id,
     },
@@ -90,10 +90,10 @@ const updatePost = catchAsync(async (req, res, next) => {
   });
 });
 
-const deletePost = async (req, res, next) => {
+const deleteHelpPost = async (req, res, next) => {
   const { id } = req.params;
 
-  const post = await prisma.post.findFirst({
+  const post = await prisma.helpPost.findFirst({
     where: { id, userId: req.user.id },
   });
 
@@ -101,7 +101,7 @@ const deletePost = async (req, res, next) => {
     return next(new AppError('Post not found', 404));
   }
 
-  const deletedPost = await prisma.post.delete({
+  const deletedPost = await prisma.helpPost.delete({
     where: {
       id,
     },
@@ -164,7 +164,7 @@ const updateComment = catchAsync(async (req, res, next) => {
     return next(new AppError('Comment not found', 404));
   }
 
-  const updatedComment = await prisma.post.update({
+  const updatedComment = await prisma.helpPost.update({
     where: {
       id,
     },
@@ -207,11 +207,11 @@ const deletedComment = async (req, res, next) => {
 };
 
 export {
-  getAllPost,
-  getPostById,
-  createPost,
-  updatePost,
-  deletePost,
+  getAllHelpPost,
+  getHelpPostById,
+  createHelpPost,
+  updatehelpPost,
+  deleteHelpPost,
   getPostComment,
   createComment,
   updateComment,

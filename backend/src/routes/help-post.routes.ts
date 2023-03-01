@@ -7,7 +7,7 @@ import {
   updatePost,
   deletePost,
   getPostById,
-} from '../controllers/post.controller';
+} from '../controllers/help-post.controller';
 
 router.route('/').get(getAllPost).post(createPost);
 
