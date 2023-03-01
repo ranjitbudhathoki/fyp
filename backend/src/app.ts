@@ -1,8 +1,6 @@
 import express, { Request, Response, urlencoded } from 'express';
 require('./services/passport');
-import authRouter from './routes/auth.routes';
-import userRouter from './routes/user.routes';
-import postRouter from './routes/post.routes';
+
 import passport from 'passport';
 import checkLoggedIn from './utils/checkLoggedIn';
 import cookieSession from 'cookie-session';
@@ -12,6 +10,10 @@ import AppError from './utils/appError';
 import { createCanvas } from 'canvas';
 import { writeFile } from 'fs/promises';
 import { nanoid } from 'nanoid';
+import authRouter from './routes/auth.routes';
+import userRouter from './routes/user.routes';
+import helpPostRouter from './routes/post.routes';
+import matchPostRouter from './routes/post.routes';
 
 const app = express();
 
@@ -38,7 +40,8 @@ app.use(passport.session());
 app.use('/auth', authRouter);
 
 app.use('/api/users', checkLoggedIn, userRouter);
-app.use('/api/posts', postRouter);
+app.use('/api/help-posts', checkLoggedIn, helpPostRouter);
+app.use('/api/match-posts', checkLoggedIn, matchPostRouter);
 
 app.post('/api/save-snippet', async (req, res) => {
   const { language, theme, fontFamily, code } = req.body;

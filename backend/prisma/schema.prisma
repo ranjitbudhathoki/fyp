@@ -11,27 +11,28 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(uuid())
-  githubId        String?   @unique
-  username        String?   @unique
+  id              String      @id @default(uuid())
+  githubId        String?     @unique
+  username        String?     @unique
   displayName     String?
   bio             String?
   gender          String?
   preferredGender String?
   birthDate       DateTime?
   photoUrl        String?
-  createdAt       DateTime  @default(now())
+  createdAt       DateTime    @default(now())
   updatedAt       DateTime
-  posts           Post[]
+  posts           HelpPost[]
   comments        Comment[]
-  matches1        Match[]   @relation(name: "user1")
-  matches2        Match[]   @relation(name: "user2")
-  msgSender       Message[] @relation(name: "sender")
-  receiver        Message[] @relation(name: "receiver")
+  matches1        Match[]     @relation(name: "user1")
+  matches2        Match[]     @relation(name: "user2")
+  msgSender       Message[]   @relation(name: "sender")
+  receiver        Message[]   @relation(name: "receiver")
   UpVote          UpVote[]
+  questions       MatchPost[]
 }
 
-model Post {
+model HelpPost {
   id           String    @id @default(uuid())
   user         User      @relation(fields: [userId], references: [id])
   userId       String
@@ -44,12 +45,21 @@ model Post {
   updatedAt    DateTime
 }
 
+model MatchPost {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
 model Comment {
   id        String    @id @default(uuid())
   body      String
   user      User      @relation(fields: [userId], references: [id])
   userId    String
-  post      Post      @relation(fields: [postId], references: [id])
+  post      HelpPost  @relation(fields: [postId], references: [id])
   postId    String
   parent    Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
   parentId  String?
