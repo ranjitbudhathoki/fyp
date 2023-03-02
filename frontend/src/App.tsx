@@ -5,15 +5,16 @@ import Chat from './pages/Chat';
 import Date from './pages/Date';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
 import { updateUser } from './redux/slice/authSlice';
 import axios from './utils/axios-instance';
 import ProtectedRoute from './components/ProtectedRoute';
 import Collaborator from './pages/Collaborator';
 import Profile from './components/Profile/Profile';
-import Post from './pages/Feed';
 import AdminLogin from './pages/AdminLogin';
+import Feed from './pages/Feed';
+import HelpPostDetail from './pages/HelpPostDetail';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -51,12 +52,11 @@ const App: React.FC = () => {
           }
         >
           <Route path="home" element={<Date />} />
-          <Route path="feed" element={<Post />} />
+          <Route path="feed" element={<Feed />} />
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chat />} />
-          <Route path="collaborator" element={<Collaborator />}>
-            <Route path="posts/:id" element={<Post />} />
-          </Route>
+          <Route path="collaborator" element={<Collaborator />} />
+          <Route path="collaborator/posts/:id" element={<HelpPostDetail />} />
           <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />

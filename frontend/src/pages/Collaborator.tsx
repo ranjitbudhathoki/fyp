@@ -3,6 +3,7 @@ import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import HelpPost from '../components/collaborator/HelpPost';
+import { Link } from 'react-router-dom';
 
 const Collaborator: React.FC = () => {
   const queryClient = useQueryClient();
@@ -18,7 +19,7 @@ const Collaborator: React.FC = () => {
   );
 
   const { data } = useQuery({
-    queryKey: ['posts'],
+    queryKey: ['help-posts'],
     queryFn: async () => {
       const response = await axios.get('/api/help-posts/');
 
@@ -38,7 +39,7 @@ const Collaborator: React.FC = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['posts']);
+      queryClient.invalidateQueries(['help-posts']);
     },
   });
 
@@ -70,7 +71,11 @@ const Collaborator: React.FC = () => {
   const renderedPosts = (
     <div style={{ height: '620px', overflowY: 'scroll' }}>
       {data?.data?.posts.map((post) => {
-        return <HelpPost key={post.id} post={post} />;
+        return (
+          <Link to={`/collaborator/posts/${post.id}`} key={post.id}>
+            <HelpPost post={post} />
+          </Link>
+        );
       })}
     </div>
   );

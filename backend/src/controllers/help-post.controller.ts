@@ -28,7 +28,19 @@ const getHelpPostById = catchAsync(async (req, res, next) => {
       id: req.params.id,
     },
     select: {
-      comments: true,
+      comments: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -41,7 +53,7 @@ const getHelpPostById = catchAsync(async (req, res, next) => {
 });
 
 const createHelpPost = catchAsync(async (req, res, next) => {
-  console.log(req.body)
+  console.log(req.body);
   const { title, body, tech_stack, project_link } = req.body;
 
   const post = await prisma.helpPost.create({
