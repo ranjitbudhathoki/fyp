@@ -27,18 +27,14 @@ const getHelpPostById = catchAsync(async (req, res, next) => {
     where: {
       id: req.params.id,
     },
-    select: {
+    include: {
+      user: true,
       comments: {
         orderBy: {
           createdAt: 'desc',
         },
-        select: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-            },
-          },
+        include: {
+          user: true,
         },
       },
     },
@@ -138,7 +134,7 @@ const createComment = catchAsync(async (req, res, next) => {
       updatedAt: new Date(),
       userId: req.user.id,
       postId: id,
-      parentId,
+      parentId: parentId || null,
     },
   });
 
@@ -152,10 +148,11 @@ const createComment = catchAsync(async (req, res, next) => {
 
 const updateComment = catchAsync(async (req, res, next) => {
   const { id } = req.params;
+  const { body } = req.body;
 
   const comment = await prisma.comment.findFirst({
     where: {
-      id,
+      id: id,
       userId: req.user.id,
     },
   });
@@ -181,7 +178,18 @@ const updateComment = catchAsync(async (req, res, next) => {
   });
 });
 
-const deletedComment = async (req, res, next) => {
+// const getCommentLike = async (req, res, next) => {
+//   const { commentId } = req.params;
+
+//   const totalLikes = await prisma.comment.groupBy({
+//     by:['commentID'],
+//     where:{
+
+//     }
+//   })
+// };
+
+const deleteComment = async (req, res, next) => {
   const { id } = req.params;
   const comment = await prisma.comment.findFirst({
     where: {
@@ -214,5 +222,5 @@ export {
   deleteHelpPost,
   createComment,
   updateComment,
-  deletedComment,
+  deleteComment,
 };

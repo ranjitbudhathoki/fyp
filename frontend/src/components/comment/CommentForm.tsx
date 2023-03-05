@@ -1,22 +1,62 @@
+import { useState } from 'react';
+
+export function CommentForm({
+  onSubmit,
+  autoFocus = false,
+  initialValue = '',
+}) {
+  const [message, setMessage] = useState(initialValue);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log('this is from the handle submit');
+    if (!message) return alert('Missing Required Fields');
+    onSubmit({ comment: message });
+  }
+
+  return (
+    <form
+      id="submit-message"
+      onSubmit={handleSubmit}
+      className="flex items-center flex-grow"
+    >
+      <input
+        type="text"
+        value={message}
+        autoFocus={autoFocus}
+        onChange={(event) => setMessage(event.target.value)}
+        placeholder="Enter a comment..."
+        className="py-2 pl-2 pr-10 border-2  border-dark-gray w-full bg-custom-light-dark text-gray-300 focus:outline-none text-sm rounded-2xl"
+      />
+    </form>
+  );
+}
+
+export default CommentForm;
+
 // import React, { useMemo } from 'react';
-// import { CommentList } from '../components/comment/CommentList';
-// import CommentForm from '../components/comment/CommentForm';
+// import { CommentList } from './ProductCommentList';
+// import { CommentForm } from './ProductCommentForm';
 // import { useState } from 'react';
 // import {
+//   BackwardIcon,
+//   ChatBubbleBottomCenterTextIcon,
 //   FaceSmileIcon,
 //   FlagIcon,
+//   ForwardIcon,
 //   HeartIcon,
 //   PencilSquareIcon,
 //   ShareIcon,
 //   TrashIcon,
 // } from '@heroicons/react/24/outline';
 // import { Link, useParams } from 'react-router-dom';
-// import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-// import axios from '../utils/axios-instance';
+// import { useQuery, useMutation, useQueryClient } from 'react-query';
+// import axios from 'axios';
+// import Similarproduct from './Similarproduct';
+// import { useAuth } from '../context/AuthContextProvider';
 // import profile from '../Images/profile.png';
-// import { useSelector } from 'react-redux';
 
-// const HelpPostDetail = ({
+// const SingleProduct = ({
 //   productName,
 //   image,
 //   price,
@@ -25,19 +65,27 @@
 //   description,
 // }) => {
 //   const queryClient = useQueryClient();
-//   const { user } = useSelector((state: any) => state.auth);
-//   const { id } = useParams();
-//   const singlePost = useQuery(['single-post', id], async () => {
-//     const res = await axios.get(`/api/match-posts/${id}`);
+//   const [user] = useAuth();
+//   const { productId } = useParams();
+//   const singleProduct = useQuery(['single-product', productId], async () => {
+//     const res = await axios.get(
+//       `http://localhost:8000/products/${productId}/get-single-product`
+//     );
 //     return res;
 //   });
 
-//   const allPosts = useQuery(['all-products'], async () => {
-//     const res = await axios.get('api/match-posts/');
+//   const productsQuery = useQuery('products-query', async () => {
+//     const res = await axios.get('http://localhost:8000/products/get-products');
 //     return res;
 //   });
 
-//   const productsData = allPosts.data?.data?.posts || [];
+//   const productsData = productsQuery.data?.data?.products || [];
+
+//   const [activeTab, setActiveTab] = useState(1);
+
+//   const handleClick = (tabIndex) => {
+//     setActiveTab(tabIndex);
+//   };
 
 //   const [messagemodal, setModal] = useState(false);
 
@@ -51,7 +99,7 @@
 //     setreplyModal(!replymodal);
 //   };
 
-//   const productComments = singlePost?.data?.data?.post?.comments;
+//   const productComments = singleProduct?.data?.data?.product?.productComments;
 
 //   const commentsByParentId = useMemo(() => {
 //     const payload = {};
@@ -72,7 +120,7 @@
 //         return alert('Please Login Firstj my bou');
 //       }
 //       const res = await axios.post(
-//         `http://localhost:8000/products/create-product-comment/${user.id}/${id}`,
+//         `http://localhost:8000/products/create-product-comment/${user.id}/${productId}`,
 //         data,
 //         {
 //           headers: {
@@ -87,7 +135,7 @@
 //         console.log('error', error);
 //       },
 //       onSuccess: (data) => {
-//         queryClient.invalidateQueries(['single-product', id]);
+//         queryClient.invalidateQueries(['single-product', productId]);
 //       },
 //     }
 //   );
@@ -95,19 +143,15 @@
 //     commentCreateMutation.mutate(data);
 //   };
 
-//   console.log({ singlePost });
+//   console.log({ singleProduct });
 //   console.log({ productComments });
 //   let rootComments = commentsByParentId['null'];
 //   console.log({ rootComments });
-//   if (singlePost.isLoading) return <h2>Loading...</h2>;
+//   if (singleProduct.isLoading) return <h2>Loading...</h2>;
 
-//   return <></>;
-// };
-
-// export default HelpPostDetail;
-
-// {
-//   /* <div className="bg-gray-900 pt-2">
+//   return (
+//     <>
+//       <div className="bg-gray-900 pt-2">
 //         <div className="w-[95%] mx-auto">
 //           <div className="lg:flex md:gap-0 gap-10 md:flex sm:grid-cols-1 mb-8">
 //             <div className=" my-auto mx-auto w-[300px]">
@@ -125,7 +169,7 @@
 //                 <div>
 //                   <ForwardIcon className="w-16 h-6 bg-[#dfe4f1ad] text-slate-900 rounded-sm"></ForwardIcon>
 //                 </div>
-//               </div>
+//               </div> */}
 //               <div>
 //                 <div className="flex gap-2 justify-center mt-2">
 //                   <div className="bg-slate-400 w-10 h-10 rounded-md cursor-pointer">
@@ -738,7 +782,7 @@
 //                           <h1 className="text-center">
 //                             No Comments till Now Be the first one to comment
 //                           </h1>
-//                         </div>
+//                         </div> */}
 //                       </div>
 //                     </div>
 //                     <div className="flex justify-center my-2">
@@ -784,11 +828,9 @@
 //             </div>
 //           </div>
 //         </div>
-//       </div> */
-// }
+//       </div>
+//     </>
+//   );
+// };
 
-const HelpPostDetail = () => {
-  return <div>Help post</div>;
-};
-
-export default HelpPostDetail;
+// export default SingleProduct;

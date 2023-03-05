@@ -15,6 +15,7 @@ import Profile from './components/Profile/Profile';
 import AdminLogin from './pages/AdminLogin';
 import Feed from './pages/Feed';
 import HelpPostDetail from './pages/HelpPostDetail';
+import Comment from './components/comment/Comment';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,8 +26,6 @@ const App: React.FC = () => {
       const res = await axios.get(`/api/users/user`);
       return res.data;
     },
-    retry: 1,
-    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {

@@ -38,7 +38,7 @@ function SnippetForm() {
   };
 
   return (
-    <main className="max-w-md mx-auto my-4 p-6 bg-white rounded-md shadow-md">
+    <main className="max-w-md mx-auto my-4 p-6 rounded-md shadow-md">
       <div className="mb-4">
         <SelectField
           label="Syntax Highlighting"
