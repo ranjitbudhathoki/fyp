@@ -54,7 +54,7 @@ function Date() {
 
   console.log(posts);
 
-  const { data: solutions } = useQuery({
+  const { data: solutions, isLoading } = useQuery({
     queryKey: ['solutions'],
     queryFn: async function () {
       const res = await axios.get(`/api/solutions/${posts?.data?.post.id}`);
@@ -76,6 +76,9 @@ function Date() {
     []
   );
 
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
   const updateCurrentIndex = (val) => {
     setCurrentIndex(val);
     currentIndexRef.current = val;
