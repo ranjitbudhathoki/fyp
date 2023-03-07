@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import axios from '../../utils/axios-instance';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 
 type ProfileForm = {

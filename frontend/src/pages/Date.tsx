@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
 import { FcLike } from 'react-icons/fc/';
-import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { useQueryClient, useQuery } from 'react-query';
 import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
 const db = [

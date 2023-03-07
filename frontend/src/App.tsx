@@ -6,7 +6,7 @@ import Date from './pages/Date';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import { useDispatch } from 'react-redux';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query';
 import { updateUser } from './redux/slice/authSlice';
 import axios from './utils/axios-instance';
 import ProtectedRoute from './components/ProtectedRoute';

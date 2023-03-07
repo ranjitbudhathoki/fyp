@@ -80,6 +80,7 @@ function CodeEditor({ postId, userId }) {
           )}`}
           target="_blank"
           className="text-blue-500"
+          rel="noreferrer"
         >
           Click to preview
         </a>
@@ -98,20 +99,8 @@ function CodeEditor({ postId, userId }) {
           Submit
         </button>
       </div>
-
-      {/* <SnippetForm /> */}
     </>
   );
 }
 
 export default CodeEditor;
-
-// import Editor from "react-simple-code-editor";
-// import Highlight, { defaultProps } from "prism-react-renderer";
-// import darkTheme from "prism-react-renderer/themes/nightOwl";
-// import lightTheme from "prism-react-renderer/themes/nightOwlLight";
-
-// function CodeEditor(){
-//   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}'`);
-// const [theme, setTheme] = useState("dark");
-// }

@@ -5,11 +5,9 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './redux/store/store';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-const container = document.getElementById('root') as HTMLDivElement;
-
-const root = createRoot(container);
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -18,6 +16,9 @@ const queryClient = new QueryClient({
     },
   },
 });
+const container = document.getElementById('root') as HTMLDivElement;
+
+const root = createRoot(container);
 
 root.render(
   <QueryClientProvider client={queryClient}>
@@ -26,5 +27,6 @@ root.render(
         <App />
       </BrowserRouter>
     </Provider>
+    <ReactQueryDevtools />
   </QueryClientProvider>
 );

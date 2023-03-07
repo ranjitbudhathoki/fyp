@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import axios from '../../utils/axios-instance';
 import { TrashIcon } from '@heroicons/react/24/outline';

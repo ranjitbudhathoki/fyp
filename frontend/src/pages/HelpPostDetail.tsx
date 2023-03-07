@@ -16,6 +16,9 @@
 // import profile from '../Images/profile.png';
 // import { useSelector } from 'react-redux';
 
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
+
 // const HelpPostDetail = ({
 //   productName,
 //   image,
@@ -788,6 +791,8 @@
 // }
 
 const HelpPostDetail = () => {
+  const { id } = useParams();
+  // const { data } = useQuery();
   return <div>Help post</div>;
 };
 
