@@ -45,7 +45,7 @@ model HelpPost {
   comments     Comment[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime
-  likes        Like[]
+  // likes        Like[]
 }
 
 model MatchPost {
@@ -85,18 +85,18 @@ model Comment {
 }
 
 model Like {
-  id        String    @id @default(uuid())
-  user      User      @relation(fields: [userId], references: [id])
+  // id        String   @id @default(uuid())
+  user      User    @relation(fields: [userId], references: [id])
   userId    String
-  post      HelpPost? @relation(fields: [postId], references: [id])
-  postId    String?
-  comment   Comment?  @relation(fields: [commentId], references: [id])
-  commentId String?
-  Feed      Feed?     @relation(fields: [feedId], references: [id])
-  feedId    Int?
+  // post      HelpPost? @relation(fields: [postId], references: [id])
+  // postId    String?
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId String
+  // Feed      Feed?     @relation(fields: [feedId], references: [id])
+  // feedId    Int?
 
-  @@unique([userId, postId])
-  @@unique([userId, commentId])
+  // @@unique([userId, postId])
+  @@id([userId, commentId])
 }
 
 // model UpVote {
@@ -109,8 +109,8 @@ model Like {
 // }
 
 model Feed {
-  id   Int    @id @default(autoincrement())
-  Like Like[]
+  id Int @id @default(autoincrement())
+  // Like Like[]
 }
 
 model Match {

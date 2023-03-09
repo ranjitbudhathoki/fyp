@@ -8,8 +8,10 @@ import {
   updatehelpPost,
   deleteHelpPost,
   createComment,
+  handleLikeUpdate,
 } from '../controllers/help-post.controller';
 
+import commentRouter from './comment.routes';
 router.route('/').get(getAllHelpPost).post(createHelpPost);
 
 router
@@ -18,6 +20,8 @@ router
   .delete(deleteHelpPost)
   .get(getHelpPostById);
 
-router.route('/:id/comments').post(createComment);
+router.use('/:id/comments', commentRouter);
+
+// router.route('/:id/comments').post(createComment).get(handleLikeUpdate);
 
 export default router;

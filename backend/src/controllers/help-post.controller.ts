@@ -127,6 +127,7 @@ const deleteHelpPost = async (req, res, next) => {
 const createComment = catchAsync(async (req, res, next) => {
   const { body, parentId } = req.body;
   const { id } = req.params;
+  console.log(id, parentId, body);
 
   const comment = await prisma.comment.create({
     data: {
@@ -153,7 +154,6 @@ const updateComment = catchAsync(async (req, res, next) => {
   const comment = await prisma.comment.findFirst({
     where: {
       id: id,
-      userId: req.user.id,
     },
   });
 
@@ -161,12 +161,18 @@ const updateComment = catchAsync(async (req, res, next) => {
     return next(new AppError('Comment not found', 404));
   }
 
+  if (comment.userId !== req.user.id) {
+    return next(
+      new AppError('You are not authorized to update this comment', 401)
+    );
+  }
+
   const updatedComment = await prisma.helpPost.update({
     where: {
       id,
     },
     data: {
-      ...req.body,
+      body,
     },
   });
 
@@ -178,18 +184,57 @@ const updateComment = catchAsync(async (req, res, next) => {
   });
 });
 
-// const getCommentLike = async (req, res, next) => {
-//   const { commentId } = req.params;
+const getCommentLike = async (req: any, res, next) => {
+  const { commentId } = req.params;
+  const userId = req.user.id;
 
-//   const totalLikes = await prisma.comment.groupBy({
-//     by:['commentID'],
-//     where:{
+  const likes = await prisma.like.groupBy({
+    by: ['commentId'],
+    where: {
+      commentId,
+    },
+    _count: {
+      _all: true,
+    },
+  });
 
-//     }
-//   })
-// };
+  const likeExists = await prisma.like.findUnique({
+    where: {
+      userId_commentId: { userId, commentId },
+    },
+  });
+  return res.status(200).json({
+    message: 'Get Liked SucessFully',
+    data: {
+      likeExists,
+      likesCount: likes[0]?._count?._all ?? 0,
+    },
+  });
+};
+
+const handleLikeUpdate = catchAsync(async (req, res, next) => {
+  const { commentId } = req.params;
+  const userId = req.user.id;
+  const like = await prisma.like.findUnique({
+    where: { userId_commentId: { userId, commentId } },
+  });
+  if (like) {
+    await prisma.like.delete({
+      where: { userId_commentId: { userId, commentId } },
+    });
+  } else {
+    await prisma.like.create({
+      data: {
+        commentId,
+        userId,
+      },
+    });
+  }
+  return res.status(200).json({ message: 'Toggled Successfully' });
+});
 
 const deleteComment = async (req, res, next) => {
+  const userId = req.user.id;
   const { id } = req.params;
   const comment = await prisma.comment.findFirst({
     where: {
@@ -223,4 +268,6 @@ export {
   createComment,
   updateComment,
   deleteComment,
+  handleLikeUpdate,
+  getCommentLike,
 };

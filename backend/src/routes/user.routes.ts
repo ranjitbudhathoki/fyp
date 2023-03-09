@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-router.get('/user', getCurrentUser);
+router.get('/me', getCurrentUser);
 
 router.patch('/:id', updateProfile);
 

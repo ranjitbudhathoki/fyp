@@ -16,8 +16,12 @@ import helpPostRouter from './routes/help-post.routes';
 import matchPostRouter from './routes/match-post.routes';
 import prisma from './services/prisma';
 import path from 'path';
+import axios from 'axios';
+import fs from 'fs';
+import multer from 'multer';
+import Prism from 'prismjs';
 const app = express();
-
+import hljs from 'highlight.js';
 app.use(express.json());
 
 app.use(
@@ -34,15 +38,16 @@ app.use(
     keys: [process.env.COOKIE_KEY as string],
   })
 );
-app.use(express.static(path.join(__dirname, 'images')));
 
 console.log(__dirname);
-console.log(express.static('images/'));
-
-app.use('/images', express.static('images/'));
+app.use(express.static('images/'));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(express.json());
+app.use(express.static('images/'));
+app.use('/images', express.static('images/'));
 
 app.use('/auth', authRouter);
 
@@ -60,12 +65,12 @@ app.post('/api/save-snippet', async (req, res) => {
   // Create canvas and draw code
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#272822'; // set background color
+  ctx.fillStyle = '#FFF'; // set background color
   ctx.fillRect(0, 0, width, height); // fill background color
-  ctx.font = `14px monospace`;
-  ctx.fillStyle = '#f8f8f2'; // set text color
-  ctx.fillText(code, 10, 20);
+  ctx.font = `14px consolas bold`;
 
+  ctx.fillStyle = '#000'; // set text color
+  ctx.fillText(code, 10, 20);
   // Generate unique filename for image
   const filename = `${nanoid()}.png`;
 
