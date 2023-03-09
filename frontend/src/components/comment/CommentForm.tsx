@@ -11,7 +11,7 @@ export function CommentForm({
     e.preventDefault();
     console.log('this is from the handle submit');
     if (!message) return alert('Missing Required Fields');
-    onSubmit({ comment: message });
+    onSubmit({ body: message });
   }
 
   return (
@@ -26,7 +26,7 @@ export function CommentForm({
         autoFocus={autoFocus}
         onChange={(event) => setMessage(event.target.value)}
         placeholder="Enter a comment..."
-        className="py-2 pl-2 pr-10 border-2  border-dark-gray w-full bg-custom-light-dark text-gray-300 focus:outline-none text-sm rounded-2xl"
+        className="py-2 pl-2 pr-10 border-2  border-dark-gray w-full  text-black focus:outline-none text-sm rounded-2xl"
       />
     </form>
   );

@@ -15,7 +15,6 @@ import Profile from './components/Profile/Profile';
 import AdminLogin from './pages/AdminLogin';
 import Feed from './pages/Feed';
 import HelpPostDetail from './pages/HelpPostDetail';
-import Comment from './components/comment/Comment';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -23,7 +22,7 @@ const App: React.FC = () => {
   const { data } = useQuery({
     queryKey: ['user-data'],
     queryFn: async function ({ queryKey }) {
-      const res = await axios.get(`/api/users/user`);
+      const res = await axios.get(`/api/users/me`);
       return res.data;
     },
   });
