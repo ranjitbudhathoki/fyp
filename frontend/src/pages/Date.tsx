@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import TinderCard from 'react-tinder-card';
 import { FcLike } from 'react-icons/fc/';
 import { useQueryClient, useQuery } from 'react-query';
@@ -30,29 +30,24 @@ const db = [
 function Date() {
   console.log('date');
 
-  const queryClinet = useQueryClient();
+  const queryClient = useQueryClient();
 
-  const [currentIndex, setCurrentIndex] = useState(db.length - 1);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [lastDirection, setLastDirection] = useState();
   const [loveSelected, setLoveSelected] = useState(true);
   const [friendshipSelected, setFriendshipSelected] = useState(false);
-  // const { user } = useSelector((state: any) => state.auth);
-  const data: any = queryClinet.getQueryData(['user-data']);
+  const { user } = useSelector((state: any) => state.auth);
 
-  console.log(data?.user.id);
-
-  const { data: posts } = useQuery({
+  const { data: posts, isLoading: loadingPost } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
-      const response = await axios.get(
-        `/api/match-posts/user/${data?.user.id}`
-      );
+      const response = await axios.get(`/api/match-posts/user/${user.id}`);
       console.log(response);
       return response.data;
     },
   });
 
-  console.log(posts);
+  const post = posts?.data?.post;
 
   const { data: solutions, isLoading } = useQuery({
     queryKey: ['solutions'],
@@ -60,6 +55,7 @@ function Date() {
       const res = await axios.get(`/api/solutions/${posts?.data?.post.id}`);
       return res.data;
     },
+    enabled: !!post,
   });
 
   console.log(solutions);
@@ -75,16 +71,20 @@ function Date() {
         .map((i) => React.createRef()),
     []
   );
+  // if (loadingPost) {
+  //   return <div>loading...</div>;
+  // }
 
   if (isLoading) {
-    return <div>loading...</div>;
+    return <h1>Loadiing solutions</h1>;
   }
+
   const updateCurrentIndex = (val) => {
     setCurrentIndex(val);
     currentIndexRef.current = val;
   };
 
-  const canGoBack = currentIndex < db.length - 1;
+  // const canGoBack = currentIndex < db.length - 1;
 
   const canSwipe = currentIndex >= 0;
 
@@ -111,9 +111,10 @@ function Date() {
 
   return (
     <div className="">
-      <div className="flex flex-col justify-center  items-center">
+      <div className="flex flex-col justify-center  items-center h-full mt-0">
         <div className="cardContainer">
-          {solutions.map((soln: any, index: any) => (
+          {loadingPost && <div>Loading posts</div>}
+          {solutions?.map((soln: any, index: any) => (
             <TinderCard
               ref={childRefs[index]}
               className="swipe"
@@ -121,23 +122,12 @@ function Date() {
               onSwipe={(dir) => swiped(dir, soln.name, index)}
               onCardLeftScreen={() => outOfFrame(soln.name, index)}
             >
-              {/* <div
-                style={{
-                  backgroundImage: `url(http://localhost:8000/images/${soln.imgUrl})`,
-                  height: '200px',
-                  wid
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                }}
-                className="card"
-              >
-                <h3>{soln.body}</h3>
-              </div> */}
-              <div className="mb-5">
+              <div className="">
                 <img
                   src={`http://localhost:8000/images/${soln.imgUrl}`}
                   alt="solutions"
-                  className="h-[330px] w-[260px]"
+                  // className="h-[360px] w-[400px]"
+                  className="object-fill h-96 w-90"
                 />
               </div>
             </TinderCard>
@@ -166,7 +156,7 @@ function Date() {
           <h2 className="infoText">Swipe a card or press a button!</h2>
         )}
       </div>
-      <div className="flex  top-20 absolute right-0 m-0">
+      {/* <div className="flex  top-20 absolute right-0 m-0">
         <button
           className={`text-white font-bold py-2 px-4 rounded-full ${
             loveSelected ? 'bg-red-500' : 'bg-gray-500'
@@ -189,7 +179,7 @@ function Date() {
         >
           Friendship
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

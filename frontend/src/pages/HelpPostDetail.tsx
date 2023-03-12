@@ -68,33 +68,44 @@ const HelpPostDetail = () => {
   let rootComments = commentsByParentId['null'];
   console.log('root comments', rootComments);
   if (isLoading) return <div>Loading.... </div>;
+
   return (
-    <div>
-      {singlePostData && (
-        <div>
-          <h1>{singlePostData.title}</h1>
-          <p>{singlePostData.body}</p>
-        </div>
-      )}
-      <section
-        className="h-[480px] overflow-y-scroll
-      "
-      >
-        <CommentForm onSubmit={createComment} autoFocus />
-        {rootComments != null && rootComments.length > 0 && (
-          <div className="mt-4">
-            <CommentList
-              comments={rootComments}
-              getReplies={getReplies}
-              post={singlePostData}
-              postId={id}
-              // createdAt={singlePostData.createdAt}
-              // updatedAt={singlePostData.updatedAt}
+    <>
+      <div className="mt-2 mx-10 mb-16 max-w-screen-md rounded-2xl border p-4 bg-gray-900  ">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3.5">
+            <img
+              src={singlePostData.user.photoUrl}
+              alt={`${singlePostData.user.username}'s profile`}
+              className="h-10 w-10 rounded-full bg-yellow-500 object-cover"
             />
+            <div className="flex flex-col">
+              <b className="mb-2 capitalize">{singlePostData.user.username}</b>
+            </div>
           </div>
-        )}
-      </section>
-    </div>
+        </div>
+        <div className="mt-7 whitespace-pre-wrap">{singlePostData.body}</div>
+      </div>
+
+      <div>
+        <section
+          className="h-[340px] overflow-y-scroll
+      "
+        >
+          <CommentForm onSubmit={createComment} autoFocus />
+          {rootComments != null && rootComments.length > 0 && (
+            <div className="mt-4">
+              <CommentList
+                comments={rootComments}
+                getReplies={getReplies}
+                post={singlePostData}
+                postId={id}
+              />
+            </div>
+          )}
+        </section>
+      </div>
+    </>
   );
 };
 

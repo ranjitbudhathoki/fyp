@@ -15,6 +15,7 @@ const Collaborator: React.FC = () => {
       body: string;
       project_link: string;
       tech_stack: string;
+      image: string;
     }[]
   );
 
@@ -27,15 +28,37 @@ const Collaborator: React.FC = () => {
     },
   });
 
+  // const createPostMutation = useMutation({
+  //   mutationFn: async (form: any) => {
+  //     console.log(form);
+  //     await axios.post('/api/help-posts/', {
+  //       authorID: user.id,
+  //       title: form.elements.topic.value,
+  //       body: form.elements.problem_description.value,
+  //       tech_stack: [form.elements.tech_stack.value],
+  //       project_link: form.elements.project_link.value,
+  //       image: form.elements.file_upload.files[0],
+  //     });
+  //   },
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries(['help-posts']);
+  //   },
+  // });
+
   const createPostMutation = useMutation({
     mutationFn: async (form: any) => {
       console.log(form);
-      await axios.post('/api/help-posts/', {
-        authorID: user.id,
-        title: form.elements.topic.value,
-        body: form.elements.problem_description.value,
-        tech_stack: [form.elements.tech_stack.value],
-        project_link: form.elements.project_link.value,
+      const formData = new FormData();
+      formData.append('authorID', user.id);
+      formData.append('title', form.elements.topic.value);
+      formData.append('body', form.elements.problem_description.value);
+      formData.append('tech_stack', form.elements.tech_stack.value);
+      formData.append('project_link', form.elements.project_link.value);
+      formData.append('image', form.elements.image_upload.files[0]);
+      await axios.post('/api/help-posts/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
     },
     onSuccess: () => {
@@ -52,6 +75,7 @@ const Collaborator: React.FC = () => {
     const body = form.elements.problem_description.value;
     const project_link = form.elements.project_link.value;
     const tech_stack = form.elements.tech_stack.value;
+    const image = form.elements.image_upload.files[0];
     setPosts([
       ...posts,
       {
@@ -59,10 +83,39 @@ const Collaborator: React.FC = () => {
         body,
         project_link,
         tech_stack,
+        image,
       },
     ]);
     setShowModal(false);
   };
+
+  // const handleCreatePost = async (event: any) => {
+  //   event.preventDefault();
+  //   const form = event.currentTarget;
+
+  //   const title = form.elements.topic.value;
+  //   const body = form.elements.problem_description.value;
+  //   const project_link = form.elements.project_link.value;
+  //   const tech_stack = form.elements.tech_stack.value;
+  //   const image = form.elements.image_upload.files[0];
+
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append('authorID', user.id);
+  //     formData.append('title', title);
+  //     formData.append('body', body);
+  //     formData.append('tech_stack', tech_stack);
+  //     formData.append('project_link', project_link);
+  //     formData.append('image', image);
+
+  //     await axios.post('/api/help-posts/', formData);
+
+  //     queryClient.invalidateQueries(['help-posts']);
+  //     setShowModal(false);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const toggleModal = () => {
     setShowModal(!showModal);

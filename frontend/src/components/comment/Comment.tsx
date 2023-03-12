@@ -332,6 +332,7 @@ function Comment({
         console.log('error', error);
       },
       onSuccess: (data) => {
+        setIsReplying(false);
         queryClient.invalidateQueries(['single-post'], postId);
       },
     }

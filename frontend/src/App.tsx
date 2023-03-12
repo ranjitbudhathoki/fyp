@@ -15,7 +15,8 @@ import Profile from './components/Profile/Profile';
 import AdminLogin from './pages/AdminLogin';
 import Feed from './pages/Feed';
 import HelpPostDetail from './pages/HelpPostDetail';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const App: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -60,6 +61,9 @@ const App: React.FC = () => {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <div>
+        <ToastContainer position="bottom-center" />
+      </div>
     </main>
   );
 };
