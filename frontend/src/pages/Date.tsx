@@ -4,41 +4,19 @@ import { FcLike } from 'react-icons/fc/';
 import { useQueryClient, useQuery } from 'react-query';
 import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
-const db = [
-  {
-    name: 'Getify',
-    url: 'https://avatars.githubusercontent.com/u/150330?v=4',
-  },
-  {
-    name: 'Ben Awad',
-    url: 'https://avatars.githubusercontent.com/u/7872329?v=4',
-  },
-  {
-    name: 'FireShip',
-    url: 'https://avatars.githubusercontent.com/u/10172199?v=4',
-  },
-  {
-    name: 'Jonas',
-    url: 'https://avatars.githubusercontent.com/u/18718850?v=4',
-  },
-  {
-    name: 'Stephen Grider',
-    url: 'https://avatars.githubusercontent.com/u/5003903?v=4',
-  },
-];
 
 function Date() {
   console.log('date');
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lastDirection, setLastDirection] = useState();
-  const [loveSelected, setLoveSelected] = useState(true);
-  const [friendshipSelected, setFriendshipSelected] = useState(false);
+  // const [loveSelected, setLoveSelected] = useState(true);
+  // const [friendshipSelected, setFriendshipSelected] = useState(false);
   const { user } = useSelector((state: any) => state.auth);
 
-  const { data: posts, isLoading: loadingPost } = useQuery({
+  const { data: posts, isLoading: loadingPost,  } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
       const response = await axios.get(`/api/match-posts/user/${user.id}`);
@@ -66,7 +44,7 @@ function Date() {
 
   const childRefs: any = useMemo(
     () =>
-      Array(db.length)
+      Array(solutions?.length)
         .fill(0)
         .map((i) => React.createRef()),
     []
@@ -90,6 +68,7 @@ function Date() {
 
   // set last direction and decrease current index
   const swiped = (direction, nameToDelete, index) => {
+    console.log(index);
     setLastDirection(direction);
     updateCurrentIndex(index - 1);
   };
@@ -104,9 +83,11 @@ function Date() {
   };
 
   const swipe = async (dir) => {
-    if (canSwipe && currentIndex < db.length) {
+    if (canSwipe && currentIndex < solutions?.length) {
       await childRefs[currentIndex].current.swipe(dir); // Swipe the card!
     }
+    // if (dir == 'left') {
+    // }
   };
 
   return (
@@ -185,3 +166,121 @@ function Date() {
 }
 
 export default Date;
+//
+
+// import React, { useState, useMemo, useRef } from 'react';
+// import { useQuery } from 'react-query';
+// import { useSelector } from 'react-redux';
+// import TinderCard from 'react-tinder-card';
+// import axios from '../utils/axios-instance';
+// function Advanced() {
+//   const { user } = useSelector((state: any) => state.auth);
+
+//   const { data: posts, isLoading: loadingPost } = useQuery({
+//     queryKey: ['posts'],
+//     queryFn: async () => {
+//       const response = await axios.get(`/api/match-posts/user/${user.id}`);
+//       console.log(response);
+//       return response.data;
+//     },
+//   });
+
+//   const post = posts?.data?.post;
+
+//   const { data: solutions, isLoading } = useQuery({
+//     queryKey: ['solutions'],
+//     queryFn: async function () {
+//       const res = await axios.get(`/api/solutions/${posts?.data?.post.id}`);
+//       return res.data;
+//     },
+//     enabled: !!post,
+//   });
+
+//   const [currentIndex, setCurrentIndex] = useState(0);
+//   const [lastDirection, setLastDirection] = useState();
+//   const [solution, setSolutions] = useState(solutions);
+
+//   console.log('solution state', solution);
+//   // used for outOfFrame closure
+
+//   const canGoBack = currentIndex < solutions?.length - 1;
+
+//   const canSwipe = currentIndex >= 0;
+
+//   // set last direction and decrease current index
+
+//   const swipe = async (dir) => {
+//     if (dir === 'right') {
+//       setSolutions('');
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <link
+//         href="https://fonts.googleapis.com/css?family=Damion&display=swap"
+//         rel="stylesheet"
+//       />
+//       <link
+//         href="https://fonts.googleapis.com/css?family=Alatsi&display=swap"
+//         rel="stylesheet"
+//       />
+//       <h1>React Tinder Card</h1>
+//       <div className="cardContainer">
+//         {solution?.map((soln: any, index) => (
+//           // <TinderCard
+//           //   ref={childRefs[index]}
+//           //   className="swipe"
+//           //   key={soln.name}
+//           //   onSwipe={(dir) => swiped(dir, character.name, index)}
+//           //   onCardLeftScreen={() => outOfFrame(character.name, index)}
+//           // >
+//           //   <div
+//           //     style={{ backgroundImage: 'url(' + character.url + ')' }}
+//           //     className="card"
+//           //   >
+//           //     <h3>{character.name}</h3>
+//           //   </div>
+//           // </TinderCard>
+
+//           <TinderCard className="swipe" key={soln.id}>
+//             <div className="">
+//               <img
+//                 src={`http://localhost:8000/images/${soln.imgUrl}`}
+//                 alt="solutions"
+//                 // className="h-[360px] w-[400px]"
+//                 className="object-fill h-96 w-90"
+//               />
+//             </div>
+//           </TinderCard>
+//         ))}
+//       </div>
+//       <div className="buttons">
+//         <button
+//           style={{ backgroundColor: !canSwipe && '#c3c4d3' }}
+//           onClick={() => swipe('left')}
+//         >
+//           Swipe left!
+//         </button>
+
+//         <button
+//           style={{ backgroundColor: !canSwipe && '#c3c4d3' }}
+//           onClick={() => swipe('right')}
+//         >
+//           Swipe right!
+//         </button>
+//       </div>
+//       {lastDirection ? (
+//         <h2 key={lastDirection} className="infoText">
+//           You swiped {lastDirection}
+//         </h2>
+//       ) : (
+//         <h2 className="infoText">
+//           Swipe a card or press a button to get Restore Card button visible!
+//         </h2>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default Advanced;

@@ -10,6 +10,10 @@ import EmojiPicker, {
   Theme,
 } from 'emoji-picker-react';
 
+import io from 'socket.io-client';
+
+// const socket = io('http://localhost:8000');
+
 function Chat() {
   const emojiRef = useRef(null) as RefObject<HTMLDivElement>;
   const [messages, setMessages] = useState<string[]>([]);

@@ -572,8 +572,12 @@ button {
   position: absolute;
 }
 
-@media (min-width: 1025px) {
+/* @media (min-width: 1025px) {
   body {
     overflow: hidden;
   }
+} */
+
+body {
+  overflow: hidden  ;
 }

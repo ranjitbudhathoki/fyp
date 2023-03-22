@@ -1,11 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import HelpPost from '../components/collaborator/HelpPost';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Collaborator: React.FC = () => {
+  const [selectedFile, setSelectedFile] = useState();
+  const [preview, setPreview] = useState();
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(undefined);
+      return;
+    }
+
+    const objectUrl: any = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
+
+    //free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+
+  const onSelectFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedFile(undefined);
+      return;
+    }
+
+    setSelectedFile(e.target.files[0]);
+  };
+
   const queryClient = useQueryClient();
   const { user } = useSelector((state: any) => state.auth);
   const [showModal, setShowModal] = useState(false);
@@ -47,14 +73,15 @@ const Collaborator: React.FC = () => {
 
   const createPostMutation = useMutation({
     mutationFn: async (form: any) => {
-      console.log(form);
       const formData = new FormData();
+      console.log('this', form.elements.image_upload.files[0]);
       formData.append('authorID', user.id);
       formData.append('title', form.elements.topic.value);
       formData.append('body', form.elements.problem_description.value);
       formData.append('tech_stack', form.elements.tech_stack.value);
       formData.append('project_link', form.elements.project_link.value);
       formData.append('image', form.elements.image_upload.files[0]);
+      console.log(formData);
       await axios.post('/api/help-posts/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -63,6 +90,10 @@ const Collaborator: React.FC = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['help-posts']);
+      toast.success('post created');
+    },
+    onError: () => {
+      toast.error('error creating post created');
     },
   });
 
@@ -72,6 +103,7 @@ const Collaborator: React.FC = () => {
     console.log(form);
     createPostMutation.mutate(form);
     const title = form.elements.topic.value;
+    console.log('loggin titles', title);
     const body = form.elements.problem_description.value;
     const project_link = form.elements.project_link.value;
     const tech_stack = form.elements.tech_stack.value;
@@ -216,11 +248,13 @@ const Collaborator: React.FC = () => {
                 </label>
                 <div className="mt-1">
                   <input
+                    onChange={onSelectFile}
                     type="file"
                     name="image_upload"
                     id="image_upload"
                     className="shadow-sm focus:ring-blue-500  focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   />
+                  {selectedFile && <img src={preview} />}
                 </div>
               </div>
               <div className="mt-4">
@@ -259,6 +293,9 @@ const Collaborator: React.FC = () => {
             <div className="px-4 py-3 flex justify-center">
               <button
                 type="submit"
+                // onClick={() => {
+                //   toast.success('post created');
+                // }}
                 className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
               >
                 Submit

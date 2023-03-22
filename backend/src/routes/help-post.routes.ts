@@ -7,12 +7,11 @@ import {
   createHelpPost,
   updatehelpPost,
   deleteHelpPost,
-  createComment,
-  handleLikeUpdate,
+  uploadPostImage,
 } from '../controllers/help-post.controller';
 
 import commentRouter from './comment.routes';
-router.route('/').get(getAllHelpPost).post(createHelpPost);
+router.route('/').get(getAllHelpPost).post(uploadPostImage, createHelpPost);
 
 router
   .route('/:id')
@@ -21,7 +20,5 @@ router
   .get(getHelpPostById);
 
 router.use('/:id/comments', commentRouter);
-
-// router.route('/:id/comments').post(createComment).get(handleLikeUpdate);
 
 export default router;
