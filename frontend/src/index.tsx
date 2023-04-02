@@ -1,5 +1,4 @@
 import React from 'react';
-import './styles/style.css';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,6 +6,9 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store/store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import AdminContextProvider from './context/AdminContext';
+import './styles/style.css';
+import './styles/tailwind.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,12 +23,14 @@ const container = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(container);
 
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-    <ReactQueryDevtools />
-  </QueryClientProvider>
+  <BrowserRouter>
+    <AdminContextProvider>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </Provider>
+    </AdminContextProvider>
+  </BrowserRouter>
 );

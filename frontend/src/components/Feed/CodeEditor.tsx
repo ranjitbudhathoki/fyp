@@ -66,10 +66,11 @@ function CodeEditor({ postId, userId }) {
       <div className="flex flex-col justify-self-center">
         <Editor
           height="70vh"
+          width="400px"
           language={language}
           value={value}
           onChange={handleEditorChange}
-          className="p-5"
+          className="p-5 overflow-hidden"
         />
       </div>
 
@@ -86,7 +87,8 @@ function CodeEditor({ postId, userId }) {
         </a>
         <div className="text-gray-500">
           Note: The canvas will be set to width 400px and height{' '}
-          {Math.floor((400 * 10) / 7)}px for the image
+          {Math.floor((400 * 10) / 7)}px for the image.If the code is long we
+          recommend you to upload image instead.
         </div>
       </div>
 

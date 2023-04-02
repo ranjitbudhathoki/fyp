@@ -1,4 +1,4 @@
-function PopUpModal() {
+function Modal() {
   return (
     <>
       <button
@@ -77,4 +77,4 @@ function PopUpModal() {
   );
 }
 
-export default PopUpModal;
+export default Modal;

@@ -4,7 +4,6 @@ import Header from '../components/Header';
 import { useSelector } from 'react-redux';
 import Profile from '../components/Profile/ProfileForm';
 import SideNavLink from '../components/SideBar/SideNavLink';
-import { FaFire } from 'react-icons/fa';
 
 const Home: React.FC = () => {
   const { user } = useSelector((state: any) => state.auth);
@@ -33,6 +32,8 @@ const Home: React.FC = () => {
             {/* <SideNavLink url="/posts">Projects</SideNavLink> */}
             <SideNavLink url="/collaborator">Collaborator</SideNavLink>
             <SideNavLink url="/chat">Chat</SideNavLink>
+            <SideNavLink url="/popular">Popular Repos</SideNavLink>
+
             <SideNavLink url="/profile">Profile</SideNavLink>
           </ul>
         </aside>

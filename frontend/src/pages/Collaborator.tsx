@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -7,8 +7,11 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Collaborator: React.FC = () => {
+  const queryClient = useQueryClient();
+  const { user } = useSelector((state: any) => state.auth);
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (!selectedFile) {
@@ -32,61 +35,17 @@ const Collaborator: React.FC = () => {
     setSelectedFile(e.target.files[0]);
   };
 
-  const queryClient = useQueryClient();
-  const { user } = useSelector((state: any) => state.auth);
-  const [showModal, setShowModal] = useState(false);
-  const [posts, setPosts] = useState(
-    [] as {
-      title: string;
-      body: string;
-      project_link: string;
-      tech_stack: string;
-      image: string;
-    }[]
-  );
-
   const { data } = useQuery({
     queryKey: ['help-posts'],
     queryFn: async () => {
       const response = await axios.get('/api/help-posts/');
-
       return response.data;
     },
   });
 
-  // const createPostMutation = useMutation({
-  //   mutationFn: async (form: any) => {
-  //     console.log(form);
-  //     await axios.post('/api/help-posts/', {
-  //       authorID: user.id,
-  //       title: form.elements.topic.value,
-  //       body: form.elements.problem_description.value,
-  //       tech_stack: [form.elements.tech_stack.value],
-  //       project_link: form.elements.project_link.value,
-  //       image: form.elements.file_upload.files[0],
-  //     });
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries(['help-posts']);
-  //   },
-  // });
-
   const createPostMutation = useMutation({
-    mutationFn: async (form: any) => {
-      const formData = new FormData();
-      console.log('this', form.elements.image_upload.files[0]);
-      formData.append('authorID', user.id);
-      formData.append('title', form.elements.topic.value);
-      formData.append('body', form.elements.problem_description.value);
-      formData.append('tech_stack', form.elements.tech_stack.value);
-      formData.append('project_link', form.elements.project_link.value);
-      formData.append('image', form.elements.image_upload.files[0]);
-      console.log(formData);
-      await axios.post('/api/help-posts/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    mutationFn: async (data) => {
+      await axios.post('/api/help-posts/', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['help-posts']);
@@ -97,57 +56,22 @@ const Collaborator: React.FC = () => {
     },
   });
 
-  const handleCreatePost = async (event: any) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    console.log(form);
-    createPostMutation.mutate(form);
-    const title = form.elements.topic.value;
-    console.log('loggin titles', title);
-    const body = form.elements.problem_description.value;
-    const project_link = form.elements.project_link.value;
-    const tech_stack = form.elements.tech_stack.value;
-    const image = form.elements.image_upload.files[0];
-    setPosts([
-      ...posts,
-      {
-        title,
-        body,
-        project_link,
-        tech_stack,
-        image,
-      },
-    ]);
+    const formData = new FormData(event.target);
+    const helpPost: any = {
+      userId: user.id,
+      title: formData.get('topic') ?? '',
+      body: formData.get('description') ?? '',
+      project_link: formData.get('link') ?? '',
+      tech_stack: formData.get('tech') ?? '',
+      image: formData.get('image'),
+    };
+
+    createPostMutation.mutate(helpPost);
+
     setShowModal(false);
   };
-
-  // const handleCreatePost = async (event: any) => {
-  //   event.preventDefault();
-  //   const form = event.currentTarget;
-
-  //   const title = form.elements.topic.value;
-  //   const body = form.elements.problem_description.value;
-  //   const project_link = form.elements.project_link.value;
-  //   const tech_stack = form.elements.tech_stack.value;
-  //   const image = form.elements.image_upload.files[0];
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('authorID', user.id);
-  //     formData.append('title', title);
-  //     formData.append('body', body);
-  //     formData.append('tech_stack', tech_stack);
-  //     formData.append('project_link', project_link);
-  //     formData.append('image', image);
-
-  //     await axios.post('/api/help-posts/', formData);
-
-  //     queryClient.invalidateQueries(['help-posts']);
-  //     setShowModal(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -199,7 +123,7 @@ const Collaborator: React.FC = () => {
           onClick={() => setShowModal(false)}
         />
         <div className="fixed inset-y-0 right-0 w-1/3 bg-black shadow-lg p-3 h-[650px] overflow-y-scroll">
-          <form onSubmit={handleCreatePost}>
+          <form onSubmit={handleSubmit}>
             <div className="px-4 py-5 m-0">
               <h2
                 className="text-lg font-bold text-gray-200 text-center"
@@ -225,15 +149,15 @@ const Collaborator: React.FC = () => {
               </div>
               <div className="mt-4">
                 <label
-                  htmlFor="problem_description"
+                  htmlFor="description"
                   className="blocktext-sm font-medium text-gray-400"
                 >
                   Problem Description
                 </label>
                 <div className="mt-1">
                   <textarea
-                    name="problem_description"
-                    id="problem_description"
+                    name="description"
+                    id="description"
                     rows={8}
                     className="p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   ></textarea>
@@ -241,7 +165,7 @@ const Collaborator: React.FC = () => {
               </div>
               <div className="mt-4">
                 <label
-                  htmlFor="image_upload"
+                  htmlFor="image"
                   className="block text-sm font-medium text-gray-400"
                 >
                   Upload:
@@ -250,8 +174,8 @@ const Collaborator: React.FC = () => {
                   <input
                     onChange={onSelectFile}
                     type="file"
-                    name="image_upload"
-                    id="image_upload"
+                    name="image"
+                    id="image"
                     className="shadow-sm focus:ring-blue-500  focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   />
                   {selectedFile && <img src={preview} />}
@@ -268,7 +192,7 @@ const Collaborator: React.FC = () => {
                   <input
                     type="text"
                     name="project_link"
-                    id="project_link"
+                    id="link"
                     className=" p-2 shadow-sm focus:ring-blue-500 h-10 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   />
                 </div>
@@ -284,7 +208,7 @@ const Collaborator: React.FC = () => {
                   <input
                     type="text"
                     name="tech_stack"
-                    id="project_link"
+                    id="tech"
                     className=" p-2 shadow-sm focus:ring-blue-500 h-10 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   />
                 </div>
@@ -293,9 +217,6 @@ const Collaborator: React.FC = () => {
             <div className="px-4 py-3 flex justify-center">
               <button
                 type="submit"
-                // onClick={() => {
-                //   toast.success('post created');
-                // }}
                 className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
               >
                 Submit
@@ -311,7 +232,6 @@ const Collaborator: React.FC = () => {
           </form>
         </div>
       </div>
-      {/* </div> */}
       <div className="flex flex-col ">{renderedPosts}</div>
     </>
   );

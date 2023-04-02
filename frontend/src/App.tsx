@@ -17,6 +17,8 @@ import Feed from './pages/Feed';
 import HelpPostDetail from './pages/HelpPostDetail';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Popular from './pages/Popular';
+import Admin from './pages/Admin';
 const App: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -26,6 +28,7 @@ const App: React.FC = () => {
       const res = await axios.get(`/api/users/me`);
       return res.data;
     },
+    enabled: !location.pathname.includes('system'),
   });
 
   useEffect(() => {
@@ -40,8 +43,9 @@ const App: React.FC = () => {
       bg-[#18191a] font-poppins"
     >
       <Routes>
+        <Route path="/system/admin/login" element={<AdminLogin />} />
+        <Route path="/system/admin" element={<Admin />} />
         <Route path="/login" element={<Login />} />
-
         <Route
           path="/"
           element={
@@ -55,6 +59,8 @@ const App: React.FC = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="chat" element={<Chat />} />
           <Route path="collaborator" element={<Collaborator />} />
+          <Route path="popular" element={<Popular />} />
+
           <Route path="collaborator/posts/:id" element={<HelpPostDetail />} />
           <Route path="*" element={<NotFound />} />
         </Route>

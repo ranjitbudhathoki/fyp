@@ -1,4 +1,4 @@
-import React, { RefObject, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 import {
   FaceSmileIcon,
   PaperAirplaneIcon,
@@ -13,19 +13,29 @@ import EmojiPicker, {
 import io from 'socket.io-client';
 
 // const socket = io('http://localhost:8000');
+// const socket = io('http://localhost:8000');
 
 function Chat() {
   const emojiRef = useRef(null) as RefObject<HTMLDivElement>;
-  const [messages, setMessages] = useState<string[]>([]);
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState('');
+
+  const [messages, setMessages] = useState([]);
   const [showPicker, setShowPicker] = useState<boolean>(false);
 
-  const handleMessageSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!message) return;
-    setMessage('');
-    setMessages([...messages, message]);
-  };
+  const handleMessageSubmit = (event: React.FormEvent) => {};
+  //   event.preventDefault();
+  //   if (!message) return;
+  //   socket.emit('send-message', message);
+  //   setMessage('');
+  //   // setMessages([...messages, message]);
+  // };
+
+  // useEffect(() => {
+  //   socket.on('receive-message', (payload) => {
+  //     // console.log('useEffect', message);
+  //     setMessages([...messages, payload]);
+  //   });
+  // });
 
   const onEmojiClick = (emojiObject: EmojiClickData, event: MouseEvent) => {
     setMessage(message + emojiObject.emoji);
@@ -41,12 +51,12 @@ function Chat() {
       <div className="flex-grow flex flex-col  ">
         <div className="flex flex-col gap-2 flex-grow p-3 overflow-y-scroll h-96 ">
           {messages.map((mssg, index) => (
-            <div
-              className="flex text-base max-w-[300px] shadow-sm rounded-md odd:self-start even:self-end"
-              key={index}
-            >
-              <p className="bg-[#333] p-2 rounded-2xl">{mssg}</p>
-            </div>
+            // <div
+            //   className="flex text-base max-w-[300px] shadow-sm rounded-md odd:self-start even:self-end"
+            //   key={index}
+            // >
+            <p className="bg-[#333] p-2 rounded-2xl">{mssg}</p>
+            // </div>
           ))}
         </div>
         <div className="relative flex items-center gap-3 p-2 border-t-2 border-[#333]">
