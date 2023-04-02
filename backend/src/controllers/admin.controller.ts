@@ -1,12 +1,19 @@
 import { catchAsync } from '../utils/catchAsnyc';
 import AppError from '../utils/appError';
+import prisma from '../services/prisma';
 
-const login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+const handleAdminLogin = catchAsync(async (req, res, next) => {
+  const { username, password } = req.body;
 
-  if (!email || !password) {
-    return next(new AppError('Please provide email and password!', 400));
+  if (!username || !password) {
+    return next(new AppError('Please provide username and password!', 400));
+  }
+
+  const admin = await prisma.admin.findFirst({
+    where: { username },
+  });
+
+  if (!admin) {
+    return next(new AppError('You are not allowded to login!', 401));
   }
 });
-
-export { login };

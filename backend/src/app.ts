@@ -1,7 +1,6 @@
 import express, { Request, Response, urlencoded } from 'express';
 require('./services/passport');
 import passport from 'passport';
-import bodyParser from 'body-parser';
 import checkLoggedIn from './utils/checkLoggedIn';
 import cookieSession from 'cookie-session';
 import cors from 'cors';
@@ -132,5 +131,3 @@ process.on('uncaughtException', (error: Error) => {
 });
 
 export default app;
-
-//api endpoints that generates the image of the given code snippet
