@@ -1,37 +1,6 @@
 import prisma from '../services/prisma';
 import { catchAsync } from '../utils/catchAsnyc';
 import AppError from '../utils/appError';
-import multer from 'multer';
-
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/img/help-posts/');
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split('/')[1];
-    cb(null, `posts-${req.user.id}-${Date.now()}.${ext}`);
-  },
-});
-
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb(new AppError('Not an image! Please upload only images', 400), false);
-  }
-};
-
-const upload = multer({ storage: multerStorage, FileFilter: multerFilter });
-
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
-
-const uploadPostImage = upload.single('photo');
 
 const getAllHelpPost = catchAsync(async (req, res, next) => {
   const posts = await prisma.helpPost.findMany({
@@ -80,10 +49,9 @@ const getHelpPostById = catchAsync(async (req, res, next) => {
 });
 
 const createHelpPost = catchAsync(async (req, res, next) => {
-  console.log('from create help post');
-  console.log(req);
-  const { title, body, tech_stack, project_link } = req.body;
+  console.log(req.body);
 
+  const { title, body, tech_stack, project_link } = req.body;
   const post = await prisma.helpPost.create({
     data: {
       title,
@@ -159,7 +127,7 @@ const deleteHelpPost = async (req, res, next) => {
 const createComment = catchAsync(async (req, res, next) => {
   const { body, parentId } = req.body;
   const { id } = req.params;
-  console.log(id, parentId, body);
+  // console.log(id, parentId, body);
 
   const comment = await prisma.comment.create({
     data: {
@@ -302,5 +270,5 @@ export {
   deleteComment,
   handleLikeUpdate,
   getCommentLike,
-  uploadPostImage,
+  // uploadPostImage,
 };

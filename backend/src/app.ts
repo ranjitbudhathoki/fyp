@@ -1,7 +1,7 @@
 import express, { Request, Response, urlencoded } from 'express';
 require('./services/passport');
-
 import passport from 'passport';
+import bodyParser from 'body-parser';
 import checkLoggedIn from './utils/checkLoggedIn';
 import cookieSession from 'cookie-session';
 import cors from 'cors';
@@ -15,14 +15,11 @@ import userRouter from './routes/user.routes';
 import helpPostRouter from './routes/help-post.routes';
 import matchPostRouter from './routes/match-post.routes';
 import prisma from './services/prisma';
-import path from 'path';
-import axios from 'axios';
-import fs from 'fs';
-import multer from 'multer';
-import Prism from 'prismjs';
+import matchRouter from './routes/match.routes';
+import fileUpload from 'express-fileupload';
 const app = express();
-import hljs from 'highlight.js';
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.use(
   cors({
@@ -30,6 +27,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(fileUpload());
 
 app.use(
   cookieSession({
@@ -39,27 +38,23 @@ app.use(
   })
 );
 
-console.log(__dirname);
 app.use(express.static('images/'));
-
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(express.json());
 app.use(express.static('images/'));
 app.use('/images', express.static('images/'));
 
 app.use('/auth', authRouter);
-
 app.use('/api/users', checkLoggedIn, userRouter);
 app.use('/api/help-posts', checkLoggedIn, helpPostRouter);
-app.use('/api/match-posts', checkLoggedIn, matchPostRouter);
-
+app.use('/api/match-posts', matchPostRouter);
+app.use('/api/match', checkLoggedIn, matchRouter);
 app.post('/api/save-snippet', async (req, res) => {
   const { code } = req.body;
 
   // Set canvas dimensions
-  const width = 400;
+  const width = 500;
   const height = Math.floor((width * 10) / 7);
 
   // Create canvas and draw code
@@ -83,7 +78,6 @@ app.post('/api/save-snippet', async (req, res) => {
 
 app.post('/api/save-solution', async (req, res) => {
   try {
-    console.log(req.body);
     const { postId, body, userId, imgUrl } = req.body;
 
     // Save the new solution to the database
@@ -96,11 +90,8 @@ app.post('/api/save-solution', async (req, res) => {
       },
     });
 
-    console.log(newSolution);
-
     res.status(200).json(newSolution);
   } catch (error) {
-    console.error('Error saving solution:', error);
     res.status(500).json({ message: error });
   }
 });
@@ -119,10 +110,8 @@ app.get('/api/solutions/:postId', async (req, res) => {
       },
     });
 
-    console.log(solutions);
     res.status(200).json(solutions);
   } catch (error) {
-    console.error('Error getting solutions:', error);
     res.status(500).json({ message: error });
   }
 });
@@ -134,3 +123,5 @@ app.all('*', (req, res, next) => {
 app.use(globalErrorHandler);
 
 export default app;
+
+//api endpoints that generates the image of the given code snippet

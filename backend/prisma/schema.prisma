@@ -33,9 +33,17 @@ model User {
   solutions       Solution[]
 }
 
+model Admin {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  password     String
+  isSuperAdmin Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
 model HelpPost {
   id           String    @id @default(uuid())
-  user         User      @relation(fields: [userId], references: [id])
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   title        String
   body         String?
@@ -50,7 +58,7 @@ model HelpPost {
 
 model MatchPost {
   id        String     @id @default(uuid())
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   body      String
   createdAt DateTime   @default(now())
@@ -63,7 +71,7 @@ model Solution {
   body      String?
   post      MatchPost @relation(fields: [postId], references: [id])
   postId    String
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   imgUrl    String
   createdAt DateTime  @default(now())
@@ -72,9 +80,9 @@ model Solution {
 model Comment {
   id        String    @id @default(uuid())
   body      String
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      HelpPost  @relation(fields: [postId], references: [id])
+  post      HelpPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
   parent    Comment?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
   parentId  String?
@@ -85,39 +93,20 @@ model Comment {
 }
 
 model Like {
-  // id        String   @id @default(uuid())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  // post      HelpPost? @relation(fields: [postId], references: [id])
-  // postId    String?
-  comment   Comment @relation(fields: [commentId], references: [id])
-  commentId String
-  // Feed      Feed?     @relation(fields: [feedId], references: [id])
-  // feedId    Int?
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-  // @@unique([userId, postId])
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+
   @@id([userId, commentId])
 }
 
-// model UpVote {
-//   user      User    @relation(fields: [userId], references: [id])
-//   userId    String
-//   comment   Comment @relation(fields: [commentId], references: [id])
-//   commentId String
-
-//   @@id([userId, commentId])
-// }
-
-model Feed {
-  id Int @id @default(autoincrement())
-  // Like Like[]
-}
-
 model Match {
-  id        Int       @id @default(autoincrement())
-  user1     User      @relation("user1", fields: [userId1], references: [id])
+  id        String    @id @default(uuid())
+  user1     User      @relation("user1", fields: [userId1], references: [id], onDelete: Cascade)
   userId1   String
-  user2     User      @relation("user2", fields: [userId2], references: [id])
+  user2     User      @relation("user2", fields: [userId2], references: [id], onDelete: Cascade)
   userId2   String
   unmatched Boolean   @default(false)
   createdAt DateTime  @default(now())
@@ -129,7 +118,7 @@ model Match {
 model Message {
   id         Int      @id @default(autoincrement())
   match      Match    @relation(fields: [matchId], references: [id])
-  matchId    Int
+  matchId    String
   sender     User     @relation("sender", fields: [senderId], references: [id])
   senderId   String
   receiver   User     @relation("receiver", fields: [receiverId], references: [id])

@@ -14,6 +14,10 @@ const getAllMatchPost = catchAsync(async (req, res, next) => {
     },
   });
 
+  if (!posts) {
+    return next(new AppError('No posts found', 404));
+  }
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -29,6 +33,9 @@ const getMatchPostByUserId = catchAsync(async (req, res, next) => {
     },
   });
 
+  if (!post) {
+    return next(new AppError('No post found with that used id', 404));
+  }
   res.status(200).json({
     status: 'success',
     data: {
@@ -43,6 +50,10 @@ const getMatchPostById = catchAsync(async (req, res, next) => {
       id: req.params.id,
     },
   });
+
+  if (!post) {
+    return next(new AppError('No post found with that id', 404));
+  }
 
   res.status(200).json({
     status: 'success',
@@ -124,9 +135,31 @@ const deleteMatchPost = async (req, res, next) => {
   });
 };
 
-// const createSolution = catchAsync(req, res, next)=>{
-//   const {}
-// }
+const createMatch = catchAsync(async (req, res, next) => {
+  console.log('from create match');
+  const { matchedUserId } = req.body;
+  console.log(req.body);
+
+  const match = await prisma.match.create({
+    data: {
+      user1: {
+        connect: { id: req.user.id },
+      },
+      user2: {
+        connect: { id: matchedUserId },
+      },
+    },
+  });
+
+  if (!match) {
+    return next(new AppError('Match not created', 404));
+  }
+
+  res.status(201).json({
+    status: 'success',
+    data: match,
+  });
+});
 
 export {
   getAllMatchPost,
@@ -135,154 +168,5 @@ export {
   updateMatchPost,
   deleteMatchPost,
   getMatchPostByUserId,
+  createMatch,
 };
-
-// const getSingleProduct = async (req, res) => {
-//   const { productid } = req.params;
-//   try {
-//     const product = await prisma.product.findUnique({
-//       where: { productid },
-//       include: {
-//         user: {
-//           select: {
-//             firstName: true,
-//             lastName: true,
-//             photo: true,
-//             email: true,
-//             number: true,
-//           },
-//         },
-//         productComments: {
-//           include: {
-//             user: true,
-//           },
-//         },
-//       },
-//     });
-//     console.log(product);
-//     return res.status(200).json({ product });
-//   } catch (error) {
-//     return res.status(400).json({ message: error.message });
-//   }
-// };
-
-// async function handleCreateProductComment(req, res) {
-//   const { parentId, comment } = req.body;
-//   const { userId, productId } = req.params;
-//   if (!comment)
-//     return res.status(400).json({ message: 'missing required fields' });
-
-//   const productComment = await prisma.productComment.create({
-//     data: {
-//       comment,
-//       userId,
-//       productId,
-//       parentId: parentId || null,
-//     },
-//   });
-//   return res
-//     .status(200)
-//     .json({ message: 'Comments Created Successfully', data: productComment });
-// }
-
-// async function handleUpdateProductComment(req, res) {
-//   const { comment } = req.body;
-//   const { commentId, userId } = req.params;
-
-//   if (!comment)
-//     return res.status(400).json({ message: 'Missing Contents Required' });
-
-//   const findProductComment = await prisma.productComment.findUnique({
-//     where: { id: commentId },
-//   });
-
-//   if (findProductComment.userId !== userId)
-//     return res.status(401).json({
-//       message: 'You are not authorized to perform the following actions',
-//     });
-
-//   const updateProductComment = await prisma.productComment.update({
-//     where: {
-//       id: commentId,
-//     },
-//     data: {
-//       comment,
-//     },
-//   });
-
-//   return res.status(200).json({
-//     message: 'Updated Products Commented',
-//     data: updateProductComment,
-//   });
-// }
-
-// async function getProductCommentLike(req, res) {
-//   const { userId, productCommentId } = req.params;
-
-//   const totalLikes = await prisma.productCommentLike.groupBy({
-//     by: ['productCommentId'],
-//     where: {
-//       productCommentId,
-//     },
-//     _count: {
-//       _all: true,
-//     },
-//   });
-
-//   const likeExists = await prisma.productCommentLike.findUnique({
-//     where: {
-//       userId_productCommentId: { userId, productCommentId },
-//     },
-//   });
-
-//   console.log({ totalLikes: totalLikes[0]?._count?._all ?? 0 });
-
-//   return res.status(200).json({
-//     message: 'Get Liked SucessFully',
-//     data: {
-//       likeExists,
-//       likesCount: totalLikes[0]?._count?._all ?? 0,
-//     },
-//   });
-// }
-
-// async function handleCommentLikeUpdate(req, res) {
-//   const { userId, productCommentId } = req.params;
-//   const like = await prisma.productCommentLike.findUnique({
-//     where: { userId_productCommentId: { userId, productCommentId } },
-//   });
-
-//   if (like) {
-//     await prisma.productCommentLike.delete({
-//       where: { userId_productCommentId: { userId, productCommentId } },
-//     });
-//   } else {
-//     await prisma.productCommentLike.create({
-//       data: {
-//         productCommentId,
-//         userId,
-//       },
-//     });
-//   }
-//   return res.status(200).json({ message: 'Toggled Successfully' });
-// }
-
-// async function deleteComment(req, res) {
-//   const { commentId, userId } = req.params;
-//   const findComment = await prisma.productComment.findUnique({
-//     where: { id: commentId },
-//   });
-
-//   if (findComment.userId !== userId)
-//     return res
-//       .status(400)
-//       .json({ message: 'You are not authorized to do following actions' });
-//   const deleteComment = await prisma.productComment.delete({
-//     where: { id: commentId },
-//   });
-
-//   return res.status(200).json({
-//     message: 'Delete the Product Comment Was Succesfully done',
-//     data: deleteComment,
-//   });
-// }

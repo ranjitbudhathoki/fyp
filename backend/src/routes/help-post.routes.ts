@@ -7,11 +7,15 @@ import {
   createHelpPost,
   updatehelpPost,
   deleteHelpPost,
-  uploadPostImage,
 } from '../controllers/help-post.controller';
+import fileUpload from 'express-fileupload';
 
 import commentRouter from './comment.routes';
-router.route('/').get(getAllHelpPost).post(uploadPostImage, createHelpPost);
+
+router
+  .route('/')
+  .get(getAllHelpPost)
+  .post(fileUpload({ createParentPath: true }), createHelpPost);
 
 router
   .route('/:id')
