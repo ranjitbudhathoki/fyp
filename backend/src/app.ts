@@ -122,6 +122,15 @@ app.all('*', (req, res, next) => {
 
 app.use(globalErrorHandler);
 
+process.on('unhandledRejection', (error: Error) => {
+  throw error;
+});
+
+process.on('uncaughtException', (error: Error) => {
+  console.log(error);
+  process.exit(1);
+});
+
 export default app;
 
 //api endpoints that generates the image of the given code snippet
