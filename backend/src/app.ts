@@ -16,6 +16,8 @@ import matchPostRouter from './routes/match-post.routes';
 import prisma from './services/prisma';
 import matchRouter from './routes/match.routes';
 import fileUpload from 'express-fileupload';
+import adminRouter from './routes/admin.routes';
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -26,8 +28,6 @@ app.use(
     credentials: true,
   })
 );
-
-app.use(fileUpload());
 
 app.use(
   cookieSession({
@@ -43,12 +43,13 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.static('images/'));
 app.use('/images', express.static('images/'));
-
+app.use('api/admin', adminRouter);
 app.use('/auth', authRouter);
 app.use('/api/users', checkLoggedIn, userRouter);
 app.use('/api/help-posts', checkLoggedIn, helpPostRouter);
 app.use('/api/match-posts', matchPostRouter);
 app.use('/api/match', checkLoggedIn, matchRouter);
+
 app.post('/api/save-snippet', async (req, res) => {
   const { code } = req.body;
 
