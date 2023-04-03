@@ -57,6 +57,16 @@ const deRegisterUser = catchAsync(async (req, res, next) => {
   });
 });
 
+const getTotalUserCount = catchAsync(async (req, res, next) => {
+  const totalUserCount = await prisma.user.count();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      totalUser: totalUserCount,
+    },
+  });
+});
+
 const getUserBySearch = catchAsync(async (req, res, next) => {
   const { searchTerm } = req.params;
   if (!searchTerm) {
@@ -109,4 +119,5 @@ export {
   deRegisterUser,
   getUserBySearch,
   getUserById,
+  getTotalUserCount,
 };
