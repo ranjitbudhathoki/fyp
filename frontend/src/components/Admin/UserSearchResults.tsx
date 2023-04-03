@@ -1,0 +1,52 @@
+import { useQuery } from 'react-query';
+import systemAxios from '../../api/systemAxios';
+import { useSystemAdmin } from '../../context/AdminContext';
+import Spinner from '../Spinner/Spinner';
+import UserSearchResultsItem from './UserSearchResultsItem';
+import { AnimatePresence } from 'framer-motion';
+
+export default function UserSearchResults({ searchTerm, filterMode }: any) {
+  const { admin } = useSystemAdmin();
+
+  console.log('from user search results', searchTerm);
+
+  const { data: results, isLoading } = useQuery(
+    `user-search-results-${searchTerm}`,
+    async () => {
+      const res = await systemAxios.get(
+        `/api/admin/users/${searchTerm}/${filterMode}`,
+        {
+          headers: {
+            authorization: `Bearer ${(admin as any).token}`,
+          },
+        }
+      );
+      return res.data?.data;
+    },
+    {
+      enabled: Boolean(searchTerm),
+    }
+  );
+
+  if (isLoading) return <Spinner isLoading={isLoading} />;
+
+  return (
+    <ul className="flex flex-col gap-4 mt-6">
+      {results && Boolean(searchTerm) && results?.length === 0 && (
+        <h2 className="text-red-600 ">No Search Results for {searchTerm}</h2>
+      )}
+      <AnimatePresence>
+        {results?.map(({ email, id, photoUrl, username }: any) => (
+          <UserSearchResultsItem
+            key={id}
+            userName={username}
+            photo={photoUrl}
+            searchTerm={searchTerm}
+            email={email}
+            userId={id}
+          />
+        ))}
+      </AnimatePresence>
+    </ul>
+  );
+}
