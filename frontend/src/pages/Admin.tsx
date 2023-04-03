@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import AdminDashboard from '../components/Admin/AdminDashboard';
-// import UserAnalytics from '../components/SystemAdmin/UserAnalytics';
+import UserAnalytics from '../components/Admin/UserAnalytics';
 // import WorkspaceAnalytics from '../components/SystemAdmin/WorkspaceAnalytics';
 import AdminSearch from '../components/Admin/AdminSearch';
 import { useSystemAdmin } from '../context/AdminContext';
@@ -111,8 +111,8 @@ function SystemAdmin() {
         </ul>
         <div className="h-full w-full pb-6">
           {selectedTab === Tab.DASHBOARD && <AdminDashboard />}
-          {/* {selectedTab === Tab.USER && <UserAnalytics />}
-          {selectedTab === Tab.WORKSPACE && <WorkspaceAnalytics />} */}
+          {selectedTab === Tab.USER && <UserAnalytics />}
+          {/* {selectedTab === Tab.WORKSPACE && <WorkspaceAnalytics />} */}
           {selectedTab === Tab.SEARCH && <AdminSearch />}
         </div>
       </div>

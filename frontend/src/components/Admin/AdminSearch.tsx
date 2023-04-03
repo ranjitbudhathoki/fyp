@@ -42,7 +42,7 @@ function AdminSearch() {
           onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
             setFilterMode(event.target.value)
           }
-          className="bg-[#09090a] rounded px-3 py-2 text-base text-gray-400 outline-none focus:outline-none"
+          className="bg-[#09090a] rounded px-3 py-2 text-base text-custom-light-green outline-none focus:outline-none"
         >
           <option value={filterModeValues[0]}>{filterModeValues[0]}</option>
           <option value={filterModeValues[1]}>{filterModeValues[1]}</option>
