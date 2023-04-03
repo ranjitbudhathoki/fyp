@@ -1,29 +1,93 @@
+import React from 'react';
+import { motion, Variants } from 'framer-motion';
+import SideNavLink from './SideNavLink';
 import {
-  BsPlus,
-  BsFillLightningFill,
-  BsGearFill,
-  BsDash,
-} from 'react-icons/bs';
-import { FaAccusoft, FaFire, FaPoo, FaSun, FaMoon } from 'react-icons/fa';
-import SideBarIcon from './SideBarIcon';
+  PhotoIcon,
+  ChartBarIcon,
+  SquaresPlusIcon,
+  ChatBubbleLeftIcon,
+  GlobeEuropeAfricaIcon,
+  UserIcon,
+  HomeIcon,
+  WrenchScrewdriverIcon,
+} from '@heroicons/react/24/outline';
+import { AnimatePresence } from 'framer-motion';
 
-const SideBar = () => {
+interface Props {
+  isSideBarOpen: boolean;
+}
+
+const Sidebar: React.FC<Props> = ({ isSideBarOpen }) => {
+  const asideVariants: Variants = {
+    initial: {
+      width: isSideBarOpen ? '16rem' : '4.5rem',
+    },
+    animate: {
+      width: isSideBarOpen ? '4.5rem' : '16rem',
+      transition: {
+        type: 'tween',
+      },
+    },
+  };
+
   return (
-    <div
-      className="fixed top-0 left-0 h-screen w-16 flex flex-col
-                   dark:bg-gray-700 shadow-lg "
-    >
-      <SideBarIcon icon={<BsDash size="28" />} />
-      <Divider />
-      <SideBarIcon icon={<BsPlus size="32" />} />
-      <SideBarIcon icon={<BsFillLightningFill size="20" />} />
-      <SideBarIcon icon={<FaAccusoft size="20" />} />
-      <Divider />
-      <SideBarIcon icon={<BsGearFill size="22" />} />
-    </div>
+    <AnimatePresence initial={false}>
+      <motion.aside
+        initial={'initial'}
+        animate={'animate'}
+        variants={asideVariants}
+        className="flex-shrink-0 bg-black text-white"
+      >
+        <div className="flex flex-col gap-2 py-4">
+          <SideNavLink url="/home" Icon={HomeIcon} isOpen={isSideBarOpen}>
+            Home
+          </SideNavLink>
+          <SideNavLink
+            url="/feed"
+            Icon={SquaresPlusIcon}
+            isOpen={isSideBarOpen}
+          >
+            Feed
+          </SideNavLink>
+
+          <SideNavLink
+            url="/popular"
+            Icon={ChartBarIcon}
+            isOpen={isSideBarOpen}
+          >
+            Popular Repos
+          </SideNavLink>
+
+          <SideNavLink
+            url="/collaborator"
+            Icon={GlobeEuropeAfricaIcon}
+            isOpen={isSideBarOpen}
+          >
+            Collaborator
+          </SideNavLink>
+          <SideNavLink
+            url="/chat"
+            Icon={ChatBubbleLeftIcon}
+            isOpen={isSideBarOpen}
+          >
+            Chat
+          </SideNavLink>
+
+          <SideNavLink
+            url="/battle"
+            Icon={WrenchScrewdriverIcon}
+            isOpen={isSideBarOpen}
+          >
+            Battle
+          </SideNavLink>
+
+          <SideNavLink url="/profile" Icon={UserIcon} isOpen={isSideBarOpen}>
+            Profile
+          </SideNavLink>
+        </div>
+      </motion.aside>
+    </AnimatePresence>
   );
 };
 
-const Divider = () => <hr className="sidebar-hr" />;
-
-export default SideBar;
+export default Sidebar;

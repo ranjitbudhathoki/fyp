@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   };
 
   if (user) {
-    return <Navigate to={'/home'} replace={true} />;
+    return <Navigate to={redirectPath} replace={true} />;
   }
 
   return (

@@ -19,6 +19,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Popular from './pages/Popular';
 import Admin from './pages/Admin';
+import NestedLayout from './components/NestedLayout';
 const App: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -47,25 +48,18 @@ const App: React.FC = () => {
         <Route path="/system/admin/login" element={<AdminLogin />} />
         <Route path="/system/admin" element={<Admin />} />
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="home" element={<Date />} />
-          <Route path="feed" element={<Feed />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="chat" element={<Chat />} />
-          <Route path="collaborator" element={<Collaborator />} />
-          <Route path="popular" element={<Popular />} />
-
-          <Route path="collaborator/posts/:id" element={<HelpPostDetail />} />
-          <Route path="*" element={<NotFound />} />
+        <Route path="/" element={<Home />}>
+          <Route element={<NestedLayout />}>
+            <Route path="home" element={<Date />} />
+            <Route path="feed" element={<Feed />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="chat" element={<Chat />} />
+            <Route path="collaborator" element={<Collaborator />} />
+            <Route path="popular" element={<Popular />} />
+            <Route path="collaborator/posts/:id" element={<HelpPostDetail />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Route>
-        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <div>
