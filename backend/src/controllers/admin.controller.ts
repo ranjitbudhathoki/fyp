@@ -4,6 +4,21 @@ import prisma from '../services/prisma';
 import verifyPassword from '../utils/verifyPassword';
 import generateToken from '../utils/generateToken';
 
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
 const handleAdminLogin = catchAsync(async (req, res, next) => {
   const { username, password } = req.body;
 
@@ -97,11 +112,12 @@ const getUserBySearch = catchAsync(async (req, res, next) => {
 });
 
 const getUserById = catchAsync(async (req, res, next) => {
+  console.log('form get user by id', req.params);
   const { userId } = req.params;
 
   if (!userId) return next(new AppError('Please provide user id', 400));
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findMany({
     where: { id: userId },
   });
 
@@ -113,6 +129,53 @@ const getUserById = catchAsync(async (req, res, next) => {
   });
 });
 
+const getTotalMatches = catchAsync(async (req, res, next) => {
+  const totalMatches = await prisma.match.count();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      totalMatches,
+    },
+  });
+});
+
+const getRegisteredUserforEveryMonth = catchAsync(async (req, res, next) => {
+  const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+  const endOfyear = new Date(new Date().getFullYear() + 1, 0, 1);
+
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      createdAt: true,
+    },
+    where: {
+      createdAt: {
+        gte: startOfYear,
+        lt: endOfyear,
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
+
+  const userByMonth = users.reduce((acc: any, user) => {
+    const monthIdx = user.createdAt.getMonth();
+    const key = months[monthIdx];
+    if (!acc[key]) {
+      acc[key] = 0;
+    }
+
+    acc[key] += 1;
+    return acc;
+  }, {});
+
+  return res.status(200).json({
+    status: 'success',
+    data: userByMonth,
+  });
+});
+
 export {
   handleAdminLogin,
   getAllRegisteredUser,
@@ -120,4 +183,6 @@ export {
   getUserBySearch,
   getUserById,
   getTotalUserCount,
+  getTotalMatches,
+  getRegisteredUserforEveryMonth,
 };
