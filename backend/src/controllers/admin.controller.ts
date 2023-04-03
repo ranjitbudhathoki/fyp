@@ -176,6 +176,43 @@ const getRegisteredUserforEveryMonth = catchAsync(async (req, res, next) => {
   });
 });
 
+const getMatchForEveryMonth = catchAsync(async (req, res, next) => {
+  const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+  const endOfyear = new Date(new Date().getFullYear() + 1, 0, 1);
+
+  const matches = await prisma.match.findMany({
+    select: {
+      id: true,
+      createdAt: true,
+    },
+    where: {
+      createdAt: {
+        gte: startOfYear,
+        lt: endOfyear,
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
+
+  const matchesByMonth = matches.reduce((acc: any, match) => {
+    const monthIdx = match.createdAt.getMonth();
+    const key = months[monthIdx];
+    if (!acc[key]) {
+      acc[key] = 0;
+    }
+
+    acc[key] += 1;
+    return acc;
+  }, {});
+
+  return res.status(200).json({
+    status: 'success',
+    data: matchesByMonth,
+  });
+});
+
 export {
   handleAdminLogin,
   getAllRegisteredUser,
@@ -185,4 +222,5 @@ export {
   getTotalUserCount,
   getTotalMatches,
   getRegisteredUserforEveryMonth,
+  getMatchForEveryMonth,
 };
