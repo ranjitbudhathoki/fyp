@@ -10,7 +10,6 @@ import {
 import Card from '../components/popularRepo/Card';
 import Loading from '../components/popularRepo/Loading';
 import Tooltip from '../components/popularRepo/Tooltip';
-
 function LangaugesNav({ selected, onUpdateLanguage }) {
   const languages = ['All', 'JavaScript', 'Rust', 'Go', 'Kotlin', 'Python'];
 
