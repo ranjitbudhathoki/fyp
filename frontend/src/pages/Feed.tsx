@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import HelpPost from '../components/collaborator/HelpPost';
-import { Link } from 'react-router-dom';
 import MatchPost from '../components/Feed/MatchPost';
 import { toast } from 'react-toastify';
 
@@ -17,12 +15,10 @@ const Feed: React.FC = () => {
     queryKey: ['match-posts'],
     queryFn: async () => {
       const response = await axios.get('/api/match-posts/');
-
       return response.data;
     },
+    refetchOnWindowFocus: true,
   });
-
-  console.log(data);
 
   const createPostMutation = useMutation({
     mutationFn: async (description: any) => {
@@ -35,7 +31,7 @@ const Feed: React.FC = () => {
       queryClient.invalidateQueries(['match-posts']);
     },
     onError: (error: any) => {
-      toast(error?.response?.data?.message || 'Something went wrong');
+      toast.error(error?.response?.data?.message || 'Something went wrong');
     },
   });
 
@@ -50,7 +46,7 @@ const Feed: React.FC = () => {
   };
 
   const renderedPosts = (
-    <div style={{ height: '620px', overflowY: 'scroll' }}>
+    <div className="overflow-auto max-h-screen">
       {data?.data?.posts.map((post) => {
         return <MatchPost key={post.id} post={post} />;
       })}
@@ -118,54 +114,6 @@ const Feed: React.FC = () => {
                   ></textarea>
                 </div>
               </div>
-              {/* <div className="mt-4">
-                <label
-                  htmlFor="image_upload"
-                  className="block text-sm font-medium text-gray-400"
-                >
-                  Upload:
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="file"
-                    name="image_upload"
-                    id="image_upload"
-                    className="shadow-sm focus:ring-blue-500  focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label
-                  htmlFor="project_link"
-                  className="block text-sm font-medium text-gray-400"
-                >
-                  Project Link
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="project_link"
-                    id="project_link"
-                    className=" p-2 shadow-sm focus:ring-blue-500 h-10 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label
-                  htmlFor="tech_stack"
-                  className="block text-sm font-medium text-gray-400"
-                >
-                  Tech Stack:
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="tech_stack"
-                    id="project_link"
-                    className=" p-2 shadow-sm focus:ring-blue-500 h-10 focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
-                  />
-                </div>
-              </div> */}
             </div>
             <div className="px-4 py-3 flex justify-center">
               <button

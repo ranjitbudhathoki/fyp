@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* *,
 *::before,
 *::after {
   box-sizing: border-box;
@@ -18,7 +17,7 @@
   text-green-500 hover:text-white
     hover:rounded-xl rounded-3xl
     transition-all duration-300 ease-linear
-    cursor-pointer shadow-lg ;
+    cursor-pointer shadow-lg;
   }
 
   .sidebar-tooltip {
@@ -217,17 +216,15 @@
   }
 }
 
-
-
 ::-webkit-scrollbar {
   background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-500 dark:bg-green-400;
-} */
+}
 
-#root > div {
+/* #root > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -582,7 +579,7 @@ body {
   overflow: hidden;
 }
 
-.cardContainer {
+/* .cardContainer {
   width: 160px;
   height: 270px;
   margin: 100px auto;
@@ -592,7 +589,7 @@ body {
 }
 
 /*-------- Dashboard  --------*/
-.dashboard {
+/* .dashboard {
   display: flex;
   justify-content: space-between;
 }
@@ -685,7 +682,7 @@ body {
 }
 
 /*-------- Chat Display --------*/
-.chat-display,
+/* .chat-display,
 .matches-display {
   padding: 20px;
   height: 60vh;
@@ -693,6 +690,7 @@ body {
 }
 
 /*-------- Chat Input --------*/
+/*
 .chat-input {
   padding: 20px;
   display: flex;
@@ -957,9 +955,9 @@ li {
 .light-btn {
   color: #000;
   background: #aaa8a8;
-}
+} */
 
-.light-btn:disabled {
+/* .light-btn:disabled {
   background: #292929;
   color: #4a4a4a;
-}
+} */

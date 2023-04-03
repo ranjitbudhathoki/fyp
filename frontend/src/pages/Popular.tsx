@@ -33,7 +33,7 @@ function LangaugesNav({ selected, onUpdateLanguage }) {
 
 function ReposGrid({ repos }) {
   return (
-    <div className=" max-w-full h-screen overflow-auto">
+    <div className=" max-w-full h-screen ">
       <ul className="grid grid-cols-3 space-around">
         {repos.map((repo, index) => {
           const {

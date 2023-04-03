@@ -9,8 +9,6 @@ function MatchPost({ post }) {
 
   const formattedDate = moment(post.updatedAt).fromNow();
 
-  console.log(post);
-
   const [showModal, setShowModal] = useState(false);
 
   const handleSendSolutionClick = () => {
@@ -37,18 +35,6 @@ function MatchPost({ post }) {
                 {formattedDate}
               </time>
             </div>
-          </div>
-          <div className="flex h-3.5 items-center justify-center rounded-full bg-gray-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 0 24 24"
-              width="34px"
-              fill="#92929D"
-            >
-              <path d="M0 0h24v24H0V0z" fill="none" />
-              <path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-            </svg>
           </div>
         </div>
         <div className="mt-7 whitespace-pre-wrap">{post.body}</div>

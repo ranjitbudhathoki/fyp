@@ -31,7 +31,6 @@ const Collaborator: React.FC = () => {
       setSelectedFile(undefined);
       return;
     }
-
     setSelectedFile(e.target.files[0]);
   };
 
@@ -41,6 +40,8 @@ const Collaborator: React.FC = () => {
       const response = await axios.get('/api/help-posts/');
       return response.data;
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 1000 * 5,
   });
 
   const createPostMutation = useMutation({
@@ -58,14 +59,16 @@ const Collaborator: React.FC = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    console.log('selected file', selectedFile);
     const formData = new FormData(event.target);
+    console.log('from data', formData.get('image'));
     const helpPost: any = {
       userId: user.id,
       title: formData.get('topic') ?? '',
       body: formData.get('description') ?? '',
       project_link: formData.get('link') ?? '',
       tech_stack: formData.get('tech') ?? '',
-      image: formData.get('image'),
+      image: selectedFile,
     };
 
     createPostMutation.mutate(helpPost);
@@ -78,7 +81,7 @@ const Collaborator: React.FC = () => {
   };
 
   const renderedPosts = (
-    <div style={{ height: '620px', overflowY: 'scroll' }}>
+    <div className="max-w-full h-screen ">
       {data?.data?.posts.map((post) => {
         return (
           <Link to={`/collaborator/posts/${post.id}`} key={post.id}>
@@ -112,7 +115,6 @@ const Collaborator: React.FC = () => {
           </svg>
         </button>
       </div>
-
       <div
         className={`fixed top-0 left-0 bottom-0 right-0 z-50 ${
           showModal ? 'flex' : 'hidden'
@@ -178,7 +180,7 @@ const Collaborator: React.FC = () => {
                     id="image"
                     className="shadow-sm focus:ring-blue-500  focus:border-blue-500 block w-full sm:text-sm bg-gray-700 border-gray-600 rounded-md text-gray-200"
                   />
-                  {selectedFile && <img src={preview} />}
+                  {selectedFile && <img src={preview} className="bg-cover" />}
                 </div>
               </div>
               <div className="mt-4">
@@ -232,7 +234,7 @@ const Collaborator: React.FC = () => {
           </form>
         </div>
       </div>
-      <div className="flex flex-col ">{renderedPosts}</div>
+      <div className="max-w-full h-screen ">{renderedPosts}</div>
     </>
   );
 };

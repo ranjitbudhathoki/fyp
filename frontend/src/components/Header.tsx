@@ -16,7 +16,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between px-4 py-4  bg-[#27292a] border-b-4 border-[#333]">
+    <nav className="flex items-center justify-between px-4 py-4  bg-black ">
       <h1 className="text-xl">Date.now()</h1>
       {user && (
         <ul className="flex items-center gap-3">
@@ -27,7 +27,7 @@ const Header = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 text-white"
             >
               <path
                 strokeLinecap="round"
