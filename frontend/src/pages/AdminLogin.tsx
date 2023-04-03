@@ -22,6 +22,7 @@ type FormItemProps = {
   placeholder?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
+
 function FormItem({
   label,
   value,
@@ -65,7 +66,7 @@ function AdminForm() {
 
   const { mutate } = useMutation(
     async (payload: any) => {
-      const res = await systemAxios.post('/system-admin/login', payload);
+      const res = await systemAxios.post('/api/admin/login', payload);
       console.log(res.data);
       return res.data;
     },
@@ -130,7 +131,7 @@ function AdminForm() {
         />
         <button
           disabled={attempts === 0}
-          className="text-black disabled:opacity-60 disabled:cursor-not-allowed bg-custom-light-green px-4 py-2 rounded-md"
+          className="text-white disabled:opacity-60 disabled:cursor-not-allowed bg-custom-light-green px-4 py-2 rounded-md"
         >
           Login
         </button>
