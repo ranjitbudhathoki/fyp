@@ -30,6 +30,8 @@ async function createImage(body) {
 const saveSolution = catchAsync(async (req, res, next) => {
   const { postId, code, userId } = req.body;
 
+  console.log(req.body);
+
   if (!postId || !code || !userId) {
     return next(new AppError('Please provide all the required fields', 400));
   }
@@ -38,6 +40,19 @@ const saveSolution = catchAsync(async (req, res, next) => {
 
   if (!filename) {
     return next(new AppError('Something went wrong', 400));
+  }
+
+  const existingSolution = await prisma.solution.findFirst({
+    where: {
+      postId,
+      userId,
+    },
+  });
+
+  if (existingSolution) {
+    return next(
+      new AppError('You have already submitted a solution for this post', 400)
+    );
   }
 
   const newSolution = await prisma.solution.create({
@@ -54,34 +69,5 @@ const saveSolution = catchAsync(async (req, res, next) => {
     data: newSolution,
   });
 });
-
-// .post('/api/save-solution', async (req, res) => {
-//   try {
-//     const { postId, code, userId } = req.body;
-//     console.log(req.body);
-
-//     const filename = await createImage(code);
-
-//     console.log('filename', filename);
-//     if (!filename) {
-//       return res.status(400).json({
-//         message: 'Something went wrong',
-//       });
-//     }
-//     // Save the new solution to the database
-//     const newSolution = await prisma.solution.create({
-//       data: {
-//         body: code,
-//         postId,
-//         userId,
-//         imgUrl: 'http://localhost:8000/images/' + filename,
-//       },
-//     });
-
-//     res.status(200).json(newSolution);
-//   } catch (error) {
-//     res.status(500).json({ message: "couldn't save solution" });
-//   }
-// });
 
 export { saveSolution };
