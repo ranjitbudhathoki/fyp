@@ -42,7 +42,7 @@ function FormItem({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="bg-[#09090a] rounded px-3 py-2"
+        className="bg-[#09090a]  text-white rounded px-3 py-2"
       />
     </div>
   );

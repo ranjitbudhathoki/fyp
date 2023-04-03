@@ -8,8 +8,8 @@ import Spinner from '../Spinner/Spinner';
 function SystemAdminDashboard() {
   const { admin } = useSystemAdmin();
 
-  const { data, isLoading } = useQuery('total-count', async () => {
-    const res = await systemAxios.get('/system-admin/workspace/user/count', {
+  const { data, isLoading } = useQuery('total-user', async () => {
+    const res = await systemAxios.get('/api/admin/users/', {
       headers: {
         authorization: `Bearer ${(admin as any).token}`,
       },

@@ -1,20 +1,20 @@
 import { createContext, useState, useContext } from 'react';
 
-interface Iadmin {
+interface Admin {
   id: string;
   username: string;
 }
 
-interface IAdminContext {
-  admin: Iadmin | null;
-  setAdmin: React.Dispatch<React.SetStateAction<Iadmin | null>>;
+interface AdminContext {
+  admin: Admin | null;
+  setAdmin: React.Dispatch<React.SetStateAction<Admin | null>>;
   isSystemAdminLoggedIn: () => boolean;
 }
 
-const AdminContext = createContext<IAdminContext | null>(null);
+const AdminContext = createContext<AdminContext | null>(null);
 
 function AdminContextProvider({ children }: { children: React.ReactNode }) {
-  const [admin, setAdmin] = useState<Iadmin | null>(null);
+  const [admin, setAdmin] = useState<Admin | null>(null);
 
   function isSystemAdminLoggedIn() {
     return Boolean(admin);
