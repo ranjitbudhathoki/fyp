@@ -3,7 +3,7 @@ import systemAxios from '../../api/systemAxios';
 import { useSystemAdmin } from '../../context/AdminContext';
 import Spinner from '../Spinner/Spinner';
 import UserChart from './UserChart';
-// import WorkspaceChart from './WorkspaceChart';
+import MatchChart from './MatchChart';
 
 function SystemAdminDashboard() {
   const { admin } = useSystemAdmin();
@@ -43,20 +43,24 @@ function SystemAdminDashboard() {
 
   console.log('user chart data', userChartData);
 
-  // const { data: workspaceChartData, isLoading: isWorkspaceChartLoading } =
-  //   useQuery('workspace-chart-data', async () => {
-  //     const res = await systemAxios.get('/system-admin/workspacebyMonth', {
-  //       headers: {
-  //         authorization: `Bearer ${(admin as any).token}`,
-  //       },
-  //     });
-  //     return res.data?.data;
-  //   });
+  const { data: matchChartData, isLoading: isMatchChartLoading } = useQuery(
+    'match-chart-data',
+    async () => {
+      const res = await systemAxios.get('/api/admin/matches/data', {
+        headers: {
+          authorization: `Bearer ${(admin as any).token}`,
+        },
+      });
+      return res.data?.data;
+    }
+  );
 
   if (isLoading) return <Spinner isLoading={isLoading} />;
 
   if (isUserChartDataLoading)
     return <Spinner isLoading={isUserChartDataLoading} />;
+
+  if (isMatchChartLoading) return <Spinner isLoading={isMatchChartLoading} />;
 
   if (isMatchDataLoading) {
     return <Spinner isLoading={isMatchDataLoading} />;
@@ -77,8 +81,8 @@ function SystemAdminDashboard() {
           </p>
         </div>
       </div>
-      {/* <UserChart data={{ february: 2 }} /> */}
-      {/* <WorkspaceChart data={workspaceChartData} /> */}
+      <UserChart data={userChartData} />
+      <MatchChart data={matchChartData} />
     </div>
   );
 }

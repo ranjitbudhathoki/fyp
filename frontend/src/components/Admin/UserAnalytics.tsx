@@ -120,7 +120,6 @@ function UserAnalytics() {
                 <DeRegisterCard
                   key={user.id}
                   index={index}
-                  //   email={user.email}
                   userName={user.username}
                   photo={user.photoUrl}
                   id={user.id}

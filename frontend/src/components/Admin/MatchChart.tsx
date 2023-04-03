@@ -28,7 +28,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'User Registered by Month chart',
+      text: 'Match Registered by Month Chart',
     },
   },
 };
@@ -47,25 +47,22 @@ const labels = [
   'November',
   'December',
 ];
-function UserChart({ data }: any) {
+function MatchChart({ data }: any) {
   const initialData = new Array(11).fill(0);
-
   for (let [key, val] of Object.entries(data)) {
     const findIdx = labels.findIndex((label) => key === label);
-    console.log('findIdx', findIdx);
     initialData[findIdx] = val;
   }
 
-  console.log('initial data', initialData);
   return (
     <div className="max-w-4xl mt-12 mx-auto">
       <Bar
-        datasetIdKey="user-chart"
+        datasetIdKey="match-chart"
         data={{
           labels,
           datasets: [
             {
-              label: 'User Registered',
+              label: 'Match Registered',
               data: initialData,
               borderColor: '#8ad85c',
               backgroundColor: '#8ad85c',
@@ -78,4 +75,4 @@ function UserChart({ data }: any) {
   );
 }
 
-export default UserChart;
+export default MatchChart;
