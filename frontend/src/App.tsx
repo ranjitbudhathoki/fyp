@@ -9,13 +9,11 @@ import { useDispatch } from 'react-redux';
 import { useQuery } from 'react-query';
 import { updateUser } from './redux/slice/authSlice';
 import axios from './utils/axios-instance';
-import ProtectedRoute from './components/ProtectedRoute';
 import Collaborator from './pages/Collaborator';
 import Profile from './components/Profile/Profile';
 import AdminLogin from './pages/AdminLogin';
 import Feed from './pages/Feed';
 import HelpPostDetail from './pages/HelpPostDetail';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Popular from './pages/Popular';
 import Admin from './pages/Admin';
@@ -41,7 +39,7 @@ const App: React.FC = () => {
 
   return (
     <main
-      className="h-screen 
+      className="h-screen   
       bg-[#18191a] font-poppins"
     >
       <Routes>
@@ -62,9 +60,6 @@ const App: React.FC = () => {
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <div>
-        <ToastContainer position="bottom-center" />
-      </div>
     </main>
   );
 };

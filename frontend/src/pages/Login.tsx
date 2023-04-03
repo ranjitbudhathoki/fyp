@@ -4,10 +4,8 @@ import { useLocation, Navigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const { user } = useSelector((state: any) => state.auth);
-
   const location = useLocation();
-
-  const redirectPath = location.state?.from?.pathname || '/';
+  const redirectPath = location.state?.from?.pathname || '/home';
 
   const github = () => {
     window.open('http://localhost:8000/auth/github', '_self');

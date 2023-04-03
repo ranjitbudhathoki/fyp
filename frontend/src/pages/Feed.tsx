@@ -5,16 +5,13 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import HelpPost from '../components/collaborator/HelpPost';
 import { Link } from 'react-router-dom';
 import MatchPost from '../components/Feed/MatchPost';
+import { toast } from 'react-toastify';
 
 const Feed: React.FC = () => {
   const queryClient = useQueryClient();
   const { user } = useSelector((state: any) => state.auth);
   const [showModal, setShowModal] = useState(false);
-  const [posts, setPosts] = useState(
-    [] as {
-      body: string;
-    }[]
-  );
+  const [body, setBody] = useState('');
 
   const { data } = useQuery({
     queryKey: ['match-posts'],
@@ -28,32 +25,23 @@ const Feed: React.FC = () => {
   console.log(data);
 
   const createPostMutation = useMutation({
-    mutationFn: async (form: any) => {
-      console.log(form);
+    mutationFn: async (description: any) => {
       await axios.post('/api/match-posts/', {
         authorID: user.id,
-        body: form.elements.problem_description.value,
+        body: description,
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['match-posts']);
     },
+    onError: (error: any) => {
+      toast(error?.response?.data?.message || 'Something went wrong');
+    },
   });
 
   const handleCreatePost = async (event: any) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    console.log(form);
-    createPostMutation.mutate(form);
-
-    const body = form.elements.problem_description.value;
-
-    setPosts([
-      ...posts,
-      {
-        body,
-      },
-    ]);
+    createPostMutation.mutate(body);
     setShowModal(false);
   };
 
@@ -111,22 +99,7 @@ const Feed: React.FC = () => {
               >
                 Create a new post
               </h2>
-              {/* <div className="mt-4">
-                <label
-                  htmlFor="topic"
-                  className="block text-sm font-medium text-gray-400"
-                >
-                  Topic:
-                </label>
-                <div className="mt-1">
-                  <textarea
-                    rows={3}
-                    name="topic"
-                    id="topic"
-                    className=" p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full bg-gray-700 border-gray-600 rounded-md text-gray-200"
-                  />
-                </div>
-              </div> */}
+
               <div className="mt-4">
                 <label
                   htmlFor="problem_description"
@@ -136,6 +109,8 @@ const Feed: React.FC = () => {
                 </label>
                 <div className="mt-1">
                   <textarea
+                    value={body}
+                    onChange={(e) => setBody(e.target.value)}
                     name="problem_description"
                     id="problem_description"
                     rows={8}
