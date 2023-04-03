@@ -28,6 +28,7 @@ const App: React.FC = () => {
       const res = await axios.get(`/api/users/me`);
       return res.data;
     },
+    /*eslint-disable */
     enabled: !location.pathname.includes('system'),
   });
 
