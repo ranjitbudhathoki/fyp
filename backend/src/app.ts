@@ -43,7 +43,7 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.static('images/'));
 app.use('/images', express.static('images/'));
-app.use('api/admin', adminRouter);
+app.use('/api/admin', adminRouter);
 app.use('/auth', authRouter);
 app.use('/api/users', checkLoggedIn, userRouter);
 app.use('/api/help-posts', checkLoggedIn, helpPostRouter);
