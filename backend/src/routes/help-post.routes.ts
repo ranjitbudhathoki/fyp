@@ -1,4 +1,5 @@
 import Express from 'express';
+import fileUpload from 'express-fileupload';
 
 const router = Express.Router();
 import {
@@ -8,7 +9,6 @@ import {
   updatehelpPost,
   deleteHelpPost,
 } from '../controllers/help-post.controller';
-import fileUpload from 'express-fileupload';
 
 import commentRouter from './comment.routes';
 
