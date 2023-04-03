@@ -65,6 +65,18 @@ const getMatchPostById = catchAsync(async (req, res, next) => {
 
 const createMatchPost = catchAsync(async (req, res, next) => {
   const { body } = req.body;
+  const existingPost = await prisma.matchPost.findFirst({
+    where: {
+      userId: req.user.id,
+    },
+  });
+
+  if (existingPost) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'You already have a post',
+    });
+  }
 
   const post = await prisma.matchPost.create({
     data: {
