@@ -11,25 +11,25 @@ import { Link } from 'react-router-dom';
 function Instructions() {
   const theme = 'dark';
   return (
-    <div className="instructions-container">
+    <div className="instructions-container text-white">
       <h1 className="center-text header-lg">Instructions</h1>
-      <ol className="container-sm grid center-text battle-instructions">
-        <li>
-          <h3 className="header-sm">Enter two Github users</h3>
+      <ol className="container-sm grid grid-cols-3 gap-4 center-text battle-instructions">
+        <li className="flex flex-col items-center">
+          <h3 className="header-sm">Enter two users</h3>
           <FaUserFriends
-            className={`bg-${theme}`}
+            className="bg-white"
             color="rgb(255, 191, 116)"
             size={140}
           />
         </li>
-        <li>
+        <li className="flex flex-col items-center">
           <h3 className="header-sm">Battle</h3>
-          <FaFighterJet className={`bg-${theme}`} color="#727272" size={140} />
+          <FaFighterJet className="bg-white" color="#727272" size={140} />
         </li>
-        <li>
+        <li className="flex flex-col items-center">
           <h3 className="header-sm">See the winners</h3>
           <FaTrophy
-            className={`bg-${theme}`}
+            className={`bg-white`}
             color="rgb(255, 215, 0)"
             size={140}
           />
@@ -49,24 +49,24 @@ function PlayerInput({ onSubmit, label }) {
   };
 
   const handleChange = (event) => setUsername(event.target.value);
-  const theme = 'dark';
+
   return (
-    <form className="column player" onSubmit={handleSubmit}>
-      <label htmlFor="username" className="player-label">
+    <form className="column player text-white" onSubmit={handleSubmit}>
+      <label htmlFor="username" className="player-label ">
         {label}
       </label>
       <div className="row player-inputs">
         <input
           type="text"
           id="username"
-          className={`input-${theme}`}
+          className="input-white text-black"
           placeholder="github username"
           autoComplete="off"
           value={username}
           onChange={handleChange}
         />
         <button
-          className={`btn ${theme === 'dark' ? 'light-btn' : 'dark-btn'}`}
+          className="btn bg-custom-light-green"
           type="submit"
           disabled={!username}
         >
@@ -78,11 +78,10 @@ function PlayerInput({ onSubmit, label }) {
 }
 
 function PlayerPreview({ username, onReset, label }) {
-  const theme = 'dark';
   return (
-    <div className="column player">
-      <h3 className="player-label">{label}</h3>
-      <div className={`row bg-${theme}`}>
+    <div className="column player flex justify-between">
+      <h3 className="player-label text-white">{label}</h3>
+      <div className={`row bg-white`}>
         <div className="player-info">
           <img
             className="avatar-small"
@@ -101,12 +100,6 @@ function PlayerPreview({ username, onReset, label }) {
   );
 }
 
-PlayerPreview.propTypes = {
-  username: PropTypes.string.isRequired,
-  onReset: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-};
-
 export default function Battle() {
   const [playerOne, setPlayerOne] = React.useState(null);
   const [playerTwo, setPlayerTwo] = React.useState(null);
@@ -120,9 +113,8 @@ export default function Battle() {
   return (
     <React.Fragment>
       <Instructions />
-
       <div className="players-container">
-        <h1 className="center-text header-lg">Players</h1>
+        <h1 className="center-text header-lg text-white">Players</h1>
         <div className="row space-around">
           {playerOne === null ? (
             <PlayerInput
@@ -153,7 +145,7 @@ export default function Battle() {
 
         {playerOne && playerTwo && (
           <Link
-            className="btn dark-btn btn-space"
+            className="btn light-btn btn-space"
             to={{
               pathname: '/battle/results',
               search: `?playerOne=${playerOne}&playerTwo=${playerTwo}`,

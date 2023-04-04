@@ -102,27 +102,31 @@ export default function Results({ location }) {
 
   return (
     <React.Fragment>
-      <div className="grid space-around container-sm">
-        <Card
-          header={winner.score === loser.score ? 'Tie' : 'Winner'}
-          subheader={`Score: ${winner.score.toLocaleString()}`}
-          avatar={winner.profile.avatar_url}
-          href={winner.profile.html_url}
-          name={winner.profile.login}
-        >
-          <ProfileList profile={winner.profile} />
-        </Card>
-        <Card
-          header={winner.score === loser.score ? 'Tie' : 'Loser'}
-          subheader={`Score: ${loser.score.toLocaleString()}`}
-          avatar={loser.profile.avatar_url}
-          name={loser.profile.login}
-          href={loser.profile.html_url}
-        >
-          <ProfileList profile={loser.profile} />
-        </Card>
+      <div className="flex flex-row space-x-4 justify-around">
+        <div>
+          <Card
+            header={winner.score === loser.score ? 'Tie' : 'Winner'}
+            subheader={`Score: ${winner.score.toLocaleString()}`}
+            avatar={winner.profile.avatar_url}
+            href={winner.profile.html_url}
+            name={winner.profile.login}
+          >
+            <ProfileList profile={winner.profile} />
+          </Card>
+        </div>
+        <div>
+          <Card
+            header={winner.score === loser.score ? 'Tie' : 'Loser'}
+            subheader={`Score: ${loser.score.toLocaleString()}`}
+            avatar={loser.profile.avatar_url}
+            name={loser.profile.login}
+            href={loser.profile.html_url}
+          >
+            <ProfileList profile={loser.profile} />
+          </Card>
+        </div>
       </div>
-      <Link to="/battle" className="btn dark-btn btn-space">
+      <Link to="/battle" className="btn light-btn btn-space">
         Reset
       </Link>
     </React.Fragment>
