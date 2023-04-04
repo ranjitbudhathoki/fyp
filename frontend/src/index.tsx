@@ -9,9 +9,9 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import AdminContextProvider from './context/AdminContext';
 import './styles/style.css';
 import './styles/popular.css';
-
 import './styles/tailwind.css';
 import './styles/globals.css';
+import './styles/comment.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -17,7 +17,7 @@ const Header = () => {
 
   return (
     <nav className="flex items-center justify-between px-4 py-4  bg-black ">
-      <h1 className="text-xl">Date.now()</h1>
+      <h1 className="text-xl text-white">Date.now()</h1>
       {user && (
         <ul className="flex items-center gap-3">
           <li>

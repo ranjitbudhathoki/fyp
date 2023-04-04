@@ -579,7 +579,7 @@ body {
   overflow: hidden;
 }
 
-/* .cardContainer {
+.cardContainer {
   width: 160px;
   height: 270px;
   margin: 100px auto;
@@ -589,7 +589,7 @@ body {
 }
 
 /*-------- Dashboard  --------*/
-/* .dashboard {
+.dashboard {
   display: flex;
   justify-content: space-between;
 }
@@ -682,7 +682,7 @@ body {
 }
 
 /*-------- Chat Display --------*/
-/* .chat-display,
+.chat-display,
 .matches-display {
   padding: 20px;
   height: 60vh;
@@ -690,7 +690,7 @@ body {
 }
 
 /*-------- Chat Input --------*/
-/*
+
 .chat-input {
   padding: 20px;
   display: flex;
@@ -955,9 +955,9 @@ li {
 .light-btn {
   color: #000;
   background: #aaa8a8;
-} */
+}
 
-/* .light-btn:disabled {
+.light-btn:disabled {
   background: #292929;
   color: #4a4a4a;
-} */
+}

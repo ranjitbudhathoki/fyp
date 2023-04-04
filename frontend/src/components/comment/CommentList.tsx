@@ -1,27 +1,3 @@
-// import Comment from './Comment';
-
-// export function CommentList({
-//   comments,
-//   getReplies,
-//   post,
-//   postId,
-//   createdAt,
-//   updatedAt,
-// }) {
-//   console.log('from commnet list ', comments);
-
-//   return comments.map((comment) => (
-//     <div key={comment.id} className="comment-stack">
-//       <Comment
-//         {...comment}
-//         getReplies={getReplies}
-//         post={post}
-//         postId={postId}
-//       />
-//     </div>
-//   ));
-// }
-
 import Comment from './Comment';
 
 interface Props {

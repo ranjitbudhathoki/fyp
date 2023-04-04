@@ -17,6 +17,7 @@ import HelpPostDetail from './pages/HelpPostDetail';
 import 'react-toastify/dist/ReactToastify.css';
 import Popular from './pages/Popular';
 import Admin from './pages/Admin';
+import './styles/comment.css';
 import NestedLayout from './components/NestedLayout';
 const App: React.FC = () => {
   const dispatch = useDispatch();
