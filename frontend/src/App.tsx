@@ -19,6 +19,10 @@ import Popular from './pages/Popular';
 import Admin from './pages/Admin';
 import './styles/comment.css';
 import NestedLayout from './components/NestedLayout';
+import Battle from './pages/Battle';
+import Results from './components/battle/Results';
+import { useLocation } from 'react-router-dom';
+
 const App: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -55,6 +59,11 @@ const App: React.FC = () => {
             <Route path="chat" element={<Chat />} />
             <Route path="collaborator" element={<Collaborator />} />
             <Route path="popular" element={<Popular />} />
+            <Route path="battle" element={<Battle />} />
+            <Route
+              path="battle/results"
+              element={<Results location={useLocation()} />}
+            />
             <Route path="collaborator/posts/:id" element={<HelpPostDetail />} />
             <Route path="*" element={<NotFound />} />
           </Route>
