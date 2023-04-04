@@ -13,14 +13,17 @@ const getCurrentUser = catchAsync(async (req, res, next) => {
 });
 
 const updateProfile = catchAsync(async (req, res, next) => {
-  const { birthDate, gender, preferredGender } = req.body;
+  const { bio, preferredGender } = req.body;
+  if (!req.body) {
+    return next(new AppError('Please update something', 400));
+  }
+
   const updatedUser = await prisma.user.update({
     where: {
       id: req.user.id,
     },
     data: {
-      birthDate: new Date(birthDate),
-      gender: gender,
+      bio: bio,
       preferredGender: preferredGender,
       updatedAt: new Date(),
     },

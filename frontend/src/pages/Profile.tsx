@@ -1,13 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from '../utils/axios-instance';
 import HelpPost from '../components/collaborator/HelpPost';
 import MatchPost from '../components/Feed/MatchPost';
 import { InformationCircleIcon } from '@heroicons/react/24/solid';
+import Overlay from '../Modals/Overlay';
+import Modal from '../Modals/Modal';
+import UpdateProfileModal from '../Modals/UpdateProfileModal';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { updateUser } from '../redux/slice/authSlice';
+// import { updateUser } from './redux/slice/authSlice';
 
 const Profile = () => {
   const { user } = useSelector((state: any) => state.auth);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const { data: helpPosts, isLoading } = useQuery({
     queryKey: ['user-help-posts'],
@@ -49,20 +59,37 @@ const Profile = () => {
     },
   });
 
+  const updateProfileMutation = useMutation({
+    mutationFn: async (data) => {
+      await axios.patch(`/api/users/${user.id}`, data);
+    },
+    onSuccess: (value) => {
+      toast.success('Profile Updated Successfully');
+    },
+    onError: () => {
+      toast.error('Error Updating Profile');
+    },
+  });
+
   const renderedMatchPosts = matchpost?.map((post) => {
     return (
-      <div className="max-w-full h-screen m-0">
+      <div key={post.id} className="max-w-full h-screen m-0">
         <MatchPost post={post} mutation={deleteMatchPostMutation} />;
       </div>
     );
   });
   const renderedHelpPosts = helpost?.map((post) => {
     return (
-      <div className="max-w-full h-screen m-0">
+      <div key={post.id} className="max-w-full h-screen m-0">
         <HelpPost post={post} mutation={deleteHelpPostMutation} />;
       </div>
     );
   });
+
+  const handleUpdateProfile = (body) => {
+    updateProfileMutation.mutate(body);
+    setIsOpen(false);
+  };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -82,7 +109,10 @@ const Profile = () => {
               <p className="text-gray-600 text-sm">{user.bio}</p>
             </div>
           </div>
-          <button className="bg-custom-light-green text-white  text-lg font-bold py-2 px-4 rounded w-full">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="bg-custom-light-green text-white  text-lg font-bold py-2 px-4 rounded w-full"
+          >
             Update Profile
           </button>
         </div>
@@ -101,7 +131,7 @@ const Profile = () => {
             <InformationCircleIcon className="w-8 h-8 text-gray-400 mr-2" />
             <div>
               <h2 className="text-lg font-medium text-white mb-30">
-                Such empoty here. No any post.
+                Such empty here. No any post.
               </h2>
             </div>
           </div>
@@ -113,9 +143,23 @@ const Profile = () => {
         {renderedHelpPosts?.length !== 0 ? (
           renderedHelpPosts
         ) : (
-          <h1 className="text-white text-lg  text-center">No posts to show!</h1>
+          <div className="flex items-center justify-center p-4  mb-30">
+            <InformationCircleIcon className="w-8 h-8 text-gray-400 mr-2" />
+            <div>
+              <h2 className="text-lg font-medium text-white mb-30">
+                Such empty here. No any post.
+              </h2>
+            </div>
+          </div>
         )}
       </div>
+      <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)}>
+        <Modal onClick={() => setIsOpen(false)}>
+          <UpdateProfileModal
+            onUpdate={handleUpdateProfile}
+          ></UpdateProfileModal>
+        </Modal>
+      </Overlay>
     </div>
   );
 };

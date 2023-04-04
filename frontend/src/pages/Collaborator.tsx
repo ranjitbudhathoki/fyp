@@ -13,8 +13,6 @@ const Collaborator: React.FC = () => {
   const queryClient = useQueryClient();
   const { user } = useSelector((state: any) => state.auth);
 
-  const [showModal, setShowModal] = useState(false);
-
   const [isOpen, setIsOpen] = useState(false);
 
   const { data } = useQuery({
@@ -43,10 +41,7 @@ const Collaborator: React.FC = () => {
 
   const handleSubmit = async (data: any) => {
     createPostMutation.mutate(data);
-  };
-
-  const toggleModal = () => {
-    setShowModal(!showModal);
+    setIsOpen(false);
   };
 
   const renderedPosts = (
@@ -65,7 +60,7 @@ const Collaborator: React.FC = () => {
     <>
       <div className="fixed bottom-4 right-12">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          className="bg-custom-light-green hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-full"
           onClick={() => setIsOpen(true)}
         >
           <svg
