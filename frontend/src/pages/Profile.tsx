@@ -39,6 +39,16 @@ const Profile = () => {
     },
   });
 
+  const deleteHelpPostMutation = useMutation({
+    mutationFn: async (id: any) => {
+      console.log(id);
+      await axios.delete(`/api/help-posts/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['user-help-posts']);
+    },
+  });
+
   const renderedMatchPosts = matchpost?.map((post) => {
     return (
       <div className="max-w-full h-screen m-0">
@@ -49,7 +59,7 @@ const Profile = () => {
   const renderedHelpPosts = helpost?.map((post) => {
     return (
       <div className="max-w-full h-screen m-0">
-        <HelpPost post={post} />;
+        <HelpPost post={post} mutation={deleteHelpPostMutation} />;
       </div>
     );
   });

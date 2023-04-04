@@ -1,14 +1,111 @@
+// import moment from 'moment';
+// import { useState } from 'react';
+// import { RiSendPlaneFill } from 'react-icons/ri';
+// import { useSelector } from 'react-redux';
+// import DeleteConfirmationModal from '../../Modals/DeleteConfirmationModal';
+// import { TrashIcon } from '@heroicons/react/24/solid';
+
+// interface HelpPostProps {
+//   post: any;
+//   mutation?: any;
+// }
+// function HelpPost({ post, mutation }: HelpPostProps) {
+//   const { user } = useSelector((state: any) => state.auth);
+//   const [showConfirmationModal, setShowConfirmationModal] =
+//     useState<boolean>(false);
+
+//   const isOwner = post.user.id === user.id; // check if post owner is the current user
+
+//   const formattedDate = moment(post.updatedAt).fromNow();
+//   return (
+//     <>
+//       <DeleteConfirmationModal
+//         isVisible={showConfirmationModal}
+//         message={`Do you want to delete this post ?`}
+//         onCancel={() => setShowConfirmationModal(false)}
+//         onConfirm={() => mutation.mutate(post.id)}
+//       />
+//       <div className="mt-2 mx-10 mb-16 max-w-screen-md rounded-2xl border p-4 bg-gray-300 text-black">
+//         <div className="flex items-center justify-between">
+//           <div className="flex items-center gap-3.5">
+//             <img
+//               src={post.user.photoUrl}
+//               alt={`${post.user.username}'s profile`}
+//               className="h-10 w-10 rounded-full bg-yellow-500 object-cover"
+//             />
+//             <div className="flex flex-col">
+//               <p className="mb-2 capitalize text-sm">{post.user.username}</p>
+//               <time dateTime="06-08-21" className="text-xs text-black-400">
+//                 {formattedDate}
+//               </time>
+//             </div>
+//           </div>
+//         </div>
+
+//         <div className="flex flex-row mt-2">
+//           {post?.tech_stack?.map((tech) => (
+//             <div
+//               key={tech}
+//               className="bg-custom-light-green w-20 h-10 rounded-full flex flex-row items-center justify-center mr-2"
+//             >
+//               <p className="text-sm fond-bold w-50 text-custom-light-dark">
+//                 {tech}
+//               </p>
+//             </div>
+//           ))}
+//         </div>
+
+//         {isOwner && (
+//           <div onClick={() => setShowConfirmationModal(true)}>
+//             <TrashIcon className="h-8  text-red-600" />
+//           </div>
+//         )}
+//         <div className="mt-7 whitespace-pre-wrap text-xl">{post.title}</div>
+//         <div className="mt-7 whitespace-pre-wrap text-sm">{post.body}</div>
+//         <div className="mt-7 ">
+//           <img src={post.image} className="h-45  w-full bg-cover"></img>
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
+
+// export default HelpPost;
+
 import moment from 'moment';
+import { useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
+import DeleteConfirmationModal from '../../Modals/DeleteConfirmationModal';
+import { TrashIcon } from '@heroicons/react/24/solid';
 
-function HelpPost({ post }) {
+interface HelpPostProps {
+  post: any;
+  mutation?: any;
+}
+
+function HelpPost({ post, mutation }: HelpPostProps) {
   const { user } = useSelector((state: any) => state.auth);
-  console.log('help post', post);
+  const [showConfirmationModal, setShowConfirmationModal] =
+    useState<boolean>(false);
+
+  const isOwner = post.user.id === user.id; // check if post owner is the current user
 
   const formattedDate = moment(post.updatedAt).fromNow();
+
+  const handleConfirm = () => {
+    mutation.mutate(post.id);
+    setShowConfirmationModal(false);
+  };
+
   return (
     <>
+      <DeleteConfirmationModal
+        isVisible={showConfirmationModal}
+        message={`Do you want to delete this post ?`}
+        onCancel={() => setShowConfirmationModal(false)}
+        onConfirm={handleConfirm}
+      />
       <div className="mt-2 mx-10 mb-16 max-w-screen-md rounded-2xl border p-4 bg-gray-300 text-black">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3.5">
@@ -24,7 +121,17 @@ function HelpPost({ post }) {
               </time>
             </div>
           </div>
+
+          {isOwner && (
+            <div
+              className="flex justify-end"
+              onClick={() => setShowConfirmationModal(true)}
+            >
+              <TrashIcon className="h-8 w-8 text-red-600 cursor-pointer" />
+            </div>
+          )}
         </div>
+
         <div className="flex flex-row mt-2">
           {post?.tech_stack?.map((tech) => (
             <div
@@ -37,10 +144,11 @@ function HelpPost({ post }) {
             </div>
           ))}
         </div>
+
         <div className="mt-7 whitespace-pre-wrap text-xl">{post.title}</div>
         <div className="mt-7 whitespace-pre-wrap text-sm">{post.body}</div>
         <div className="mt-7 ">
-          <img src={post.image} className="h-45  w-full bg-cover"></img>
+          <img src={post.image} className="h-45 w-full bg-cover" alt="post" />
         </div>
       </div>
     </>
