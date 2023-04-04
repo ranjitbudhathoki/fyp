@@ -4,7 +4,13 @@ import axios from '../../utils/axios-instance';
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
 
-function CodeEditor({ postId, userId, onSubmit, language: lang }) {
+function CodeEditor({
+  postId,
+  userId,
+  onSubmit,
+  language: lang,
+  preferredGender,
+}) {
   const [value, setValue] = useState('');
   const [language, setLanguage] = useState(lang);
 
@@ -31,8 +37,14 @@ function CodeEditor({ postId, userId, onSubmit, language: lang }) {
       return;
     }
     if (value) {
-      createSolutionMutation.mutate({ userId, postId, code: value });
+      createSolutionMutation.mutate({
+        userId,
+        postId,
+        code: value,
+        preferredGender,
+      });
     }
+    onSubmit(false);
   };
 
   return (

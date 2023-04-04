@@ -10,7 +10,7 @@ import { useQuery } from 'react-query';
 import { updateUser } from './redux/slice/authSlice';
 import axios from './utils/axios-instance';
 import Collaborator from './pages/Collaborator';
-import Profile from './components/Profile/Profile';
+import Profile from './pages/Profile';
 import AdminLogin from './pages/AdminLogin';
 import Feed from './pages/Feed';
 import HelpPostDetail from './pages/HelpPostDetail';

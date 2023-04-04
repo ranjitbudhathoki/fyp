@@ -28,12 +28,29 @@ async function createImage(body) {
 }
 
 const saveSolution = catchAsync(async (req, res, next) => {
-  const { postId, code, userId } = req.body;
+  const { postId, code, userId, preferredGender } = req.body;
 
-  console.log(req.body);
+  console.log(preferredGender);
 
   if (!postId || !code || !userId) {
     return next(new AppError('Please provide all the required fields', 400));
+  }
+
+  const currentUser = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  console.log('cureent ', currentUser.preferredGender);
+
+  if (currentUser.gender !== preferredGender) {
+    return next(
+      new AppError(
+        'You are not allowed to submit a solution for this post',
+        400
+      )
+    );
   }
 
   const filename = await createImage(code);
