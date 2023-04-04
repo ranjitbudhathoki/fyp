@@ -9,7 +9,7 @@ function HelpPost({ post }) {
   const formattedDate = moment(post.updatedAt).fromNow();
   return (
     <>
-      <div className="mt-2 mx-10 mb-16 max-w-screen-md rounded-2xl border p-4 text-white">
+      <div className="mt-2 mx-10 mb-16 max-w-screen-md rounded-2xl border p-4 bg-gray-300 text-black">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3.5">
             <img
@@ -19,7 +19,7 @@ function HelpPost({ post }) {
             />
             <div className="flex flex-col">
               <p className="mb-2 capitalize text-sm">{post.user.username}</p>
-              <time dateTime="06-08-21" className="text-xs text-gray-400">
+              <time dateTime="06-08-21" className="text-xs text-black-400">
                 {formattedDate}
               </time>
             </div>

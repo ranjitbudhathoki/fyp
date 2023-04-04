@@ -132,15 +132,21 @@ const updateMatchPost = catchAsync(async (req, res, next) => {
 const deleteMatchPost = async (req, res, next) => {
   const { id } = req.params;
 
+  console.log('from delete match post controller');
+
+  console.log(id);
+
   const post = await prisma.matchPost.findFirst({
     where: { id, userId: req.user.id },
   });
+
+  console.log('post', post);
 
   if (!post) {
     return next(new AppError('Post not found', 404));
   }
 
-  const deletedPost = await prisma.helpPost.delete({
+  const deletedPost = await prisma.matchPost.delete({
     where: {
       id,
     },

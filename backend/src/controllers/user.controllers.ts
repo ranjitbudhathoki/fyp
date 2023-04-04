@@ -30,7 +30,7 @@ const updateProfile = catchAsync(async (req, res, next) => {
   });
 });
 
-const getPostByUserId = catchAsync(async (req, res, next) => {
+const getHelpPostByUserId = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   if (id !== req.user.id) {
@@ -56,16 +56,35 @@ const getPostByUserId = catchAsync(async (req, res, next) => {
   });
 });
 
-const getUserImages = catchAsync(async (req, res, next) => {
-  const userImages = await prisma.user.findMany({
-    select: {
-      photoUrl: true,
+const getMatchPostByUserId = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (id !== req.user.id) {
+    return next(
+      new AppError('You are not authorized to access this resource', 403)
+    );
+  }
+
+  const posts = await prisma.matchPost.findMany({
+    where: {
+      userId: req.user.id,
+    },
+    include: {
+      user: true,
     },
   });
 
   res.status(200).json({
-    userImages,
+    status: 'success',
+    data: {
+      posts,
+    },
   });
 });
 
-export { updateProfile, getPostByUserId, getCurrentUser };
+export {
+  updateProfile,
+  getHelpPostByUserId,
+  getMatchPostByUserId,
+  getCurrentUser,
+};

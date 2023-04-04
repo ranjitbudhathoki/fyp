@@ -1,72 +1,109 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import axios from '../utils/axios-instance';
-import { TrashIcon } from '@heroicons/react/24/outline';
+import HelpPost from '../components/collaborator/HelpPost';
+import MatchPost from '../components/Feed/MatchPost';
+import { InformationCircleIcon } from '@heroicons/react/24/solid';
 
 const Profile = () => {
   const { user } = useSelector((state: any) => state.auth);
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['user-posts'],
+  const { data: helpPosts, isLoading } = useQuery({
+    queryKey: ['user-help-posts'],
     queryFn: async () => {
-      const response = await axios.get(`/api/users/${user.id}/posts/`);
+      const response = await axios.get(`/api/users/${user.id}/help-posts/`);
       return response.data;
     },
   });
 
-  const posts = data?.data?.posts;
+  const helpost = helpPosts?.data?.posts;
 
-  const deletePostMutation = useMutation({
-    mutationFn: async (id: any) => {
-      console.log(id);
-      await axios.delete(`/api/posts/${id}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['user-posts']);
+  const { data: matchPosts, isLoading: isMatchPostLoading } = useQuery({
+    queryKey: ['user-match-posts'],
+    queryFn: async () => {
+      const response = await axios.get(`/api/users/${user.id}/match-posts/`);
+      return response.data;
     },
   });
 
-  const renderedPosts = posts?.map((post) => {
+  const matchpost = matchPosts?.data?.posts;
+
+  const deleteMatchPostMutation = useMutation({
+    mutationFn: async (id: any) => {
+      console.log(id);
+      await axios.delete(`/api/match-posts/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['user-match-posts']);
+    },
+  });
+
+  const renderedMatchPosts = matchpost?.map((post) => {
     return (
-      <div className="bg-black h-full">
-        <div>{post.title}</div>
+      <div className="max-w-full h-screen m-0">
+        <MatchPost post={post} mutation={deleteMatchPostMutation} />;
+      </div>
+    );
+  });
+  const renderedHelpPosts = helpost?.map((post) => {
+    return (
+      <div className="max-w-full h-screen m-0">
+        <HelpPost post={post} />;
       </div>
     );
   });
 
-  console.log('rendered posts', renderedPosts);
   return (
-    <div>
-      <div className="flex flex-col items-center p-6">
-        <div className="flex flex-col items-center">
-          <img
-            src={user.photoUrl}
-            alt={user.name}
-            className="w-20 h-22 rounded-full object-cover mr-4"
-          />
-          <div className="flex flex-col text-center">
-            <h1 className="text-lg font-bold text-white">{user.displayName}</h1>
-            <p className="text-gray-600">@{user.username}</p>
-            <p className="text-gray-600">{user.bio}</p>
+    <div className="flex flex-col md:flex-row">
+      <div className="md:w-1/3 p-6 fixed right-0">
+        <div className="bg-white rounded-md shadow-md p-6">
+          <div className="flex  flex-col items-center mb-6">
+            <img
+              src={user.photoUrl}
+              alt={user.name}
+              className="w-20 h-20 rounded-full object-cover mr-4"
+            />
+            <div className="flex flex-col text-center">
+              <h1 className="text-lg font-bold text-gray-900">
+                {user.displayName}
+              </h1>
+              <p className="text-gray-600 text-sm">@{user.username}</p>
+              <p className="text-gray-600 text-sm">{user.bio}</p>
+            </div>
           </div>
+          <button className="bg-custom-light-green text-white  text-lg font-bold py-2 px-4 rounded w-full">
+            Update Profile
+          </button>
         </div>
-        <button className="bg-blue-500 text-white font-bold py-2 px-4 mt-4 rounded">
-          Update Profile
-        </button>
       </div>
-
-      <div className=" h-64 overflow-y-scroll">
-        {renderedPosts?.length !== 0 ? (
-          <div>
-            <h1 className="text-lg font-medium mb-1 text-center mt-5">
-              My Posts
-            </h1>
-
-            {renderedPosts}
-          </div>
+      <div className="md:w-2/3 p-6 overflow-y-auto">
+        <h1 className="text-custom-light-green text-center underline mb-10">
+          My Posts
+        </h1>
+        <h4 className="text-white text-center mb-3 text-2xl underline">
+          Match Posts
+        </h4>
+        {renderedMatchPosts?.length !== 0 ? (
+          renderedMatchPosts
         ) : (
-          <h1 className="text-white text-center">No post to show!</h1>
+          <div className="flex items-center justify-center p-4  mb-30">
+            <InformationCircleIcon className="w-8 h-8 text-gray-400 mr-2" />
+            <div>
+              <h2 className="text-lg font-medium text-white mb-30">
+                Such empoty here. No any post.
+              </h2>
+            </div>
+          </div>
+        )}
+        <h4 className="text-white text-center mb-3 text-2xl underline  mt-50">
+          Help Posts
+        </h4>
+
+        {renderedHelpPosts?.length !== 0 ? (
+          renderedHelpPosts
+        ) : (
+          <h1 className="text-white text-lg  text-center">No posts to show!</h1>
         )}
       </div>
     </div>

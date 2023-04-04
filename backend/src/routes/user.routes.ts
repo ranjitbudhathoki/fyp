@@ -2,7 +2,8 @@ import express from 'express';
 
 import {
   updateProfile,
-  getPostByUserId,
+  getHelpPostByUserId,
+  getMatchPostByUserId,
   getCurrentUser,
 } from '../controllers/user.controllers';
 
@@ -12,6 +13,7 @@ router.get('/me', getCurrentUser);
 
 router.patch('/:id', updateProfile);
 
-router.get('/:id/posts/', getPostByUserId);
+router.get('/:id/help-posts/', getHelpPostByUserId);
+router.get('/:id/match-posts/', getMatchPostByUserId);
 
 export default router;
