@@ -50,7 +50,11 @@ const getHelpPostById = catchAsync(async (req, res, next) => {
 });
 
 const createHelpPost = catchAsync(async (req, res, next) => {
-  console.log(req.body);
+  const { title, body } = req.body;
+  const tags = JSON.parse(req.body.tags);
+
+  if (!title || !body || !tags)
+    return res.status(400).json({ message: 'Please fill all the fields' });
 
   const files = req.files!;
   const file = files[Object.keys(files)[0]] as any;
@@ -61,8 +65,6 @@ const createHelpPost = catchAsync(async (req, res, next) => {
     if (err) return res.status(400).json({ message: 'Error Occured in Image' });
   });
 
-  const { title, body } = req.body;
-  const tags = JSON.parse(req.body.tags);
   const post = await prisma.helpPost.create({
     data: {
       title,
@@ -139,7 +141,6 @@ const deleteHelpPost = async (req, res, next) => {
 const createComment = catchAsync(async (req, res, next) => {
   const { body, parentId } = req.body;
   const { id } = req.params;
-  // console.log(id, parentId, body);
 
   const comment = await prisma.comment.create({
     data: {

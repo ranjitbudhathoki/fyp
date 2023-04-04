@@ -66,7 +66,9 @@ const getMatchPostById = catchAsync(async (req, res, next) => {
 const createMatchPost = catchAsync(async (req, res, next) => {
   const { body, language } = req.body;
 
-  console.log('body', req.body);
+  if (!body || !language) {
+    return next(new AppError('Please provide body and language', 400));
+  }
 
   const existingPost = await prisma.matchPost.findFirst({
     where: {
