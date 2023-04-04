@@ -64,9 +64,9 @@ const getMatchPostById = catchAsync(async (req, res, next) => {
 });
 
 const createMatchPost = catchAsync(async (req, res, next) => {
-  const {
-    body: { title },
-  } = req.body;
+  const { body, language } = req.body;
+
+  console.log('body', req.body);
 
   const existingPost = await prisma.matchPost.findFirst({
     where: {
@@ -83,8 +83,9 @@ const createMatchPost = catchAsync(async (req, res, next) => {
 
   const post = await prisma.matchPost.create({
     data: {
-      body: title,
+      body: body,
       userId: req.user.id,
+      language: language,
       updatedAt: new Date(),
     },
   });
