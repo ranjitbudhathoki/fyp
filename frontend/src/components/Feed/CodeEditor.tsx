@@ -4,9 +4,9 @@ import axios from '../../utils/axios-instance';
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query';
 
-function CodeEditor({ postId, userId, onSubmit }) {
+function CodeEditor({ postId, userId, onSubmit, language: lang }) {
   const [value, setValue] = useState('');
-  const [language, setLanguage] = useState('javascript');
+  const [language, setLanguage] = useState(lang);
 
   const handleEditorChange = (value: string, event: any) => {
     setValue(value);
@@ -31,23 +31,6 @@ function CodeEditor({ postId, userId, onSubmit }) {
       return;
     }
     if (value) {
-      // const resposne: any = await axios
-      //   .post('/api/solutions/', {
-      //     postId,
-      //     userId,
-      //     code: value,
-      //   })
-      //   .then(() => {
-      //     toast.success('Solution sent successfully');
-      //   })
-      //   .catch((error) => {
-      //     toast.error(error.message);
-      //   })
-      //   .finally(() => {
-      //     onSubmit(false);
-      //   });
-
-      console.log(userId, postId, value);
       createSolutionMutation.mutate({ userId, postId, code: value });
     }
   };

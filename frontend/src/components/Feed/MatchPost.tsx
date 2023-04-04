@@ -95,6 +95,7 @@ import CodeEditor from './CodeEditor';
 import Overlay from '../../Modals/Overlay';
 import SendSolutionModal from '../../Modals/SendSolutionModal';
 import Modal from '../../Modals/Modal';
+import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/solid';
 
 function MatchPost({ post }) {
   const { user } = useSelector((state: any) => state.auth);
@@ -121,7 +122,13 @@ function MatchPost({ post }) {
               </time>
             </div>
           </div>
+          <div className="bg-custom-light-green w-20 h-10 rounded-full flex items-center justify-center">
+            <p className="text-sm fond-bold w-50 text-custom-light-dark">
+              {post.language}
+            </p>
+          </div>
         </div>
+
         <div className="mt-7 whitespace-pre-wrap text-lg">{post.body}</div>
         <div className="mt-5 flex flex-wrap justify-center gap-2 border-b pb-4"></div>
         <div className="flex justify-center mt-2">
@@ -141,6 +148,7 @@ function MatchPost({ post }) {
             onSubmit={setIsOpen}
             postId={post.id}
             userId={post.userId}
+            language={post.language}
           ></SendSolutionModal>
         </Modal>
       </Overlay>

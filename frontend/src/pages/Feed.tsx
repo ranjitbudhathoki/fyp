@@ -23,10 +23,12 @@ const Feed: React.FC = () => {
   });
 
   const createPostMutation = useMutation({
-    mutationFn: async (description: any) => {
+    mutationFn: async ({ title, language }: any) => {
+      console.log('title,lan', title, language);
       await axios.post('/api/match-posts/', {
         authorID: user.id,
-        body: description,
+        body: title,
+        language: language,
       });
     },
     onSuccess: () => {
