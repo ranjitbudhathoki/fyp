@@ -1,6 +1,7 @@
 import prisma from '../services/prisma';
 import { catchAsync } from '../utils/catchAsnyc';
 import AppError from '../utils/appError';
+import path from 'path';
 
 const getAllHelpPost = catchAsync(async (req, res, next) => {
   const posts = await prisma.helpPost.findMany({
@@ -51,17 +52,24 @@ const getHelpPostById = catchAsync(async (req, res, next) => {
 const createHelpPost = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
-  const files = req.files;
+  const files = req.files!;
+  const file = files[Object.keys(files)[0]] as any;
 
-  console.log('files', files);
+  const filePath = `./images/${file.name}`;
 
-  const { title, body, tech_stack, project_link } = req.body;
+  file.mv(filePath, (err: any) => {
+    if (err) return res.status(400).json({ message: 'Error Occured in Image' });
+  });
+
+  const { title, body } = req.body;
+  const tags = JSON.parse(req.body.tags);
   const post = await prisma.helpPost.create({
     data: {
       title,
       body,
-      tech_stack,
-      project_link,
+      tech_stack: tags,
+      project_link: req.body.link,
+      image: `http://localhost:8000/images/${file.name}`,
       userId: req.user.id,
       updatedAt: new Date(),
     },
