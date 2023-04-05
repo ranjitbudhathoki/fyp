@@ -61,10 +61,11 @@ const Profile = () => {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
-      await axios.patch(`/api/users/${user.id}`, data);
+      const res = await axios.patch(`/api/users/${user.id}`, data);
     },
     onSuccess: (value) => {
       toast.success('Profile Updated Successfully');
+      queryClient.invalidateQueries(['user-data']);
     },
     onError: () => {
       toast.error('Error Updating Profile');

@@ -60,7 +60,7 @@ function UpdateProfileModal({ bio, preferredGender, onUpdate }: Props) {
             <option value="">Select an option</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-            <option value="Binary">Binary</option>
+            <option value="Other">Other</option>
           </select>
 
           <button

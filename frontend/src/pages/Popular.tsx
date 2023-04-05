@@ -10,6 +10,7 @@ import {
 import Card from '../components/popularRepo/Card';
 import Loading from '../components/popularRepo/Loading';
 import Tooltip from '../components/popularRepo/Tooltip';
+
 function LangaugesNav({ selected, onUpdateLanguage }) {
   const languages = ['All', 'JavaScript', 'Rust', 'Go', 'Kotlin', 'Python'];
 
@@ -33,7 +34,7 @@ function LangaugesNav({ selected, onUpdateLanguage }) {
 function ReposGrid({ repos }) {
   return (
     <div className=" max-w-full h-screen ">
-      <ul className="grid grid-cols-3 space-around">
+      <ul className="grid grid-cols-3 gap-5 space-around">
         {repos.map((repo, index) => {
           const {
             name,
