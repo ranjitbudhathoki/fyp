@@ -47,8 +47,6 @@ const NotificationTemplateDecider: React.FC<
   } = useSelector((state: any) => state.auth);
   const queryClient = useQueryClient();
 
-  console.log('notification', notification);
-
   const { mutate } = useMutation(
     async () => {
       const res = await axios.delete(

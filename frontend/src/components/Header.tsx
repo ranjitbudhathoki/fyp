@@ -118,12 +118,18 @@ const Header = () => {
   const profileRef = useRef(null) as RefObject<HTMLDivElement>;
   const notificationsRef = useRef(null) as RefObject<HTMLDivElement>;
 
-  const unReadNotificationQuery = useQuery('unread-notifications', async () => {
-    const res = await axios.get(
-      `/notification/${user.id}/get-unread-notifications-count`
-    );
-    return res.data;
-  });
+  const unReadNotificationQuery = useQuery(
+    'unread-notifications',
+    async () => {
+      const res = await axios.get(
+        `/notification/${user.id}/get-unread-notifications-count`
+      );
+      return res.data;
+    },
+    {
+      refetchOnWindowFocus: true,
+    }
+  );
 
   const unreadNotificationCount = unReadNotificationQuery?.data?.data;
 

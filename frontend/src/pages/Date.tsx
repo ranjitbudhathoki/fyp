@@ -30,6 +30,7 @@ function Date() {
       return res.data;
     },
     enabled: !!post,
+    refetchOnWindowFocus: true,
   });
 
   const matchMutation = useMutation({
@@ -65,6 +66,13 @@ function Date() {
   return (
     <div className="dashboard mt-0">
       <div className="swipe-container">
+        {solutions?.data?.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full">
+            <p className="text-white text-xl">
+              😢Nothing to show.Try again after some time...
+            </p>
+          </div>
+        )}
         <div className="card-container">
           {solutions?.data?.map((soln: any) => (
             <TinderCard
