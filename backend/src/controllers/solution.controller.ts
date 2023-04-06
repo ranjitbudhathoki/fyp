@@ -4,6 +4,9 @@ import { nanoid } from 'nanoid';
 import prisma from '../services/prisma';
 import { catchAsync } from '../utils/catchAsnyc';
 import AppError from '../utils/appError';
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 
 async function createImage(body) {
   // Set canvas dimensions
@@ -29,6 +32,11 @@ async function createImage(body) {
 
 const saveSolution = catchAsync(async (req, res, next) => {
   const { postId, code, userId, preferredGender } = req.body;
+
+  console.log('from params', userId);
+  console.log('currentUser', req.user.id);
+
+  console.log(userId === req.user.id);
 
   console.log(preferredGender);
 
@@ -87,4 +95,38 @@ const saveSolution = catchAsync(async (req, res, next) => {
   });
 });
 
-export { saveSolution };
+//get all the solutions for a post
+const getSolution = catchAsync(async (req, res, next) => {
+  const { postId } = req.params;
+
+  const solutions = await prisma.solution.findMany({
+    where: {
+      postId,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: solutions,
+  });
+});
+
+const deleteSoltion = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const solution = await prisma.solution.delete({
+    where: {
+      id,
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: null,
+  });
+});
+
+export { saveSolution, getSolution };

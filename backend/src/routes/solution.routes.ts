@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { saveSolution } from '../controllers/solution.controller';
+import { saveSolution, getSolution } from '../controllers/solution.controller';
 const router = Router();
 
 router.post('/', saveSolution);
+router.get('/:postId', getSolution);
 
 export default router;

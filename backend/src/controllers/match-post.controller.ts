@@ -160,9 +160,7 @@ const deleteMatchPost = async (req, res, next) => {
 };
 
 const createMatch = catchAsync(async (req, res, next) => {
-  console.log('from create match');
   const { matchedUserId } = req.body;
-  console.log(req.body);
 
   const match = await prisma.match.create({
     data: {

@@ -15,13 +15,11 @@ import solutionRouter from './routes/solution.routes';
 import prisma from './services/prisma';
 import matchRouter from './routes/match.routes';
 import adminRouter from './routes/admin.routes';
-// import fileUpload from 'express-fileupload';
+
 const app = express();
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
-
-// app.use(fileUpload());
 
 app.use(
   cors({
@@ -39,6 +37,7 @@ app.use(
 );
 
 app.use(express.static('images/'));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
@@ -51,26 +50,6 @@ app.use('/api/help-posts', checkLoggedIn, helpPostRouter);
 app.use('/api/match-posts', matchPostRouter);
 app.use('/api/matches', checkLoggedIn, matchRouter);
 app.use('/api/solutions', checkLoggedIn, solutionRouter);
-
-app.get('/api/solutions/:postId', async (req, res) => {
-  try {
-    const { postId } = req.params;
-
-    // Find all solutions for the specified post ID
-    const solutions = await prisma.solution.findMany({
-      where: {
-        postId: postId,
-      },
-      include: {
-        user: true,
-      },
-    });
-
-    res.status(200).json(solutions);
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
-});
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
