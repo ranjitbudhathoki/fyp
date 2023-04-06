@@ -3,120 +3,10 @@ import { motion } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import handleStopPropagation from '../utils/handleStopPropagation';
 import NotificationType from '../utils/NotificationType';
-import InvitationStatus from '../utils/InvitationStatus';
 import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
 import { formatRelative } from 'date-fns';
 import { TrashIcon } from '@heroicons/react/24/solid';
-
-interface AppointAdminNotificationProps {
-  notification: any;
-}
-
-const AppointAdminNotification: React.FC<AppointAdminNotificationProps> = ({
-  notification,
-}) => {
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation(
-    async (data: any) => {
-      const res = await axios.patch(
-        `/workspace/${notification.workspaceId}/accept-admin-invitation`,
-        data
-      );
-      return res.data;
-    },
-    {
-      onSuccess(data) {
-        queryClient.invalidateQueries('unread-notifications');
-        queryClient.invalidateQueries('workspace-query');
-        queryClient.invalidateQueries('notifications');
-      },
-      onError(error) {},
-    }
-  );
-
-  return (
-    <div className="p-2 rounded-md flex gap-4 items-center">
-      <figure className=" flex-shrink-0 w-14 h-14   rounded-full overflow-hidden">
-        <img
-          className="w-full h-full object-cover"
-          src={notification?.sender?.photo}
-          alt={notification?.sender?.userName}
-        />
-      </figure>
-      <div className="flex flex-col gap-1">
-        <h3 className="text-base">
-          {notification.message} by {notification.sender?.userName}
-        </h3>
-        <div className="flex flex-col gap-1">
-          <p className="text-xs text-custom-light-green">
-            {formatRelative(new Date(notification.createdAt), new Date())}
-          </p>
-          <div className="text-sm flex items-center gap-2">
-            <button
-              onClick={() => {
-                mutate({
-                  newAdminId: notification.recieverId,
-                  adminId: notification.senderId,
-                  status: NotificationType.APPOINT_ADMIN_ACCEPTED,
-                  notificationId: notification.id,
-                });
-              }}
-              className="bg-green-600 py-2 px-4 text-white rounded-md"
-            >
-              Accept
-            </button>
-            <button
-              onClick={() => {
-                mutate({
-                  newAdminId: notification.recieverId,
-                  adminId: notification.senderId,
-                  status: NotificationType.APPOINT_ADMIN_DECLINED,
-                  notificationId: notification.id,
-                });
-              }}
-              className="bg-red-600 py-2 px-4 text-white rounded-md"
-            >
-              Decline
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-interface AdminAppointCreatorProps {
-  notification: any;
-}
-const AdminAppointCreator: React.FC<AdminAppointCreatorProps> = ({
-  notification,
-}) => {
-  return (
-    <div className="p-2 rounded-md flex gap-4 items-center">
-      <figure className=" flex-shrink-0 w-14 h-14   rounded-full overflow-hidden">
-        <img
-          className="w-full h-full object-cover"
-          src={notification?.sender?.photo}
-          alt={notification?.sender?.userName}
-        />
-      </figure>
-      <div className="flex flex-col gap-1">
-        <h3 className="text-base">
-          {notification.message.replace(
-            '(recieverName)',
-            notification?.reciever?.userName
-          )}{' '}
-        </h3>
-        <div className="flex flex-col gap-1">
-          <p className="text-xs text-custom-light-green">
-            {formatRelative(new Date(notification.createdAt), new Date())}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 interface NormalNotificationProps {
   notification: any;
@@ -134,7 +24,7 @@ const NormalNotification: React.FC<NormalNotificationProps> = ({
         />
       </figure>
       <div className="flex flex-col gap-1">
-        <h3 className="text-base">{notification.message}</h3>
+        <h3 className="text-base">{`${notification.message}`}</h3>
         <div className="flex flex-col gap-1">
           <p className="text-xs text-custom-light-green">
             {formatRelative(new Date(notification.createdAt), new Date())}
@@ -179,16 +69,15 @@ const NotificationTemplateDecider: React.FC<
   return (
     <div className="border-b relative group  border-custom-light-green">
       <div>{content}</div>
-      {!(type === NotificationType.INVITATION) && (
-        <div className="absolute right-0 top-2 hidden group-hover:flex">
-          <button
-            onClick={() => mutate()}
-            className="text-gray-400 hover:text-custom-light-green"
-          >
-            <TrashIcon className="h-4 w-4" />
-          </button>
-        </div>
-      )}
+
+      <div className="absolute right-0 top-2 hidden group-hover:flex">
+        <button
+          onClick={() => mutate()}
+          className="text-gray-400 hover:text-custom-light-green"
+        >
+          <TrashIcon className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 };
