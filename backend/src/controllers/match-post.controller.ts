@@ -162,6 +162,19 @@ const deleteMatchPost = async (req, res, next) => {
 const createMatch = catchAsync(async (req, res, next) => {
   const { matchedUserId } = req.body;
 
+  const existingMatch = await prisma.match.findUnique({
+    where: {
+      userId1_userId2: {
+        userId1: req.user.id,
+        userId2: matchedUserId,
+      },
+    },
+  });
+
+  if (existingMatch) {
+    return next(new AppError('You already matched with this user', 400));
+  }
+
   const match = await prisma.match.create({
     data: {
       user1: {

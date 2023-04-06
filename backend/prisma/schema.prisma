@@ -11,26 +11,28 @@ datasource db {
 }
 
 model User {
-  id              String      @id @default(uuid())
-  githubId        String?     @unique
-  username        String?     @unique
-  displayName     String?
-  bio             String?
-  gender          String?
-  preferredGender String?
-  birthDate       DateTime?
-  photoUrl        String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime
-  posts           HelpPost[]
-  comments        Comment[]
-  matches1        Match[]     @relation(name: "user1")
-  matches2        Match[]     @relation(name: "user2")
-  msgSender       Message[]   @relation(name: "sender")
-  receiver        Message[]   @relation(name: "receiver")
-  questions       MatchPost[]
-  likes           Like[]
-  solutions       Solution[]
+  id                    String         @id @default(uuid())
+  githubId              String?        @unique
+  username              String?        @unique
+  displayName           String?
+  bio                   String?
+  gender                String?
+  preferredGender       String?
+  birthDate             DateTime?
+  photoUrl              String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime
+  posts                 HelpPost[]
+  comments              Comment[]
+  matches1              Match[]        @relation(name: "user1")
+  matches2              Match[]        @relation(name: "user2")
+  msgSender             Message[]      @relation(name: "sender")
+  receiver              Message[]      @relation(name: "receiver")
+  questions             MatchPost[]
+  likes                 Like[]
+  solutions             Solution[]
+  senderNotifications   Notification[] @relation("sender-notifications")
+  recieverNotifications Notification[] @relation("receiver-notifications")
 }
 
 model Admin {
@@ -132,4 +134,24 @@ model Report {
   reason     String
   reporterId String
   targetId   String
+}
+
+enum NotificationType {
+  SEND_SOLUTION
+  WARNING
+  MATCHED
+  NORMAL
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  type       NotificationType @default(NORMAL)
+  message    String
+  read       Boolean          @default(false)
+  sender     User?            @relation("sender-notifications", fields: [senderId], references: [id], onDelete: SetNull)
+  senderId   String?
+  receiver   User             @relation("receiver-notifications", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 }

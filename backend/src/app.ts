@@ -12,9 +12,9 @@ import userRouter from './routes/user.routes';
 import helpPostRouter from './routes/help-post.routes';
 import matchPostRouter from './routes/match-post.routes';
 import solutionRouter from './routes/solution.routes';
-import prisma from './services/prisma';
 import matchRouter from './routes/match.routes';
 import adminRouter from './routes/admin.routes';
+import notificationRouter from './routes/notificaion.routes';
 
 const app = express();
 app.use(express.json());
@@ -50,6 +50,7 @@ app.use('/api/help-posts', checkLoggedIn, helpPostRouter);
 app.use('/api/match-posts', matchPostRouter);
 app.use('/api/matches', checkLoggedIn, matchRouter);
 app.use('/api/solutions', checkLoggedIn, solutionRouter);
+app.use('/notification', checkLoggedIn, notificationRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
