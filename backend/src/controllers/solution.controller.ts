@@ -87,14 +87,16 @@ const saveSolution = catchAsync(async (req, res, next) => {
     },
   });
 
-  const targetUser = await prisma.user.findFirst({
-    where: {},
+  const targetUser = await prisma.user.findUnique({
+    where: {
+      id: postOwnerId,
+    },
   });
 
   const notification = await prisma.notification.create({
     data: {
       type: NotificationType.SEND_SOLUTION,
-      message: 'You have a new solution for your post',
+      message: `You have a new solution for your post from ${targetUser.username}`,
       senderId: req.user.id,
       receiverId: postOwnerId,
       solutionId: newSolution.id,

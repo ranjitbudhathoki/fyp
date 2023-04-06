@@ -1,6 +1,7 @@
 import prisma from '../services/prisma';
 import { catchAsync } from '../utils/catchAsnyc';
 import AppError from '../utils/appError';
+import { NotificationType } from '@prisma/client';
 
 const getAllMatchPost = catchAsync(async (req, res, next) => {
   const posts = await prisma.matchPost.findMany({
@@ -187,21 +188,35 @@ const createMatch = catchAsync(async (req, res, next) => {
     },
   });
 
-  console.log('match', match);
-
   if (!match) {
     return next(new AppError('Match not created', 404));
   }
 
   if (match) {
-    // delete solution
     const deletedsoln = await prisma.solution.delete({
       where: {
         id: solutionId,
       },
     });
-    console.log(deletedsoln);
   }
+
+  const matchedUser = await prisma.user.findUnique({
+    where: {
+      id: matchedUserId,
+    },
+    select: {
+      username: true,
+    },
+  });
+
+  const notification = await prisma.notification.create({
+    data: {
+      type: NotificationType.MATCHED,
+      message: `You have matched with ${matchedUser.username}`,
+      senderId: req.user.id,
+      receiverId: matchedUserId,
+    },
+  });
 
   res.status(201).json({
     status: 'success',

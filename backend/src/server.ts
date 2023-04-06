@@ -14,10 +14,22 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-  console.log(`Connected on ${socket.id}`);
-  socket.on('send-message', (payload) => {
-    console.log(payload);
-    socket.broadcast.emit('receive-message', payload);
+  socket.on('join-room', (roomId) => {
+    console.log(`joined a room ${roomId}`);
+    socket.join(roomId);
+  });
+
+  socket.on('leave-room', (chatId) => {
+    socket.leave(chatId);
+  });
+
+  socket.on('new-message', (event) => {
+    socket.to(event.data.events[1]).emit('push-new-message', event);
+  });
+
+  socket.on('typing', (data) => {
+    console.log({ data });
+    socket.to(data.chatId).emit('typing-status', data);
   });
 });
 
