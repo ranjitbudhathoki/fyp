@@ -77,7 +77,7 @@ function MatchPost({ post, mutation }: MatchPostProps) {
             onSubmit={setIsOpen}
             postId={post.id}
             preferredGender={post.user.preferredGender}
-            userId={post.userId}
+            userId={user.id}
             language={post.language}
           ></SendSolutionModal>
         </Modal>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { TagsInput } from 'react-tag-input-component';
 import { toast } from 'react-toastify';
 
-const CreteHelpPost = ({ onSubmit }) => {
+const CreateHelpPost = ({ onSubmit }) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [link, setLink] = useState('');
@@ -126,4 +126,4 @@ const CreteHelpPost = ({ onSubmit }) => {
   );
 };
 
-export default CreteHelpPost;
+export default CreateHelpPost;

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Overlay from '../Modals/Overlay';
 import Modal from '../Modals/Modal';
-import CreateProgress from '../Modals/CreateHelpPost';
+import CreateHelpPost from '../Modals/CreateHelpPost';
 
 const Collaborator: React.FC = () => {
   const queryClient = useQueryClient();
@@ -81,7 +81,7 @@ const Collaborator: React.FC = () => {
       </div>
       <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)}>
         <Modal onClick={() => setIsOpen(false)}>
-          <CreateProgress onSubmit={handleSubmit}></CreateProgress>
+          <CreateHelpPost onSubmit={handleSubmit}></CreateHelpPost>
         </Modal>
       </Overlay>
       <div className="max-w-full h-screen mt-0 ">{renderedPosts}</div>

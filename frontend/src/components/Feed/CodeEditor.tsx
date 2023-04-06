@@ -33,7 +33,7 @@ function CodeEditor({
 
   const handleSave = async () => {
     if (value.length > 1000) {
-      toast.error('Code is too long. Please upload image instead.');
+      toast.error('Code is too long.');
       return;
     }
     if (value) {
@@ -76,8 +76,7 @@ function CodeEditor({
           </a>
           <div className="text-gray-500 items-center">
             Note: The canvas will be set to width 400px and height{' '}
-            {Math.floor((400 * 10) / 7)}px for the image.If the code is long we
-            recommend you to upload image instead.
+            {Math.floor((400 * 10) / 7)}px for the image.
           </div>
         </div>
 

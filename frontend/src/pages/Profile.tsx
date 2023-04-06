@@ -9,8 +9,6 @@ import Modal from '../Modals/Modal';
 import UpdateProfileModal from '../Modals/UpdateProfileModal';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { updateUser } from '../redux/slice/authSlice';
-// import { updateUser } from './redux/slice/authSlice';
 
 const Profile = () => {
   const { user } = useSelector((state: any) => state.auth);
