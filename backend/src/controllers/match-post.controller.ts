@@ -160,7 +160,8 @@ const deleteMatchPost = async (req, res, next) => {
 };
 
 const createMatch = catchAsync(async (req, res, next) => {
-  const { matchedUserId } = req.body;
+  const { matchedUserId, solutionId } = req.body;
+  console.log(req.body);
 
   const existingMatch = await prisma.match.findUnique({
     where: {
@@ -186,8 +187,20 @@ const createMatch = catchAsync(async (req, res, next) => {
     },
   });
 
+  console.log('match', match);
+
   if (!match) {
     return next(new AppError('Match not created', 404));
+  }
+
+  if (match) {
+    // delete solution
+    const deletedsoln = await prisma.solution.delete({
+      where: {
+        id: solutionId,
+      },
+    });
+    console.log(deletedsoln);
   }
 
   res.status(201).json({

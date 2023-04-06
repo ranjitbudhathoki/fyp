@@ -69,14 +69,15 @@ model MatchPost {
 }
 
 model Solution {
-  id        String    @id @default(uuid())
-  body      String?
-  post      MatchPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  imgUrl    String
-  createdAt DateTime  @default(now())
+  id            String         @id @default(uuid())
+  body          String?
+  post          MatchPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  imgUrl        String
+  createdAt     DateTime       @default(now())
+  notifications Notification[] @relation("solution-notifications")
 }
 
 model Comment {
@@ -152,6 +153,8 @@ model Notification {
   senderId   String?
   receiver   User             @relation("receiver-notifications", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId String
+  solution   Solution?        @relation("solution-notifications", fields: [solutionId], references: [id], onDelete: SetNull)
+  solutionId String?
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
 }

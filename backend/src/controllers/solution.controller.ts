@@ -4,9 +4,7 @@ import { nanoid } from 'nanoid';
 import prisma from '../services/prisma';
 import { catchAsync } from '../utils/catchAsnyc';
 import AppError from '../utils/appError';
-import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
+import { NotificationType } from '@prisma/client';
 
 async function createImage(body) {
   // Set canvas dimensions
@@ -31,7 +29,7 @@ async function createImage(body) {
 }
 
 const saveSolution = catchAsync(async (req, res, next) => {
-  const { postId, code, userId, preferredGender } = req.body;
+  const { postId, code, userId, preferredGender, postOwnerId } = req.body;
 
   console.log('from params', userId);
   console.log('currentUser', req.user.id);
@@ -86,6 +84,20 @@ const saveSolution = catchAsync(async (req, res, next) => {
       postId,
       userId,
       imgUrl: 'http://localhost:8000/images/' + filename,
+    },
+  });
+
+  const targetUser = await prisma.user.findFirst({
+    where: {},
+  });
+
+  const notification = await prisma.notification.create({
+    data: {
+      type: NotificationType.SEND_SOLUTION,
+      message: 'You have a new solution for your post',
+      senderId: req.user.id,
+      receiverId: postOwnerId,
+      solutionId: newSolution.id,
     },
   });
 

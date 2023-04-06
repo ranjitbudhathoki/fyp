@@ -27,17 +27,17 @@ async function handleMarkReadNotification(
 }
 
 async function getUnreadNotificationCount(
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) {
   const { userId } = req.params;
-  checkIfUserIdMatches(req, userId, next);
+  // checkIfUserIdMatches(req, userId, next);
 
   const unreadNotificationCount = await prisma.notification.groupBy({
     by: ['receiverId'],
     where: {
-      receiverId: userId,
+      receiverId: req.user.id,
       read: false,
     },
 
@@ -64,8 +64,16 @@ async function getNotificationsByUserId(
     where: {
       receiverId: userId,
     },
+    include: {
+      sender: {
+        select: {
+          photoUrl: true,
+          username: true,
+        },
+      },
+    },
 
-    // orderBy: [{ createdAt: 'desc' }, { updatedAt: 'desc' }],
+    orderBy: [{ createdAt: 'desc' }, { updatedAt: 'desc' }],
   });
 
   return res
