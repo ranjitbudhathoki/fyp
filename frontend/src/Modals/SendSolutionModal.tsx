@@ -9,11 +9,13 @@ const SendSolutionModal = ({
   userId,
   language,
   preferredGender,
+  postOwnerId,
 }) => {
   return (
     <div className="h-[500px] w-[720px] overflow-auto">
       <CodeEditor
         postId={postId}
+        postOwnerId={postOwnerId}
         preferredGender={preferredGender}
         userId={userId}
         onSubmit={onSubmit}

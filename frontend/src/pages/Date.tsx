@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, QueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import TinderCard from 'react-tinder-card';
 import axios from '../utils/axios-instance';
@@ -10,6 +10,8 @@ function Date() {
   const [lastDirection, setLastDirection] = useState();
 
   const { user } = useSelector((state: any) => state.auth);
+
+  const queryClient = new QueryClient();
 
   const { data: posts, isLoading: loadingPost } = useQuery({
     queryKey: ['posts'],
@@ -27,7 +29,6 @@ function Date() {
       const res = await axios.get(`/api/solutions/${posts?.data?.post.id}`);
       return res.data;
     },
-    refetchOnWindowFocus: true,
     enabled: !!post,
   });
 
@@ -35,30 +36,27 @@ function Date() {
     mutationKey: ['match'],
     mutationFn: async ({ swipedUser, swipedSoln }: any) => {
       await axios.post('/api/matches', {
-        matchedUserId: swipedUser.id,
+        matchedUserId: swipedUser,
         solutionId: swipedSoln,
       });
     },
     onSuccess: () => {
       toast.success(`Matched `);
+      queryClient.invalidateQueries('solutions');
     },
-    onError: (error) => {
-      toast.error('Something went wrong');
+    onError: (error: any) => {
+      toast.error(error.response.data.message);
     },
     retry: false,
   });
 
   console.log('from solutions', solutions?.data);
 
-  const debouncedSwiped = debounce((direction, swipedUser, swipedSoln) => {
+  const swiped = (direction, swipedUser, swipedSoln) => {
     if (direction === 'right') {
       matchMutation.mutate({ swipedUser, swipedSoln });
     }
     setLastDirection(direction);
-  }, 500);
-
-  const swiped = (direction, swipedUser, swipedSoln) => {
-    debouncedSwiped(direction, swipedUser, swipedSoln);
   };
   const outOfFrame = (name) => {
     console.log(name + ' left the screen!');
@@ -72,8 +70,8 @@ function Date() {
             <TinderCard
               className="swipe"
               key={soln.id}
-              onSwipe={(dir) => swiped(dir, soln.user, soln.id)}
-              // preventSwipe={['up', 'down']}
+              onSwipe={(dir) => swiped(dir, soln?.user?.id, soln.id)}
+              preventSwipe={['up', 'down']}
               onCardLeftScreen={() => outOfFrame(soln.id)}
             >
               <div

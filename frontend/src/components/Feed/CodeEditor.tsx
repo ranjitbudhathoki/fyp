@@ -10,6 +10,7 @@ function CodeEditor({
   onSubmit,
   language: lang,
   preferredGender,
+  postOwnerId,
 }) {
   const [value, setValue] = useState('');
   const [language, setLanguage] = useState(lang);
@@ -42,6 +43,7 @@ function CodeEditor({
         postId,
         code: value,
         preferredGender,
+        postOwnerId,
       });
     }
     onSubmit(false);

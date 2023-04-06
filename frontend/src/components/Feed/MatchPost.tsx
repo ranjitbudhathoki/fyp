@@ -76,6 +76,7 @@ function MatchPost({ post, mutation }: MatchPostProps) {
           <SendSolutionModal
             onSubmit={setIsOpen}
             postId={post.id}
+            postOwnerId={post.user.id}
             preferredGender={post.user.preferredGender}
             userId={user.id}
             language={post.language}
