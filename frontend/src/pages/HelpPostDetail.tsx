@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import CommentForm from '../components/comment/CommentForm';
 import CommentList from '../components/comment/CommentList';
 import axios from '../utils/axios-instance';
@@ -9,9 +9,12 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 const HelpPostDetail = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
-
   const { user } = useSelector((state: any) => state.auth);
+  const navigate = useNavigate();
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
   const { data, isLoading } = useQuery(['single-post', id], async () => {
     const res = await axios.get(`/api/help-posts/${id}`);
     return res.data;
@@ -64,9 +67,11 @@ const HelpPostDetail = () => {
 
   return (
     <>
-      <Link to={`/collaborator`}>
-        <ArrowLeftIcon className="h-8 flex-shrink-0 text-custom-light-green" />
-      </Link>
+      <ArrowLeftIcon
+        onClick={handleGoBack}
+        className="h-8 flex-shrink-0 text-custom-light-green"
+      />
+
       <div className="mt-2 mx-10 mb-16 max-w-screen-md rounded-2xl border p-4  bg-gray-300 text-black">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3.5">

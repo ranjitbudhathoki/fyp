@@ -9,6 +9,7 @@ import Modal from '../Modals/Modal';
 import UpdateProfileModal from '../Modals/UpdateProfileModal';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 enum Tab {
   MATCH_POSTS = 'MATCH_POSTS',
@@ -93,15 +94,15 @@ const Profile = () => {
   const renderedMatchPosts = matchpost?.map((post) => {
     return (
       <div key={post.id} className="max-w-full h-screen m-0">
-        <MatchPost post={post} mutation={deleteMatchPostMutation} />;
+        <MatchPost post={post} mutation={deleteMatchPostMutation} />
       </div>
     );
   });
   const renderedHelpPosts = helpost?.map((post) => {
     return (
-      <div key={post.id} className="max-w-full h-screen m-0">
-        <HelpPost post={post} mutation={deleteHelpPostMutation} />;
-      </div>
+      <Link to={`/collaborator/posts/${post.id}`} key={post.id}>
+        <HelpPost post={post} />
+      </Link>
     );
   });
 

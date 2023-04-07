@@ -34,8 +34,8 @@ const Collaborator: React.FC = () => {
       queryClient.invalidateQueries(['help-posts']);
       toast.success('post created');
     },
-    onError: () => {
-      toast.error('error creating post created');
+    onError: (error: any) => {
+      toast.error(error.response.data.message);
     },
   });
 
