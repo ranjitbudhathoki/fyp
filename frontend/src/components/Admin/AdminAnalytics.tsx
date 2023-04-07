@@ -6,6 +6,8 @@ import Spinner from '../Spinner/Spinner';
 import { motion, Variants } from 'framer-motion';
 import { useSystemAdmin } from '../../context/AdminContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import DeleteConfirmationModal from '../../Modals/DeleteConfirmationModal';
+import { toast } from 'react-toastify';
 
 const variants: Variants = {
   initial: {},
@@ -35,17 +37,17 @@ const itemVariants: Variants = {
 function DeRegisterCard({ email, userName, id, photo, page }: any) {
   const { admin } = useSystemAdmin();
   const queryClient = useQueryClient();
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
   const { mutate } = useMutation(
-    async () => {
-      const res = await systemAxios.delete(
-        `/system-admin/${id}/deregister-user`,
-        { headers: { authorization: `Bearer ${(admin as any).token}` } }
-      );
+    async (id: any) => {
+      const res = await systemAxios.delete(`/api/admin/admins/${id}`, {
+        headers: { authorization: `Bearer ${(admin as any).token}` },
+      });
       return res.data;
     },
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries(`user-analytics-${page}`);
         console.log(data);
       },
       onError: (error) => {
@@ -55,29 +57,37 @@ function DeRegisterCard({ email, userName, id, photo, page }: any) {
   );
 
   return (
-    <motion.div
-      variants={itemVariants}
-      className="flex  bg-custom-black border-custom-light-dark border-2 items-center  rounded-md gap-3 p-3 hover:!-translate-y-2 transition-all duration-200  cursor-pointer hover:shadow-lg"
-    >
-      <figure className="w-16 h-16 flex-shrink-0  rounded-full overflow-hidden">
-        <img referrerPolicy="no-referrer" src={photo} alt={userName} />
-      </figure>
-      <div className="flex flex-col gap-1">
-        <h2 className="text-lg text-custom-light-green">{userName}</h2>
-        <p className="text-sm">{email}</p>
-        <button
-          onClick={() => mutate()}
-          className="bg-red-600 text-sm mt-2 self-start  px-3 py-1 flex items-center justify-center text-white rounded-md"
-        >
-          Delete
-        </button>
-      </div>
-    </motion.div>
+    <>
+      <DeleteConfirmationModal
+        isVisible={showConfirmationModal}
+        message={`Do you want to delete this Admin ?`}
+        onCancel={() => setShowConfirmationModal(false)}
+        onConfirm={() => mutate(id)}
+      />
+      <motion.div
+        variants={itemVariants}
+        className="flex  bg-custom-black border-custom-light-dark border-2 items-center  rounded-md gap-3 p-3 hover:!-translate-y-2 transition-all duration-200  cursor-pointer hover:shadow-lg"
+      >
+        <figure className="w-16 h-16 flex-shrink-0  rounded-full overflow-hidden">
+          <img referrerPolicy="no-referrer" src={photo} alt={userName} />
+        </figure>
+        <div className="flex flex-col gap-1">
+          <h2 className="text-lg text-custom-light-green">{userName}</h2>
+          <p className="text-sm">{email}</p>
+          <button
+            onClick={() => setShowConfirmationModal(true)}
+            className="bg-red-600 text-sm mt-2 self-start  px-3 py-1 flex items-center justify-center text-white rounded-md"
+          >
+            Delete
+          </button>
+        </div>
+      </motion.div>
+    </>
   );
 }
 
 async function fetchUserDetails(page: number, admin: any) {
-  const res = await systemAxios.get(`/api/admin/?page=${page}`, {
+  const res = await systemAxios.get(`/api/admin/admins/?page=${page}`, {
     headers: { authorization: `Bearer ${(admin as any).token}` },
   });
   return res.data?.data;
@@ -88,11 +98,21 @@ function AdminAnalytics() {
   const pageCount = 10;
   const { admin } = useSystemAdmin();
   const queryClient = useQueryClient();
-  const totalCount: any = queryClient.getQueryData('total-user');
-  console.log('total count', totalCount);
-  const totalPage = Math.ceil(totalCount.userCount / pageCount);
+  const { data: adminCount, isLoading: isAdminLoading } = useQuery(
+    'total-admin',
+    async () => {
+      const res = await systemAxios.get('/api/admin/users/count', {
+        headers: {
+          authorization: `Bearer ${(admin as any).token}`,
+        },
+      });
+      return res.data?.data;
+    }
+  );
 
-  const { data, isLoading } = useQuery(`user-analytics-${page}`, () =>
+  const totalPage = Math.ceil(adminCount?.totalUser / pageCount);
+
+  const { data, isLoading } = useQuery(`admin-analytics-${page}`, () =>
     fetchUserDetails(page, admin)
   );
 
@@ -116,16 +136,16 @@ function AdminAnalytics() {
         >
           <AnimatePresence>
             {data.length > 0 ? (
-              data?.map((user: any, index: number) => (
+              data?.map((admin: any, index: number) => (
                 <DeRegisterCard
-                  key={user.id}
+                  key={admin.id}
                   index={index}
-                  userName={user.username}
+                  userName={admin.username}
                   photo={
-                    user.photoUrl ??
+                    admin.photoUrl ??
                     'https://avatars.githubusercontent.com/u/55929607?v=4'
                   }
-                  id={user.id}
+                  id={admin.id}
                   page={page}
                 />
               ))
