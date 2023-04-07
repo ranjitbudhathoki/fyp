@@ -83,18 +83,7 @@ const NotificationTemplateDecider: React.FC<
           </div>
         </Link>
       )}
-      {/* <div className="border-b relative group  border-custom-light-green">
-        <div>{content}</div>
 
-        <div className="absolute right-0 top-2 hidden group-hover:flex">
-          <button
-            onClick={() => mutate()}
-            className="text-gray-400 hover:text-custom-light-green"
-          >
-            <TrashIcon className="h-4 w-4" />
-          </button>
-        </div>
-      </div> */}
       {notification?.type !== 'COMMENT' && (
         <div className="border-b relative group  border-custom-light-green">
           <div>{content}</div>
