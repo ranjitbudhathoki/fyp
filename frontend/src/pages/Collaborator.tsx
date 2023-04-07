@@ -58,6 +58,14 @@ const Collaborator: React.FC = () => {
 
   return (
     <>
+      {(!data || data.data.posts.length === 0) && (
+        <div className="flex flex-col items-center justify-center h-full">
+          <p className="text-white text-xl">
+            😢Nothing to show. Try again after some time...
+          </p>
+        </div>
+      )}
+
       <div className="fixed bottom-4 right-12">
         <button
           className="bg-custom-light-green hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-full"

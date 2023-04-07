@@ -6,7 +6,6 @@ import Spinner from '../Spinner/Spinner';
 import { motion, Variants } from 'framer-motion';
 import { useSystemAdmin } from '../../context/AdminContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import DeleteConfirmationModal from '../../Modals/DeleteConfirmationModal';
 
 const variants: Variants = {
   initial: {},
@@ -36,13 +35,12 @@ const itemVariants: Variants = {
 function DeRegisterCard({ email, userName, id, photo, page }: any) {
   const { admin } = useSystemAdmin();
   const queryClient = useQueryClient();
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
   const { mutate } = useMutation(
-    async (id: any) => {
-      const res = await systemAxios.delete(`/api/admin/users/${id}`, {
-        headers: { authorization: `Bearer ${(admin as any).token}` },
-      });
+    async () => {
+      const res = await systemAxios.delete(
+        `/system-admin/${id}/deregister-user`,
+        { headers: { authorization: `Bearer ${(admin as any).token}` } }
+      );
       return res.data;
     },
     {
@@ -57,51 +55,42 @@ function DeRegisterCard({ email, userName, id, photo, page }: any) {
   );
 
   return (
-    <>
-      <DeleteConfirmationModal
-        isVisible={showConfirmationModal}
-        message={`Do you want to delete this User ?`}
-        onCancel={() => setShowConfirmationModal(false)}
-        onConfirm={() => mutate(id)}
-      />
-
-      <motion.div
-        variants={itemVariants}
-        className="flex  bg-custom-black border-custom-light-dark border-2 items-center  rounded-md gap-3 p-3 hover:!-translate-y-2 transition-all duration-200  cursor-pointer hover:shadow-lg"
-      >
-        <figure className="w-16 h-16 flex-shrink-0  rounded-full overflow-hidden">
-          <img referrerPolicy="no-referrer" src={photo} alt={userName} />
-        </figure>
-        <div className="flex flex-col gap-1">
-          <h2 className="text-lg text-custom-light-green">{userName}</h2>
-          <p className="text-sm">{email}</p>
-          <button
-            onClick={() => setShowConfirmationModal(true)}
-            className="bg-red-600 text-sm mt-2 self-start  px-3 py-1 flex items-center justify-center text-white rounded-md"
-          >
-            Delete
-          </button>
-        </div>
-      </motion.div>
-    </>
+    <motion.div
+      variants={itemVariants}
+      className="flex  bg-custom-black border-custom-light-dark border-2 items-center  rounded-md gap-3 p-3 hover:!-translate-y-2 transition-all duration-200  cursor-pointer hover:shadow-lg"
+    >
+      <figure className="w-16 h-16 flex-shrink-0  rounded-full overflow-hidden">
+        <img referrerPolicy="no-referrer" src={photo} alt={userName} />
+      </figure>
+      <div className="flex flex-col gap-1">
+        <h2 className="text-lg text-custom-light-green">{userName}</h2>
+        <p className="text-sm">{email}</p>
+        <button
+          onClick={() => mutate()}
+          className="bg-red-600 text-sm mt-2 self-start  px-3 py-1 flex items-center justify-center text-white rounded-md"
+        >
+          Delete
+        </button>
+      </div>
+    </motion.div>
   );
 }
 
 async function fetchUserDetails(page: number, admin: any) {
-  const res = await systemAxios.get(`/api/admin/users/?page=${page}`, {
+  const res = await systemAxios.get(`/api/admin/?page=${page}`, {
     headers: { authorization: `Bearer ${(admin as any).token}` },
   });
   return res.data?.data;
 }
 
-function UserAnalytics() {
+function AdminAnalytics() {
   const [page, setPage] = useState(1);
   const pageCount = 10;
   const { admin } = useSystemAdmin();
   const queryClient = useQueryClient();
   const totalCount: any = queryClient.getQueryData('total-user');
   console.log('total count', totalCount);
-  const totalPage = Math.ceil(totalCount?.totalUser / pageCount);
+  const totalPage = Math.ceil(totalCount.userCount / pageCount);
 
   const { data, isLoading } = useQuery(`user-analytics-${page}`, () =>
     fetchUserDetails(page, admin)
@@ -132,14 +121,17 @@ function UserAnalytics() {
                   key={user.id}
                   index={index}
                   userName={user.username}
-                  photo={user.photoUrl}
+                  photo={
+                    user.photoUrl ??
+                    'https://avatars.githubusercontent.com/u/55929607?v=4'
+                  }
                   id={user.id}
                   page={page}
                 />
               ))
             ) : (
               <h2 className=" col-start-1 col-end-5 text-center mt-12 text-2xl text-gray-500">
-                Not any User Registered in the System
+                Not any Any registered in the system
               </h2>
             )}
           </AnimatePresence>
@@ -155,17 +147,19 @@ function UserAnalytics() {
             <ChevronLeftIcon className="h-5 w-5 text-white" />
           </button>
           <span className="text-custom-light-green">{page}</span>
-          <button
-            onClick={nextPageHandler}
-            className="w-10 h-10 bg-custom-light-green disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center rounded-full cursor-pointer"
-            disabled={page === totalPage}
-          >
-            <ChevronRightIcon className="h-5 w-5 text-white" />
-          </button>
+          {
+            <button
+              onClick={nextPageHandler}
+              className="w-10 h-10 bg-custom-light-green disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center rounded-full cursor-pointer"
+              disabled={page === totalPage}
+            >
+              <ChevronRightIcon className="h-5 w-5 text-white" />
+            </button>
+          }
         </div>
       )}
     </div>
   );
 }
 
-export default UserAnalytics;
+export default AdminAnalytics;

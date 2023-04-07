@@ -9,11 +9,13 @@ import AppointAdmin from '../components/Admin/AppointAdmin';
 // import WorkspaceAnalytics from '../components/SystemAdmin/WorkspaceAnalytics';
 import AdminSearch from '../components/Admin/AdminSearch';
 import { useSystemAdmin } from '../context/AdminContext';
+import AdminAnalytics from '../components/Admin/AdminAnalytics';
 
 enum Tab {
   DASHBOARD = 'DASHBOARD',
   USER = 'USER',
   APPOINT_ADMIN = 'APPOINT_ADMIN',
+  ADMIN = 'ADMIN',
   SEARCH = 'SEARCH ',
 }
 
@@ -64,7 +66,7 @@ const AdminNavBar: React.FC<any> = ({ logout }) => {
 function SystemAdmin() {
   const navigate = useNavigate();
   const { user } = useSelector((state: any) => state.auth);
-  const { setAdmin, admin } = useSystemAdmin();
+  const { setAdmin, admin }: { setAdmin: any; admin: any } = useSystemAdmin();
   const [selectedTab, setSelectedTab] = useState<Tab>(Tab.DASHBOARD);
 
   const handleLogout = () => {
@@ -95,13 +97,26 @@ function SystemAdmin() {
           >
             User
           </TabbedButton>
-          <TabbedButton
-            tabType={Tab.APPOINT_ADMIN}
-            selectedTab={selectedTab}
-            setSelectedTab={() => setSelectedTab(Tab.APPOINT_ADMIN)}
-          >
-            Appoint Admin
-          </TabbedButton>
+
+          {admin?.isSuperAdmin && (
+            <TabbedButton
+              tabType={Tab.APPOINT_ADMIN}
+              selectedTab={selectedTab}
+              setSelectedTab={() => setSelectedTab(Tab.APPOINT_ADMIN)}
+            >
+              Appoint Admin
+            </TabbedButton>
+          )}
+
+          {admin?.isSuperAdmin && (
+            <TabbedButton
+              tabType={Tab.ADMIN}
+              selectedTab={selectedTab}
+              setSelectedTab={() => setSelectedTab(Tab.ADMIN)}
+            >
+              Admin
+            </TabbedButton>
+          )}
           <TabbedButton
             tabType={Tab.SEARCH}
             selectedTab={selectedTab}
@@ -114,6 +129,8 @@ function SystemAdmin() {
           {selectedTab === Tab.DASHBOARD && <AdminDashboard />}
           {selectedTab === Tab.USER && <UserAnalytics />}
           {selectedTab === Tab.APPOINT_ADMIN && <AppointAdmin />}
+          {selectedTab === Tab.ADMIN && <AdminAnalytics />}
+
           {selectedTab === Tab.SEARCH && <AdminSearch />}
         </div>
       </div>
