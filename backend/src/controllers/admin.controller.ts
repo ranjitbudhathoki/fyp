@@ -3,6 +3,7 @@ import AppError from '../utils/appError';
 import prisma from '../services/prisma';
 import verifyPassword from '../utils/verifyPassword';
 import generateToken from '../utils/generateToken';
+import bcrypt from 'bcryptjs';
 
 const months = [
   'January',
@@ -213,6 +214,34 @@ const getMatchForEveryMonth = catchAsync(async (req, res, next) => {
   });
 });
 
+const appointAdmin = catchAsync(async (req, res, next) => {
+  console.log('appoint admin');
+  const { username, password } = req.body;
+
+  const existingAdmin = await prisma.admin.findUnique({
+    where: { username },
+  });
+
+  if (existingAdmin) return next(new AppError('Admin already exist', 400));
+
+  if (!username || !password) {
+    return next(new AppError('Please provide username and password!', 400));
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const admin = await prisma.admin.create({
+    data: {
+      username,
+      password: hashedPassword,
+    },
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    data: admin,
+  });
+});
+
 export {
   handleAdminLogin,
   getAllRegisteredUser,
@@ -223,4 +252,5 @@ export {
   getTotalMatches,
   getRegisteredUserforEveryMonth,
   getMatchForEveryMonth,
+  appointAdmin,
 };
