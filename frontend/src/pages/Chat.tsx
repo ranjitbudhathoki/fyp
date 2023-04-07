@@ -11,11 +11,9 @@ import EmojiPicker, {
 } from 'emoji-picker-react';
 
 import io from 'socket.io-client';
+import ChatList from '../components/Chat/ChatList';
 
-// const socket = io('http://localhost:8000');
-// const socket = io('http://localhost:8000');
-
-function Chat() {
+function Chat({ socket }) {
   const emojiRef = useRef(null) as RefObject<HTMLDivElement>;
   const [message, setMessage] = useState('');
 
@@ -23,19 +21,6 @@ function Chat() {
   const [showPicker, setShowPicker] = useState<boolean>(false);
 
   const handleMessageSubmit = (event: React.FormEvent) => {};
-  //   event.preventDefault();
-  //   if (!message) return;
-  //   socket.emit('send-message', message);
-  //   setMessage('');
-  //   // setMessages([...messages, message]);
-  // };
-
-  // useEffect(() => {
-  //   socket.on('receive-message', (payload) => {
-  //     // console.log('useEffect', message);
-  //     setMessages([...messages, payload]);
-  //   });
-  // });
 
   const onEmojiClick = (emojiObject: EmojiClickData, event: MouseEvent) => {
     setMessage(message + emojiObject.emoji);

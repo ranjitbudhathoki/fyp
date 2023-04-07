@@ -22,6 +22,7 @@ import NestedLayout from './components/NestedLayout';
 import Battle from './pages/Battle';
 import Results from './components/battle/Results';
 import { useLocation } from 'react-router-dom';
+import socket from './api/socket';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ const App: React.FC = () => {
             <Route path="home" element={<Date />} />
             <Route path="feed" element={<Feed />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="chat" element={<Chat />} />
+            <Route path="chat" element={<Chat socket={socket} />} />
             <Route path="collaborator" element={<Collaborator />} />
             <Route path="popular" element={<Popular />} />
             <Route path="battle" element={<Battle />} />

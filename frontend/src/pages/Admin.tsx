@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import UserAnalytics from '../components/Admin/UserAnalytics';
+import AppointAdmin from '../components/Admin/AppointAdmin';
 // import WorkspaceAnalytics from '../components/SystemAdmin/WorkspaceAnalytics';
 import AdminSearch from '../components/Admin/AdminSearch';
 import { useSystemAdmin } from '../context/AdminContext';
@@ -12,7 +13,7 @@ import { useSystemAdmin } from '../context/AdminContext';
 enum Tab {
   DASHBOARD = 'DASHBOARD',
   USER = 'USER',
-  WORKSPACE = 'WORKSPACE',
+  APPOINT_ADMIN = 'APPOINT_ADMIN',
   SEARCH = 'SEARCH ',
 }
 
@@ -95,11 +96,11 @@ function SystemAdmin() {
             User
           </TabbedButton>
           <TabbedButton
-            tabType={Tab.WORKSPACE}
+            tabType={Tab.APPOINT_ADMIN}
             selectedTab={selectedTab}
-            setSelectedTab={() => setSelectedTab(Tab.WORKSPACE)}
+            setSelectedTab={() => setSelectedTab(Tab.APPOINT_ADMIN)}
           >
-            Workspace
+            Appoint Admin
           </TabbedButton>
           <TabbedButton
             tabType={Tab.SEARCH}
@@ -109,10 +110,10 @@ function SystemAdmin() {
             Search
           </TabbedButton>
         </ul>
-        <div className="h-full w-full pb-6">
+        <div className="h-full w-full pb-6 ">
           {selectedTab === Tab.DASHBOARD && <AdminDashboard />}
           {selectedTab === Tab.USER && <UserAnalytics />}
-          {/* {selectedTab === Tab.WORKSPACE && <WorkspaceAnalytics />} */}
+          {selectedTab === Tab.APPOINT_ADMIN && <AppointAdmin />}
           {selectedTab === Tab.SEARCH && <AdminSearch />}
         </div>
       </div>

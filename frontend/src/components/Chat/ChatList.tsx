@@ -33,7 +33,7 @@ const chatList = [
 
 const ChatList = () => {
   return (
-    <div className=" max-w-xs bg-black h-screen overflow-y-scroll">
+    <div className="max-w-xs bg-black h-screen overflow-y-scroll">
       {chatList.map((chat) => (
         <div
           key={chat.id}
