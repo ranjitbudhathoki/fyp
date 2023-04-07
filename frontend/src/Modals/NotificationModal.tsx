@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import handleStopPropagation from '../utils/handleStopPropagation';
@@ -40,6 +40,7 @@ interface NotificationTemplateDeciderProps {
   type: NotificationType;
   notification: any;
 }
+
 const NotificationTemplateDecider: React.FC<
   NotificationTemplateDeciderProps
 > = ({ type, notification }) => {

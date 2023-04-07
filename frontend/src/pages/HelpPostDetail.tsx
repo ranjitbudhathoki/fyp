@@ -72,7 +72,7 @@ const HelpPostDetail = () => {
         className="h-8 flex-shrink-0 text-custom-light-green"
       />
 
-      <div className="mt-2 mx-10 mb-16 max-w-screen-md rounded-2xl border p-4  bg-gray-300 text-black">
+      <div className="mt-2 mx-10 mb-16 max-w-screen-md rounded-2xl text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3.5">
             <img
