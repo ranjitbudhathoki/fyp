@@ -8,11 +8,9 @@ interface Props {
 
 const validateValues = (values: any) => {
   const errors: Record<string, string> = {};
-  if (!values.bio) {
+
+  if (!values.bio && !values.preferredGender) {
     errors.bio = 'Missing Required Field *';
-  }
-  if (!values.preferredGender) {
-    errors.preferredGender = 'Missing Required Field *';
   }
   return errors;
 };
