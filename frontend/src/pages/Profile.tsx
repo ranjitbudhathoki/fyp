@@ -10,10 +10,30 @@ import UpdateProfileModal from '../Modals/UpdateProfileModal';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+enum Tab {
+  MATCH_POSTS = 'MATCH_POSTS',
+  HELP_POSTS = 'HELP_POSTS',
+}
+
+const TabbedButton = ({ children, selectedTab, tabType, setSelectedTab }) => {
+  const isActive =
+    selectedTab === tabType ? 'text-custom-light-green' : 'text-gray-400';
+  return (
+    <li className="mr-2 text-sm" onClick={() => setSelectedTab(tabType)}>
+      <button
+        className={`p-4  ${isActive} bg-custom-light-dark rounded-t-lg active dark:bg-gray-800 dark:text-blue-500`}
+      >
+        {children}
+      </button>
+    </li>
+  );
+};
+
 const Profile = () => {
   const { user } = useSelector((state: any) => state.auth);
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const [selectedTab, setSelectedTab] = useState<Tab>(Tab.MATCH_POSTS);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -91,7 +111,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col">
       <div className="md:w-1/3 p-6 fixed right-0">
         <div className="bg-white rounded-md shadow-md p-6">
           <div className="flex  flex-col items-center mb-6">
@@ -116,42 +136,48 @@ const Profile = () => {
           </button>
         </div>
       </div>
-      <div className="md:w-2/3 p-6 overflow-y-auto">
-        <h1 className="text-custom-light-green text-center underline mb-10">
-          My Posts
-        </h1>
-        <h4 className="text-white text-center mb-3 text-2xl underline">
+      <div className="flex flex-row">
+        <TabbedButton
+          tabType={Tab.MATCH_POSTS}
+          selectedTab={selectedTab}
+          setSelectedTab={() => {
+            setSelectedTab(Tab.MATCH_POSTS);
+          }}
+        >
           Match Posts
-        </h4>
-        {renderedMatchPosts?.length !== 0 ? (
-          renderedMatchPosts
-        ) : (
-          <div className="flex items-center justify-center p-4  mb-30">
-            <InformationCircleIcon className="w-8 h-8 text-gray-400 mr-2" />
-            <div>
-              <h2 className="text-lg font-medium text-white mb-30">
-                Such empty here. No any post.
-              </h2>
-            </div>
-          </div>
-        )}
-        <h4 className="text-white text-center mb-3 text-2xl underline  mt-50">
+        </TabbedButton>
+        <TabbedButton
+          tabType={Tab.HELP_POSTS}
+          selectedTab={selectedTab}
+          setSelectedTab={() => {
+            setSelectedTab(Tab.HELP_POSTS);
+          }}
+        >
           Help Posts
-        </h4>
-
-        {renderedHelpPosts?.length !== 0 ? (
-          renderedHelpPosts
-        ) : (
-          <div className="flex items-center justify-center p-4  mb-30">
-            <InformationCircleIcon className="w-8 h-8 text-gray-400 mr-2" />
-            <div>
-              <h2 className="text-lg font-medium text-white mb-30">
-                Such empty here. No any post.
-              </h2>
-            </div>
-          </div>
-        )}
+        </TabbedButton>
       </div>
+
+      <div className="h-full w-full pb-6 md:w-2/3 p-6 overflow-y-auto ">
+        {selectedTab === Tab.MATCH_POSTS &&
+          (renderedMatchPosts?.length > 0 ? (
+            renderedMatchPosts
+          ) : (
+            <div className="flex items-center justify-center mt-40 h-full text-gray-400">
+              <span className="text-3xl mr-2">🤔</span>
+              <span>No match posts found</span>
+            </div>
+          ))}
+        {selectedTab === Tab.HELP_POSTS &&
+          (renderedHelpPosts?.length > 0 ? (
+            renderedHelpPosts
+          ) : (
+            <div className="flex items-center justify-center mt-40 h-full text-gray-400">
+              <span className="text-3xl mr-2">🙁</span>
+              <span>No help posts found</span>
+            </div>
+          ))}
+      </div>
+
       <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)}>
         <Modal onClick={() => setIsOpen(false)}>
           <UpdateProfileModal
