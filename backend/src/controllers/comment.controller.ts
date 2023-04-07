@@ -3,10 +3,60 @@ import prisma from '../services/prisma';
 import AppError from '../utils/appError';
 import { NotificationType } from '@prisma/client';
 
+// const createComment = catchAsync(async (req, res, next) => {
+//   const { body, parentId } = req.body;
+//   const { id } = req.params;
+//   console.log(id, parentId, body);
+
+//   const comment = await prisma.comment.create({
+//     data: {
+//       body,
+//       updatedAt: new Date(),
+//       userId: req.user.id,
+//       postId: id,
+//       parentId: parentId || null,
+//     },
+//   });
+
+//   const targetPost = await prisma.helpPost.findUnique({
+//     where: {
+//       id: id,
+//     },
+//     include: {
+//       user: {
+//         select: {
+//           id: true,
+//           username: true,
+//         },
+//       },
+//     },
+//   });
+
+//   console.log(comment.userId, req.user.id);
+
+//   if (comment.userId !== targetPost.userId) {
+//     const notification = await prisma.notification.create({
+//       data: {
+//         type: NotificationType.COMMENT,
+//         message: `You have a new comment from ${req.user.username}`,
+//         senderId: req.user.id,
+//         receiverId: targetPost.user.id,
+//         postId: id,
+//       },
+//     });
+//   }
+
+//   res.status(201).json({
+//     status: 'success',
+//     data: {
+//       comment,
+//     },
+//   });
+// });
+
 const createComment = catchAsync(async (req, res, next) => {
   const { body, parentId } = req.body;
   const { id } = req.params;
-  console.log(id, parentId, body);
 
   const comment = await prisma.comment.create({
     data: {
@@ -32,16 +82,47 @@ const createComment = catchAsync(async (req, res, next) => {
     },
   });
 
-  console.log('target comment', targetPost.user.id);
-  const notification = await prisma.notification.create({
-    data: {
-      type: NotificationType.COMMENT,
-      message: `You have a new comment from ${req.user.username}`,
-      senderId: req.user.id,
-      receiverId: targetPost.user.id,
-      postId: id,
-    },
-  });
+  // Create notification when a comment is made on a post
+  if (!parentId && comment.userId !== targetPost.userId) {
+    await prisma.notification.create({
+      data: {
+        type: NotificationType.COMMENT,
+        message: `You have a new comment from ${req.user.username}`,
+        senderId: req.user.id,
+        receiverId: targetPost.user.id,
+        postId: id,
+      },
+    });
+  }
+
+  // Create notification when a reply is made to a comment
+  if (parentId) {
+    const parentComment = await prisma.comment.findUnique({
+      where: {
+        id: parentId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
+
+    if (comment.userId !== parentComment.userId) {
+      await prisma.notification.create({
+        data: {
+          type: NotificationType.COMMENT,
+          message: `You have a new reply from ${req.user.username}`,
+          senderId: req.user.id,
+          receiverId: parentComment.user.id,
+          postId: id,
+        },
+      });
+    }
+  }
 
   res.status(201).json({
     status: 'success',
