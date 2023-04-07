@@ -1,6 +1,7 @@
 import { catchAsync } from '../utils/catchAsnyc';
 import prisma from '../services/prisma';
 import AppError from '../utils/appError';
+import { NotificationType } from '@prisma/client';
 
 const createComment = catchAsync(async (req, res, next) => {
   const { body, parentId } = req.body;
@@ -14,6 +15,31 @@ const createComment = catchAsync(async (req, res, next) => {
       userId: req.user.id,
       postId: id,
       parentId: parentId || null,
+    },
+  });
+
+  const targetPost = await prisma.helpPost.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+  });
+
+  console.log('target comment', targetPost.user.id);
+  const notification = await prisma.notification.create({
+    data: {
+      type: NotificationType.COMMENT,
+      message: `You have a new comment from ${req.user.username}`,
+      senderId: req.user.id,
+      receiverId: targetPost.user.id,
+      postId: id,
     },
   });
 

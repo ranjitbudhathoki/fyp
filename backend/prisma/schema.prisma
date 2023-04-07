@@ -44,8 +44,8 @@ model Admin {
 }
 
 model HelpPost {
-  id           String    @id @default(uuid())
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String         @id @default(uuid())
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   title        String
   body         String?
@@ -53,8 +53,9 @@ model HelpPost {
   project_link String?
   image        String?
   comments     Comment[]
-  createdAt    DateTime  @default(now())
+  createdAt    DateTime       @default(now())
   updatedAt    DateTime
+  Notification Notification[] @relation("comment-notifications")
 }
 
 model MatchPost {
@@ -142,6 +143,7 @@ enum NotificationType {
   WARNING
   MATCHED
   NORMAL
+  COMMENT
 }
 
 model Notification {
@@ -155,6 +157,8 @@ model Notification {
   receiverId String
   solution   Solution?        @relation("solution-notifications", fields: [solutionId], references: [id], onDelete: SetNull)
   solutionId String?
+  post       HelpPost?        @relation("comment-notifications", fields: [postId], references: [id], onDelete: SetNull)
+  postId     String?
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
 }
