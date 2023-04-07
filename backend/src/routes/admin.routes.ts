@@ -10,6 +10,8 @@ import {
   getRegisteredUserforEveryMonth,
   getMatchForEveryMonth,
   appointAdmin,
+  getAllRegisteredAdmin,
+  deRegisterAdmin,
 } from '../controllers/admin.controller';
 import verifyToken from '../middlewares/verifyToken';
 
@@ -27,5 +29,7 @@ router.get('/matches/count', verifyToken, getTotalMatches);
 router.get('/matches/data', verifyToken, getMatchForEveryMonth);
 
 router.post('/appoint', appointAdmin);
+router.get('/admins', verifyToken, getAllRegisteredAdmin);
+router.delete('/admins/:userId', verifyToken, deRegisterAdmin);
 
 export default router;

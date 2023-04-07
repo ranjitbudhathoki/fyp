@@ -43,6 +43,7 @@ const handleAdminLogin = catchAsync(async (req, res, next) => {
       token,
       id: admin.id,
       username: admin.username,
+      isSuperAdmin: admin.isSuperAdmin,
     },
   });
 });
@@ -242,6 +243,50 @@ const appointAdmin = catchAsync(async (req, res, next) => {
   });
 });
 
+const getAllAdmin = catchAsync(async (req, res, next) => {
+  const admins = await prisma.admin.findMany({
+    where: {
+      isSuperAdmin: false,
+    },
+  });
+  return res.status(200).json({
+    status: 'success',
+    data: admins,
+  });
+});
+
+const getAllRegisteredAdmin = catchAsync(async (req, res, next) => {
+  const { page } = req.query;
+  const pageCount = 10;
+  const registeredAdmin = await prisma.admin.findMany({
+    where: {
+      isSuperAdmin: false,
+    },
+    skip: (Number(page) - 1) * pageCount,
+    take: pageCount,
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    data: registeredAdmin,
+  });
+});
+
+const deRegisterAdmin = catchAsync(async (req, res, next) => {
+  console.log('from delete admin');
+
+  const { userId } = req.params;
+  console.log(userId);
+  const removedAdmin = await prisma.admin.delete({
+    where: { id: userId },
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 export {
   handleAdminLogin,
   getAllRegisteredUser,
@@ -253,4 +298,6 @@ export {
   getRegisteredUserforEveryMonth,
   getMatchForEveryMonth,
   appointAdmin,
+  getAllRegisteredAdmin,
+  deRegisterAdmin,
 };
