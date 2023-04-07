@@ -7,6 +7,7 @@ import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
 import { formatRelative } from 'date-fns';
 import { TrashIcon } from '@heroicons/react/24/solid';
+import { Link } from 'react-router-dom';
 
 interface NormalNotificationProps {
   notification: any;
@@ -65,18 +66,50 @@ const NotificationTemplateDecider: React.FC<
   let content = <NormalNotification notification={notification} />;
 
   return (
-    <div className="border-b relative group  border-custom-light-green">
-      <div>{content}</div>
+    <>
+      {notification?.type === 'COMMENT' && (
+        <Link to={`/collaborator/posts/${notification?.postId}`}>
+          <div className="border-b relative group  border-custom-light-green">
+            <div>{content}</div>
 
-      <div className="absolute right-0 top-2 hidden group-hover:flex">
-        <button
-          onClick={() => mutate()}
-          className="text-gray-400 hover:text-custom-light-green"
-        >
-          <TrashIcon className="h-4 w-4" />
-        </button>
-      </div>
-    </div>
+            <div className="absolute right-0 top-2 hidden group-hover:flex">
+              <button
+                onClick={() => mutate()}
+                className="text-gray-400 hover:text-custom-light-green"
+              >
+                <TrashIcon className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </Link>
+      )}
+      {/* <div className="border-b relative group  border-custom-light-green">
+        <div>{content}</div>
+
+        <div className="absolute right-0 top-2 hidden group-hover:flex">
+          <button
+            onClick={() => mutate()}
+            className="text-gray-400 hover:text-custom-light-green"
+          >
+            <TrashIcon className="h-4 w-4" />
+          </button>
+        </div>
+      </div> */}
+      {notification?.type !== 'COMMENT' && (
+        <div className="border-b relative group  border-custom-light-green">
+          <div>{content}</div>
+
+          <div className="absolute right-0 top-2 hidden group-hover:flex">
+            <button
+              onClick={() => mutate()}
+              className="text-gray-400 hover:text-custom-light-green"
+            >
+              <TrashIcon className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

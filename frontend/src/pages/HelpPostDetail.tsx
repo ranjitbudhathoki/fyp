@@ -99,6 +99,17 @@ const HelpPostDetail = () => {
         </div>
         <div className="mt-7 whitespace-pre-wrap text-xl">{post.title}</div>
         <div className="mt-7 whitespace-pre-wrap text-sm">{post.body}</div>
+        {post.project_link && (
+          <div className="mt-7 whitespace-pre-wrap text-sm text-blue-600 underline">
+            <a
+              href={`https://${post.project_link}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LINK
+            </a>
+          </div>
+        )}
         <div className="mt-7 ">
           <img src={post.image} className="h-45  w-full bg-cover"></img>
         </div>
