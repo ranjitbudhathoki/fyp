@@ -48,6 +48,8 @@ function DeRegisterCard({ email, userName, id, photo, page }: any) {
     },
     {
       onSuccess: (data) => {
+        queryClient.invalidateQueries(`admin-analytics-${page}`);
+
         console.log(data);
       },
       onError: (error) => {

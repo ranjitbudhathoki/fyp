@@ -243,18 +243,6 @@ const appointAdmin = catchAsync(async (req, res, next) => {
   });
 });
 
-const getAllAdmin = catchAsync(async (req, res, next) => {
-  const admins = await prisma.admin.findMany({
-    where: {
-      isSuperAdmin: false,
-    },
-  });
-  return res.status(200).json({
-    status: 'success',
-    data: admins,
-  });
-});
-
 const getAllRegisteredAdmin = catchAsync(async (req, res, next) => {
   const { page } = req.query;
   const pageCount = 10;

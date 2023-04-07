@@ -51,7 +51,7 @@ function AppointAdminForm() {
     },
     {
       onSuccess: (data) => {
-        toast(data?.message);
+        toast.success('Admin appointed successfully');
         setUsername('');
         setPassword('');
       },
