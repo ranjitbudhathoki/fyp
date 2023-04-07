@@ -127,6 +127,11 @@ const NotificationModal: React.FC = () => {
     >
       <h2>Notifications</h2>
       <div className="flex flex-col gap-3">
+        {notifications?.length === 0 && (
+          <div className="flex justify-center items-center mt-20">
+            <h3 className="text-lg">No notifications😟</h3>
+          </div>
+        )}
         {notifications?.map((notification: any) => (
           <div key={notification.id}>
             <NotificationTemplateDecider

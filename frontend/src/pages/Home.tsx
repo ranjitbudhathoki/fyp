@@ -4,7 +4,6 @@ import CustomToastify from '../components/CustomToastify';
 import Header from '../components/Header';
 
 import ProtectedRoute from '../components/ProtectedRoute';
-
 const Home: React.FC = () => {
   return (
     <ProtectedRoute>

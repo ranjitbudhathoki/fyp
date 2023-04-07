@@ -40,6 +40,8 @@ const ProfileForm: React.FC = () => {
 
   const updateUserMutation = useMutation({
     mutationFn: async (formData: any) => {
+      console.log('inside muttaion', formData);
+
       await axios.patch(`/api/users/${user.id}`, {
         birthDate: formData.birthday,
         gender: formData.gender,
@@ -52,7 +54,9 @@ const ProfileForm: React.FC = () => {
   });
 
   const submitHandler = (event: any) => {
+    console.log('from submit');
     event.preventDefault();
+    console.log(formData);
     updateUserMutation.mutate(formData);
   };
 
@@ -129,7 +133,10 @@ const ProfileForm: React.FC = () => {
           </div>
         </div>
         <div className="text-center mt-6">
-          <button className="bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600">
+          <button
+            type="submit"
+            className="bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600"
+          >
             Create Profile
           </button>
         </div>

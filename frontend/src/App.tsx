@@ -54,6 +54,8 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />}>
           <Route element={<NestedLayout />}>
+            <Route index element={<Date />} />
+
             <Route path="home" element={<Date />} />
             <Route path="feed" element={<Feed />} />
             <Route path="profile" element={<Profile />} />
