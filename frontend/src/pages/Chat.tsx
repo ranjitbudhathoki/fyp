@@ -5,9 +5,7 @@ import axios from '../utils/axios-instance';
 import { useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { AnimatePresence, motion } from 'framer-motion';
-import isTypingData from '../services/isTyping.json';
-import Lottie from 'lottie-react';
+import { FlagIcon } from '@heroicons/react/24/solid';
 import { ClipLoader } from 'react-spinners';
 import Welcome from '../components/chat/Welcome';
 function Chat({ socket }) {
@@ -128,8 +126,9 @@ function Chat({ socket }) {
       />
     );
 
+  console.log('currentChat', currentChat);
   return (
-    <div className="messenger text-white h-screen scroll-m-0">
+    <div className="messenger text-white h-screen ml-[-30px]">
       <div className="chatMenu">
         <div className="chatMenuWrapper">
           {matchedUsersData?.map((match) => (
@@ -142,7 +141,20 @@ function Chat({ socket }) {
       </div>
 
       <div className="chatBox">
-        <div className="chatBoxWrapper">
+        {currentChat && (
+          // <div className="flex flex-row p-2 ">
+          //   <img src={currentChat?.photo} className="h-8 w-8 mr-3 rounded-lg" />
+          //   <p className="ml-4 text-2xl">{currentChat?.username}</p>
+          //   <FlagIcon className="h-8 w-8 hover:text-custom-light-green hover:cursor-pointer items-end" />
+          // </div>
+          <div className="flex flex-row items-center p-2 ">
+            <img src={currentChat?.photo} className="h-8 w-8 mr-3 rounded-lg" />
+            <p className="ml-4 text-2xl">{currentChat?.username}</p>
+            <FlagIcon className="h-8 w-8 hover:text-custom-light-green hover:cursor-pointer ml-auto" />
+          </div>
+        )}
+
+        <div className="chatBoxWrapper bg-custom-light-dark">
           {currentChat ? (
             <>
               <div className="chatBoxTop">
@@ -173,9 +185,6 @@ function Chat({ socket }) {
               </div>
             </>
           ) : (
-            // <span className="text-2xl noConversationText ">
-            //   Open a conversation to chat
-            // </span>
             <Welcome username={user.username} />
           )}
         </div>
