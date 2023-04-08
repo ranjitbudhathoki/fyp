@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import isTypingData from '../services/isTyping.json';
 import Lottie from 'lottie-react';
 import { ClipLoader } from 'react-spinners';
+import Welcome from '../components/chat/Welcome';
 function Chat({ socket }) {
   console.log('renderd');
   const { user } = useSelector((state: any) => state.auth);
@@ -172,9 +173,10 @@ function Chat({ socket }) {
               </div>
             </>
           ) : (
-            <span className="text-2xl noConversationText ">
-              Open a conversation to chat
-            </span>
+            // <span className="text-2xl noConversationText ">
+            //   Open a conversation to chat
+            // </span>
+            <Welcome username={user.username} />
           )}
         </div>
       </div>
