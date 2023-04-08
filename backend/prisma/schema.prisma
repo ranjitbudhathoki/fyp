@@ -27,7 +27,6 @@ model User {
   matches1              Match[]        @relation(name: "user1")
   matches2              Match[]        @relation(name: "user2")
   msgSender             Message[]      @relation(name: "sender")
-  receiver              Message[]      @relation(name: "receiver")
   questions             MatchPost[]
   likes                 Like[]
   solutions             Solution[]
@@ -120,15 +119,14 @@ model Match {
 }
 
 model Message {
-  id         Int      @id @default(autoincrement())
-  match      Match    @relation(fields: [matchId], references: [id])
-  matchId    String
-  sender     User     @relation("sender", fields: [senderId], references: [id])
-  senderId   String
-  receiver   User     @relation("receiver", fields: [receiverId], references: [id])
-  receiverId String
-  text       String
-  createdAt  DateTime @default(now())
+  id       Int    @id @default(autoincrement())
+  match    Match  @relation(fields: [matchId], references: [id])
+  matchId  String
+  sender   User   @relation("sender", fields: [senderId], references: [id])
+  senderId String
+
+  text      String
+  createdAt DateTime @default(now())
 }
 
 model Report {
