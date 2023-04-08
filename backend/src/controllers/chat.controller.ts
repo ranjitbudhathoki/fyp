@@ -77,13 +77,18 @@ const getAllMatchForUser = catchAsync(async (req, res, next) => {
 
   console.log(latestMessagesInChats);
 
-  const matchedUsersData = matchedUsers.map((matchedUser, index) => ({
-    id: matchedUser.id,
-    username: matchedUser.username,
-    photo: matchedUser.photoUrl,
-    // latestMessage: latestMessagesInChats[index][0]?.message || '',s
-  }));
+  const matchedUsersData = matchedUsers.map((matchedUser, index) => {
+    const matchId = matches[index].id;
+    return {
+      id: matchedUser.id,
+      username: matchedUser.username,
+      photo: matchedUser.photoUrl,
+      matchId: matchId,
+      // latestMessage: latestMessagesInChats[index][0]?.message || '',
+    };
+  });
 
+  console.log('matchedUsersData', matchedUsersData);
   return res.status(200).json({
     message: 'Matched Users Data',
     data: { matchedUsersData },
@@ -91,14 +96,15 @@ const getAllMatchForUser = catchAsync(async (req, res, next) => {
 });
 
 const createMessage = catchAsync(async (req, res, next) => {
-  const { sentByUserId, matchId, message } = req.body;
+  const { sentByUserId, matchId, text } = req.body;
 
-  if (!message)
+  console.log('create chat', req.body);
+  if (!text)
     return res.status(400).json({ message: 'Please Fill the Required Fields' });
 
   const chatMessage = await prisma.message.create({
     data: {
-      text: message,
+      text: text,
       matchId: matchId,
       senderId: sentByUserId,
     },

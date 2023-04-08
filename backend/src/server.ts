@@ -26,11 +26,6 @@ io.on('connection', (socket) => {
   socket.on('new-message', (event) => {
     socket.to(event.data.events[1]).emit('push-new-message', event);
   });
-
-  socket.on('typing', (data) => {
-    console.log({ data });
-    socket.to(data.chatId).emit('typing-status', data);
-  });
 });
 
 server.listen(process.env.PORT || 8000, () => {
