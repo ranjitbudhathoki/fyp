@@ -12,6 +12,7 @@ import './styles/popular.css';
 import './styles/tailwind.css';
 import './styles/globals.css';
 import './styles/comment.css';
+import './styles/chat.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {

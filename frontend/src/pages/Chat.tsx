@@ -1,105 +1,181 @@
-import React, { RefObject, useEffect, useRef, useState } from 'react';
-import {
-  FaceSmileIcon,
-  PaperAirplaneIcon,
-  PhotoIcon,
-} from '@heroicons/react/24/solid';
-import EmojiPicker, {
-  EmojiClickData,
-  EmojiStyle,
-  Theme,
-} from 'emoji-picker-react';
-
-import io from 'socket.io-client';
-import ChatList from '../components/Chat/ChatList';
-
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import Conversation from '../components/chat/Conversation';
+import Message from '../components/chat/Message';
+import axios from '../utils/axios-instance';
+import { useSelector } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import { AnimatePresence, motion } from 'framer-motion';
+import isTypingData from '../services/isTyping.json';
+import Lottie from 'lottie-react';
+import { ClipLoader } from 'react-spinners';
 function Chat({ socket }) {
-  const emojiRef = useRef(null) as RefObject<HTMLDivElement>;
-  const [message, setMessage] = useState('');
-
+  console.log('renderd');
+  const { user } = useSelector((state: any) => state.auth);
+  const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [showPicker, setShowPicker] = useState<boolean>(false);
+  const [message, setMessage] = useState('');
+  const queryClient = useQueryClient();
+  const [isTyping, setIsTyping] = useState(false);
+  const messageCountRef = useRef<number>(0);
 
-  const handleMessageSubmit = (event: React.FormEvent) => {};
+  const scrollRef = useRef<any>(null);
 
-  const onEmojiClick = (emojiObject: EmojiClickData, event: MouseEvent) => {
-    setMessage(message + emojiObject.emoji);
+  const { data, isLoading } = useQuery(
+    'allMatches',
+    async () => {
+      const res = await axios(`api/matches/${user.id}`);
+      return res.data;
+    },
+    { refetchOnMount: true }
+  );
+
+  const matchedUsersData = data?.data?.matchedUsersData;
+
+  const sendMessageMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const res = await axios.post(
+        `api/matches/${currentChat?.matchId}/messages`,
+        data
+      );
+
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['chat-messages', currentChat?.matchId]);
+    },
+
+    onError: (error) => {
+      console.log({ error: error });
+    },
+  });
+
+  const { data: allMessages, isLoading: isMessageLoading } = useQuery(
+    ['chat-messages', currentChat?.matchId],
+    async () => {
+      const res = await axios.get(
+        `api/matches/${currentChat?.matchId}/messages`
+      );
+      return res?.data?.data;
+    },
+
+    {
+      onSuccess: (data) => {
+        setMessages(data);
+      },
+
+      enabled: Boolean(currentChat?.matchId),
+    }
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const msgObj = {
+      matchId: currentChat.matchId,
+      sentByUserId: user.id,
+      text: message,
+    };
+    if (!message) toast.warning('Please enter a message');
+
+    sendMessageMutation.mutate(msgObj);
+    setMessage('');
   };
 
-  const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value);
-  };
+  useEffect(() => {
+    if (!currentChat?.matchId) return;
+    socket.emit('join-room', currentChat?.matchId);
+    return () => {
+      socket.emit('leave-room', currentChat?.matchId);
+    };
+  }, [currentChat?.matchId, socket]);
+
+  useEffect(() => {
+    socket.on('push-new-message', (event: any) => {
+      const data = event.data;
+      const queryKey = [...data.events].filter(Boolean);
+      queryClient.invalidateQueries({ queryKey: queryKey });
+    });
+    return () => {
+      socket.off('push-new-message');
+    };
+  }, [currentChat?.matchId, queryClient, socket]);
+
+  useEffect(() => {
+    socket.emit('new-message', {
+      data: {
+        events: ['chat-messages', currentChat?.matchId],
+      },
+    });
+  }, [currentChat?.matchId, allMessages, socket]);
+
+  useEffect(() => {
+    if (messageCountRef.current < allMessages?.length) {
+      scrollRef?.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    messageCountRef.current = allMessages?.length || 0;
+  }, [messages]);
+
+  if (isMessageLoading)
+    return (
+      <ClipLoader
+        color={'#8ad85c'}
+        loading={isLoading}
+        cssOverride={{ width: '40px', height: '40px' }}
+        size={150}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
+    );
 
   return (
-    <div className="h-full flex rounded-md ">
-      {/* <ChatList /> */}
-      <div className="flex-grow flex flex-col  ">
-        <div className="flex flex-col gap-2 flex-grow p-3 overflow-y-scroll h-96 ">
-          {messages.map((mssg, index) => (
-            // <div
-            //   className="flex text-base max-w-[300px] shadow-sm rounded-md odd:self-start even:self-end"
-            //   key={index}
-            // >
-            <p className="bg-[#333] p-2 rounded-2xl">{mssg}</p>
-            // </div>
+    <div className="messenger text-white h-screen scroll-m-0">
+      <div className="chatMenu">
+        <div className="chatMenuWrapper">
+          {matchedUsersData?.map((match) => (
+            <div key={match.id} onClick={() => setCurrentChat(match)}>
+              <Conversation match={match} />
+              <hr className="text-custom-light-green" />
+            </div>
           ))}
         </div>
-        <div className="relative flex items-center gap-3 p-2 border-t-2 border-[#333]">
-          <label className="flex items-center cursor-pointer">
-            <input className="w-0 h-0" type="file" accept="image/*" />
-            <PhotoIcon className="h-6 text-gray-400" />
-          </label>
+      </div>
 
-          <form
-            id="submit-message"
-            className="flex items-center flex-grow"
-            onSubmit={handleMessageSubmit}
-          >
-            <input
-              type="text"
-              value={message}
-              onChange={handleMessageChange}
-              className="py-2 pl-2 pr-10 border-2 border-[#27292a] bg-[#333] w-full  text-gray-300 focus:outline-none text-sm rounded-2xl"
-            />
-          </form>
-
-          <div
-            ref={emojiRef}
-            className="absolute right-12 flex items-center justify-center rounded-lg cursor-pointer"
-            onClick={() => setShowPicker(!showPicker)}
-          >
-            <FaceSmileIcon className="h-5 text-gray-400" />
-
-            {showPicker && (
-              <div
-                onClick={(e) => e.preventDefault()}
-                className="absolute bottom-16 right-12 text-base origin-bottom-right"
-              >
-                <EmojiPicker
-                  width={300}
-                  height={300}
-                  theme={Theme.DARK}
-                  searchDisabled={true}
-                  skinTonesDisabled={true}
-                  previewConfig={{
-                    showPreview: false,
-                  }}
-                  lazyLoadEmojis={true}
-                  emojiStyle={EmojiStyle.FACEBOOK}
-                  autoFocusSearch={false}
-                  onEmojiClick={onEmojiClick}
-                />
+      <div className="chatBox">
+        <div className="chatBoxWrapper">
+          {currentChat ? (
+            <>
+              <div className="chatBoxTop">
+                {allMessages?.map((msg) => (
+                  <div ref={scrollRef}>
+                    <Message
+                      key={msg.id}
+                      own={msg.sender.id === user.id}
+                      msg={msg}
+                      msgSender={msg.sender}
+                    />
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            form="submit-message"
-            className="flex items-center justify-center rounded-lg cursor-pointer"
-          >
-            <PaperAirplaneIcon className="h-5 text-gray-400 " />
-          </button>
+              <div className="chatBoxBottom m-0">
+                <input
+                  className=" text-white  h-[50px] m-[-2px] flex items-center  w-full text-sm bg-gray-700 rounded-full px-3 focus:outline-none "
+                  placeholder="write something..."
+                  value={message}
+                  onChange={(e: any) => setMessage(e.target.value)}
+                ></input>
+                <button
+                  className="chatSubmitButton text-sm bg-custom-light-green m-2"
+                  onClick={handleSubmit}
+                >
+                  Send
+                </button>
+              </div>
+            </>
+          ) : (
+            <span className="text-2xl noConversationText ">
+              Open a conversation to chat
+            </span>
+          )}
         </div>
       </div>
     </div>

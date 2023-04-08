@@ -18,6 +18,7 @@ function CodeEditor({
   const handleEditorChange = (value: string, event: any) => {
     setValue(value);
   };
+
   const createSolutionMutation: any = useMutation({
     mutationFn: async (data: any) => {
       await axios.post('/api/solutions/', {

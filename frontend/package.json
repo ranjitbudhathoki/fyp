@@ -21,6 +21,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^10.8.5",
     "loadsh": "^0.0.4",
+    "lottie-react": "^2.4.0",
     "moment": "^2.29.4",
     "monaco-editor": "^0.35.0",
     "prismjs": "^1.29.0",
@@ -39,6 +40,8 @@
     "react-tinder-card": "^1.6.2",
     "react-toastify": "^9.1.1",
     "socket.io-client": "^4.6.0",
+    "styled-components": "^5.3.9",
+    "timeago.js": "^4.0.0-beta.3",
     "typescript": "^4.9.4",
     "web-vitals": "^2.1.4"
   },
