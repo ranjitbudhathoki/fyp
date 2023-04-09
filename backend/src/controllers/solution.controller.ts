@@ -143,4 +143,20 @@ const deleteSoltion = catchAsync(async (req, res, next) => {
   });
 });
 
-export { saveSolution, getSolution };
+const deleteSolution = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  console.log('from delete solution', req.params);
+  const solution = await prisma.solution.delete({
+    where: {
+      id,
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: null,
+  });
+});
+
+export { saveSolution, getSolution, deleteSoltion };
