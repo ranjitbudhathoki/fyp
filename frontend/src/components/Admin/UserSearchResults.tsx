@@ -8,8 +8,6 @@ import { AnimatePresence } from 'framer-motion';
 export default function UserSearchResults({ searchTerm, filterMode }: any) {
   const { admin } = useSystemAdmin();
 
-  console.log('from user search results', searchTerm);
-
   const { data: results, isLoading } = useQuery(
     `user-search-results-${searchTerm}`,
     async () => {

@@ -67,8 +67,8 @@ function UserChart({ data }: any) {
             {
               label: 'User Registered',
               data: initialData,
-              borderColor: '#8ad85c',
-              backgroundColor: '#8ad85c',
+              borderColor: '#e2b714',
+              backgroundColor: '#e2b714',
             },
           ],
         }}

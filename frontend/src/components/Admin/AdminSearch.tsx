@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useDebounce from '../../hooks/useDebounce';
-// import WorkspaceSearchResults from './WorkspaceSearchResults';
 import UserSearchResults from './UserSearchResults';
 
 function SearchBox({ value, onChange }: any) {

@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import UserAnalytics from '../components/Admin/UserAnalytics';
 import AppointAdmin from '../components/Admin/AppointAdmin';
-// import WorkspaceAnalytics from '../components/SystemAdmin/WorkspaceAnalytics';
 import AdminSearch from '../components/Admin/AdminSearch';
 import { useSystemAdmin } from '../context/AdminContext';
 import AdminAnalytics from '../components/Admin/AdminAnalytics';
