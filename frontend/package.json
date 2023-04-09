@@ -37,7 +37,7 @@
     "react-simple-code-editor": "^0.13.1",
     "react-spinners": "^0.13.8",
     "react-tag-input-component": "^2.0.2",
-    "react-tinder-card": "^1.6.2",
+    "react-tinder-card": "https://github.com/ranjitbudhathoki/react-tinder-card.git",
     "react-toastify": "^9.1.1",
     "socket.io-client": "^4.6.0",
     "styled-components": "^5.3.9",

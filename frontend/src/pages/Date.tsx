@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation, QueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import TinderCard from 'react-tinder-card';
@@ -7,9 +7,13 @@ import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 
 function Date() {
+  const initialRenderRef: any = useRef(true);
+
   const [lastDirection, setLastDirection] = useState();
 
   const { user } = useSelector((state: any) => state.auth);
+  const [currentUser, setCurrentUser] = useState();
+  const [currentSolution, setCurrentSolution] = useState();
 
   const queryClient = new QueryClient();
 
@@ -48,7 +52,6 @@ function Date() {
     onError: (error: any) => {
       toast.error(error.response.data.message);
     },
-    retry: false,
   });
 
   const deleteSolutionMutation = useMutation({
@@ -57,19 +60,21 @@ function Date() {
       await axios.delete(`/api/solutions/${solutionId}`);
     },
     onSuccess: () => {
-      toast.success(`Deleted `);
+      toast(`Solution rejected`);
       queryClient.invalidateQueries('solutions');
     },
     onError: (error: any) => {
+      console.log('from delete mutation', error.response.data.message);
       toast.error(error.response.data.message);
     },
-    retry: false,
   });
 
   console.log('from solutions', solutions?.data);
 
   const swiped = (direction, swipedUser, swipedSoln) => {
+    console.log('from swiped', currentSolution);
     if (direction === 'right') {
+      console.log('inside right swipe');
       matchMutation.mutate({ swipedUser, swipedSoln });
     }
     if (direction === 'left') {
@@ -104,7 +109,10 @@ function Date() {
             <TinderCard
               className="swipe"
               key={soln.id}
-              onSwipe={(dir) => swiped(dir, soln?.user?.id, soln.id)}
+              onSwipe={(dir) => {
+                setCurrentSolution(soln);
+                swiped(dir, soln?.user?.id, soln.id);
+              }}
               preventSwipe={['up', 'down']}
               onCardLeftScreen={() => outOfFrame(soln.id)}
             >
@@ -132,7 +140,9 @@ function Date() {
             </TinderCard>
           ))}
           <div className="swipe-info text-white text-center">
-            {lastDirection ? <p>You swiped {lastDirection}</p> : <p />}
+            {solutions?.data?.length > 0 && lastDirection && (
+              <p className="text-lg">You swiped {lastDirection}</p>
+            )}
           </div>
         </div>
       </div>

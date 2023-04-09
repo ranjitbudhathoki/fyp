@@ -159,11 +159,6 @@ function Chat({ socket }) {
 
       <div className="chatBox">
         {currentChat && (
-          // <div className="flex flex-row p-2 ">
-          //   <img src={currentChat?.photo} className="h-8 w-8 mr-3 rounded-lg" />
-          //   <p className="ml-4 text-2xl">{currentChat?.username}</p>
-          //   <FlagIcon className="h-8 w-8 hover:text-custom-light-green hover:cursor-pointer items-end" />
-          // </div>
           <div className="flex flex-row items-center p-2 ">
             <img src={currentChat?.photo} className="h-8 w-8 mr-3 rounded-lg" />
             <p className="ml-4 text-2xl">{currentChat?.username}</p>
@@ -194,18 +189,23 @@ function Chat({ socket }) {
                 ))}
               </div>
               <div className="chatBoxBottom m-0">
-                <input
-                  className=" text-white  h-[50px] m-[-2px] flex items-center  w-full text-sm bg-gray-700 rounded-full px-3 focus:outline-none "
-                  placeholder="write something..."
-                  value={message}
-                  onChange={(e: any) => setMessage(e.target.value)}
-                ></input>
-                <button
-                  className="chatSubmitButton text-sm bg-custom-light-green m-2"
-                  onClick={handleSubmit}
+                <form
+                  onSubmit={handleSubmit}
+                  className="h-full w-full flex flex-row"
                 >
-                  Send
-                </button>
+                  <input
+                    className=" text-white  h-[50px] m-[-2px] flex items-center  w-full text-sm bg-gray-700 rounded-full px-3 focus:outline-none "
+                    placeholder="write something..."
+                    value={message}
+                    onChange={(e: any) => setMessage(e.target.value)}
+                  ></input>
+                  <button
+                    className="chatSubmitButton text-sm bg-custom-light-green m-2"
+                    onClick={handleSubmit}
+                  >
+                    Send
+                  </button>
+                </form>
               </div>
             </>
           ) : (
