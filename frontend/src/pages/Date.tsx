@@ -51,14 +51,33 @@ function Date() {
     retry: false,
   });
 
+  const deleteSolutionMutation = useMutation({
+    mutationKey: ['deleteSolution'],
+    mutationFn: async (solutionId: any) => {
+      await axios.delete(`/api/solutions/${solutionId}`);
+    },
+    onSuccess: () => {
+      toast.success(`Deleted `);
+      queryClient.invalidateQueries('solutions');
+    },
+    onError: (error: any) => {
+      toast.error(error.response.data.message);
+    },
+    retry: false,
+  });
+
   console.log('from solutions', solutions?.data);
 
   const swiped = (direction, swipedUser, swipedSoln) => {
     if (direction === 'right') {
       matchMutation.mutate({ swipedUser, swipedSoln });
     }
+    if (direction === 'left') {
+      deleteSolutionMutation.mutate(swipedSoln);
+    }
     setLastDirection(direction);
   };
+
   const outOfFrame = (name) => {
     console.log(name + ' left the screen!');
   };
