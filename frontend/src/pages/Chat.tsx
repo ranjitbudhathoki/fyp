@@ -114,6 +114,22 @@ function Chat({ socket }) {
     messageCountRef.current = allMessages?.length || 0;
   }, [messages]);
 
+  const unmatchMutation = useMutation({
+    mutationFn: async () => {
+      const res = await axios.delete(
+        `api/matches/${currentChat?.matchId}/unmatch`
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('allMatches');
+      setCurrentChat(null);
+    },
+    onError: (error) => {
+      console.log({ error: error });
+    },
+  });
+
   if (isMessageLoading)
     return (
       <ClipLoader
@@ -127,6 +143,7 @@ function Chat({ socket }) {
     );
 
   console.log('currentChat', currentChat);
+
   return (
     <div className="messenger text-white h-screen ml-[-30px]">
       <div className="chatMenu">
@@ -150,6 +167,13 @@ function Chat({ socket }) {
           <div className="flex flex-row items-center p-2 ">
             <img src={currentChat?.photo} className="h-8 w-8 mr-3 rounded-lg" />
             <p className="ml-4 text-2xl">{currentChat?.username}</p>
+            <button
+              onClick={() => unmatchMutation.mutate()}
+              type="button"
+              className="focus:outline-none text-black bg-yellow-400 mt-0 pt-1 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900 ml-auto"
+            >
+              Un Match
+            </button>
             <FlagIcon className="h-8 w-8 hover:text-custom-light-green hover:cursor-pointer ml-auto" />
           </div>
         )}
@@ -159,7 +183,7 @@ function Chat({ socket }) {
             <>
               <div className="chatBoxTop">
                 {allMessages?.map((msg) => (
-                  <div ref={scrollRef}>
+                  <div key={msg.id} ref={scrollRef}>
                     <Message
                       key={msg.id}
                       own={msg.sender.id === user.id}
