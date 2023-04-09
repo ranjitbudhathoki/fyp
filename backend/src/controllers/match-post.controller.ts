@@ -224,6 +224,31 @@ const createMatch = catchAsync(async (req, res, next) => {
   });
 });
 
+const deleteMatch = catchAsync(async (req, res, next) => {
+  const { matchId } = req.params;
+
+  const match = await prisma.match.findUnique({
+    where: {
+      id: matchId,
+    },
+  });
+
+  if (!match) {
+    return next(new AppError('Match not found', 404));
+  }
+
+  const deletedMatch = await prisma.match.delete({
+    where: {
+      id: matchId,
+    },
+  });
+
+  res.status(204).json({
+    status: 'success',
+    data: deletedMatch,
+  });
+});
+
 export {
   getAllMatchPost,
   getMatchPostById,
@@ -232,4 +257,5 @@ export {
   deleteMatchPost,
   getMatchPostByUserId,
   createMatch,
+  deleteMatch,
 };
