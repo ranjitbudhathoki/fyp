@@ -93,10 +93,13 @@ const saveSolution = catchAsync(async (req, res, next) => {
     },
   });
 
+  console.log('target user', targetUser);
+  console.log('current', req.user);
+
   const notification = await prisma.notification.create({
     data: {
       type: NotificationType.SEND_SOLUTION,
-      message: `You have a new solution for your post from ${targetUser.username}`,
+      message: `You have a new solution for your post from ${req.user.username}`,
       senderId: req.user.id,
       receiverId: postOwnerId,
       solutionId: newSolution.id,
@@ -112,10 +115,11 @@ const saveSolution = catchAsync(async (req, res, next) => {
 //get all the solutions for a post
 const getSolution = catchAsync(async (req, res, next) => {
   const { postId } = req.params;
+  console.log(req.params);
 
   const solutions = await prisma.solution.findMany({
     where: {
-      postId,
+      postId: postId,
     },
     include: {
       user: true,
@@ -128,28 +132,12 @@ const getSolution = catchAsync(async (req, res, next) => {
   });
 });
 
-const deleteSoltion = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-
-  const solution = await prisma.solution.delete({
-    where: {
-      id,
-    },
-  });
-
-  res.status(200).json({
-    status: 'success',
-    data: null,
-  });
-});
-
 const deleteSolution = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
+  const { solutionId } = req.params;
 
-  console.log('from delete solution', req.params);
   const solution = await prisma.solution.delete({
     where: {
-      id,
+      id: solutionId,
     },
   });
 
@@ -159,4 +147,4 @@ const deleteSolution = catchAsync(async (req, res, next) => {
   });
 });
 
-export { saveSolution, getSolution, deleteSoltion };
+export { saveSolution, getSolution, deleteSolution };

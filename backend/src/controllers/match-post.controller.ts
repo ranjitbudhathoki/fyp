@@ -209,10 +209,13 @@ const createMatch = catchAsync(async (req, res, next) => {
     },
   });
 
+  console.log('matched user', matchedUser);
+  console.log('current user', req.user.id);
+
   const notification = await prisma.notification.create({
     data: {
       type: NotificationType.MATCHED,
-      message: `You have matched with ${matchedUser.username}`,
+      message: `You have matched with ${req.user.username}`,
       senderId: req.user.id,
       receiverId: matchedUserId,
     },
