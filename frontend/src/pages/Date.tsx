@@ -88,14 +88,14 @@ function Date() {
         {!solutions && (
           <div className="flex flex-col items-center justify-center h-full">
             <p className="text-white text-xl">
-              😢Nothing to show.Try again after some time...
+              😢Nothing to show. Wait until someone sends you solution...
             </p>
           </div>
         )}
         {solutions?.data?.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full">
             <p className="text-white text-xl">
-              😢Nothing to show.Try again after some time...
+              😢Nothing to show. Wait until someone sends you solution...
             </p>
           </div>
         )}
