@@ -98,42 +98,87 @@ function AdminForm() {
 
   if (admin) return <Navigate to="/system/admin" replace={true} />;
 
+  // return (
+  //   <div className="flex flex-col gap-6">
+  //     <h2
+  //       className={`${
+  //         attempts > 0 ? 'text-custom-light-green' : 'text-red-600'
+  //       }`}
+  //     >
+  //       Total Attempts Left : {attempts}
+  //     </h2>
+  //     <motion.form
+  //       initial={{ scale: 0, opacity: 0 }}
+  //       animate={{ scale: 1, opacity: 1 }}
+  //       transition={{ duration: 0.4, type: 'tween' }}
+  //       onSubmit={handleAdminLogin}
+  //       className=" flex flex-col gap-6  shadow-lg border-2 bg-black border-custom-light-green  w-80 px-6 pt-12 pb-6 rounded-md  "
+  //     >
+  //       <FormItem
+  //         id="adminName"
+  //         label="Username"
+  //         placeholder="Enter a Username..."
+  //         value={username}
+  //         onChange={(event) => setUsername(event.target.value)}
+  //       />
+  //       <FormItem
+  //         id="password"
+  //         label="Password"
+  //         placeholder="Enter a Password..."
+  //         value={password}
+  //         type="password"
+  //         onChange={(event) => setPassword(event.target.value)}
+  //       />
+  //       <button
+  //         disabled={attempts === 0}
+  //         className="text-white disabled:opacity-60 disabled:cursor-not-allowed bg-custom-light-green px-4 py-2 rounded-md"
+  //       >
+  //         Login
+  //       </button>
+  //     </motion.form>
+  //   </div>
+  // );
+
   return (
     <div className="flex flex-col gap-6">
       <h2
         className={`${
-          attempts > 0 ? 'text-custom-light-green' : 'text-red-600'
-        }`}
+          attempts > 0 ? 'text-green-500' : 'text-red-500'
+        } text-2xl font-bold`}
       >
-        Total Attempts Left : {attempts}
+        Total Attempts Left: {attempts}
       </h2>
       <motion.form
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.4, type: 'tween' }}
         onSubmit={handleAdminLogin}
-        className=" flex flex-col gap-6  shadow-lg border-2 bg-black border-custom-light-green  w-80 px-6 pt-12 pb-6 rounded-md  "
+        className="flex flex-col gap-4 bg-custom-light-dark rounded-md shadow-lg p-8 w-full"
       >
         <FormItem
           id="adminName"
           label="Username"
-          placeholder="Enter a Username..."
+          placeholder="Enter a username..."
           value={username}
           onChange={(event) => setUsername(event.target.value)}
         />
         <FormItem
           id="password"
           label="Password"
-          placeholder="Enter a Password..."
+          placeholder="Enter a password..."
           value={password}
           type="password"
           onChange={(event) => setPassword(event.target.value)}
         />
         <button
           disabled={attempts === 0}
-          className="text-white disabled:opacity-60 disabled:cursor-not-allowed bg-custom-light-green px-4 py-2 rounded-md"
+          className={`w-full px-4 py-2 rounded-md font-bold text-white ${
+            attempts === 0
+              ? 'bg-gray-300 cursor-not-allowed'
+              : 'bg-green-500 hover:bg-green-600'
+          }`}
         >
-          Login
+          {attempts === 0 ? 'Login Disabled' : 'Login'}
         </button>
       </motion.form>
     </div>
