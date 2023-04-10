@@ -7,8 +7,6 @@ import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 
 function Date() {
-  const initialRenderRef: any = useRef(true);
-
   const [lastDirection, setLastDirection] = useState();
 
   const { user } = useSelector((state: any) => state.auth);
@@ -97,12 +95,16 @@ function Date() {
             </p>
           </div>
         )}
-        {solutions?.data?.length === 0 && (
+        {solutions?.data?.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full">
             <p className="text-white text-xl">
               😢Nothing to show. Wait until someone sends you solution...
             </p>
           </div>
+        ) : (
+          <p className="text-white text-lg text-center pl-20 mb-2">
+            Swipe right to 💕Like a profile, left to 👎dislike the profile
+          </p>
         )}
         <div className="card-container">
           {solutions?.data?.map((soln: any) => (
