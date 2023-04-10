@@ -5,6 +5,7 @@ import TinderCard from 'react-tinder-card';
 import axios from '../utils/axios-instance';
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
+import NoContent from '../components/NoContent';
 
 function Date() {
   const [lastDirection, setLastDirection] = useState();
@@ -88,23 +89,25 @@ function Date() {
   return (
     <div className="dashboard mt-0">
       <div className="swipe-container">
-        {!solutions && (
-          <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-white text-xl">
-              😢Nothing to show. Wait until someone sends you solution...
-            </p>
-          </div>
-        )}
-        {solutions?.data?.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-white text-xl">
-              😢Nothing to show. Wait until someone sends you solution...
-            </p>
-          </div>
+        {!solutions ? (
+          <NoContent
+            username={user.displayName}
+            content={
+              ' 😢Nothing to show. Wait until someone sends you solution...'
+            }
+          />
         ) : (
           <p className="text-white text-lg text-center pl-20 mb-2">
             Swipe right to 💕Like a profile, left to 👎dislike the profile
           </p>
+        )}
+        {solutions?.data?.length === 0 && (
+          <NoContent
+            username={user.displayName}
+            content={
+              ' 😢Nothing to show. Wait until someone sends you solution...'
+            }
+          />
         )}
         <div className="card-container">
           {solutions?.data?.map((soln: any) => (

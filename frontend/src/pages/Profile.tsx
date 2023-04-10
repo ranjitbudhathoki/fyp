@@ -99,7 +99,7 @@ const Profile = () => {
     );
   });
   const renderedHelpPosts = helpost?.map((post) => {
-    return <HelpPost post={post} />;
+    return <HelpPost post={post} mutation={deleteHelpPostMutation} />;
   });
 
   const handleUpdateProfile = (body) => {

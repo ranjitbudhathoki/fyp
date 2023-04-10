@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import Overlay from '../Modals/Overlay';
 import Modal from '../Modals/Modal';
 import CreateHelpPost from '../Modals/CreateHelpPost';
+import NoContent from '../components/NoContent';
 
 const Collaborator: React.FC = () => {
   const queryClient = useQueryClient();
@@ -55,11 +56,10 @@ const Collaborator: React.FC = () => {
   return (
     <>
       {(!data || data.data.posts.length === 0) && (
-        <div className="flex flex-col items-center justify-center h-full">
-          <p className="text-white text-xl">
-            😢Nothing to show. Try again after some time...
-          </p>
-        </div>
+        <NoContent
+          username={user.displayName}
+          content={'  😢Nothing to show. Try again after some time...'}
+        />
       )}
 
       <div className="fixed bottom-4 right-12">

@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import Overlay from '../Modals/Overlay';
 import CreateMatchPost from '../Modals/CreateMatchPost';
 import Modal from '../Modals/Modal';
+import NoContent from '../components/NoContent';
 
 const Feed: React.FC = () => {
   const queryClient = useQueryClient();
@@ -56,11 +57,10 @@ const Feed: React.FC = () => {
   return (
     <>
       {(!data || data.data.posts.length === 0) && (
-        <div className="flex flex-col items-center justify-center h-full">
-          <p className="text-white text-xl">
-            😢Nothing to show. Try again after some time...
-          </p>
-        </div>
+        <NoContent
+          username={user.displayName}
+          content={'  😢Nothing to show. Try again after some time...'}
+        />
       )}
 
       <div className="fixed bottom-4 right-12">
