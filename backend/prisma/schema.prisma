@@ -36,11 +36,12 @@ model User {
 }
 
 model Admin {
-  id           String   @id @default(uuid())
-  username     String   @unique
+  id           String         @id @default(uuid())
+  username     String         @unique
   password     String
-  isSuperAdmin Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  isSuperAdmin Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  Notification Notification[]
 }
 
 model HelpPost {
@@ -147,18 +148,20 @@ enum NotificationType {
 }
 
 model Notification {
-  id         String           @id @default(uuid())
-  type       NotificationType @default(NORMAL)
-  message    String
-  read       Boolean          @default(false)
-  sender     User?            @relation("sender-notifications", fields: [senderId], references: [id], onDelete: SetNull)
-  senderId   String?
-  receiver   User             @relation("receiver-notifications", fields: [receiverId], references: [id], onDelete: Cascade)
-  receiverId String
-  solution   Solution?        @relation("solution-notifications", fields: [solutionId], references: [id], onDelete: SetNull)
-  solutionId String?
-  post       HelpPost?        @relation("comment-notifications", fields: [postId], references: [id], onDelete: SetNull)
-  postId     String?
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  id            String           @id @default(uuid())
+  type          NotificationType @default(NORMAL)
+  message       String
+  read          Boolean          @default(false)
+  sender        User?            @relation("sender-notifications", fields: [senderId], references: [id], onDelete: SetNull)
+  senderId      String?
+  senderAdmin   Admin?           @relation(fields: [senderAdminId], references: [id], onDelete: SetNull)
+  senderAdminId String?
+  receiver      User             @relation("receiver-notifications", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId    String
+  solution      Solution?        @relation("solution-notifications", fields: [solutionId], references: [id], onDelete: SetNull)
+  solutionId    String?
+  post          HelpPost?        @relation("comment-notifications", fields: [postId], references: [id], onDelete: SetNull)
+  postId        String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 }

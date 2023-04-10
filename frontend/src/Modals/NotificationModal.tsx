@@ -20,7 +20,10 @@ const NormalNotification: React.FC<NormalNotificationProps> = ({
       <figure className=" flex-shrink-0 w-14 h-14   rounded-full overflow-hidden">
         <img
           className="w-full h-full object-cover"
-          src={notification?.sender?.photoUrl}
+          src={
+            notification?.sender?.photoUrl ||
+            'https://media.crocs.com/images/t_B2B/f_auto%2Cq_auto/products/10012549_001_ALT100/crocs-rick-and-morty-rick  '
+          }
           alt={notification?.sender?.username}
         />
       </figure>
@@ -134,6 +137,8 @@ const NotificationModal: React.FC = () => {
       refetchOnWindowFocus: true,
     }
   );
+
+  console.log('notification', notifications);
 
   useEffect(() => {
     markAsReadMutate();

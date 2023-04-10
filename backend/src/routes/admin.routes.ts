@@ -12,6 +12,8 @@ import {
   appointAdmin,
   getAllRegisteredAdmin,
   deRegisterAdmin,
+  getAllRegisteredReport,
+  createWarning,
 } from '../controllers/admin.controller';
 import verifyToken from '../middlewares/verifyToken';
 
@@ -31,5 +33,9 @@ router.get('/matches/data', verifyToken, getMatchForEveryMonth);
 router.post('/appoint', appointAdmin);
 router.get('/admins', verifyToken, getAllRegisteredAdmin);
 router.delete('/admins/:userId', verifyToken, deRegisterAdmin);
+
+router.get('/reports', verifyToken, getAllRegisteredReport);
+router.get('/reports/count', verifyToken, getTotalUserCount);
+router.post('/warnings/:userId', verifyToken, createWarning);
 
 export default router;

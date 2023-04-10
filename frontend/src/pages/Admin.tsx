@@ -9,6 +9,7 @@ import AppointAdmin from '../components/Admin/AppointAdmin';
 import AdminSearch from '../components/Admin/AdminSearch';
 import { useSystemAdmin } from '../context/AdminContext';
 import AdminAnalytics from '../components/Admin/AdminAnalytics';
+import ReportAnalytics from '../components/Admin/ReportAnalytics';
 
 enum Tab {
   DASHBOARD = 'DASHBOARD',
@@ -16,6 +17,7 @@ enum Tab {
   APPOINT_ADMIN = 'APPOINT_ADMIN',
   ADMIN = 'ADMIN',
   SEARCH = 'SEARCH ',
+  REPORT = 'REPORT',
 }
 
 interface TabbedButtonProps {
@@ -117,6 +119,13 @@ function SystemAdmin() {
             </TabbedButton>
           )}
           <TabbedButton
+            tabType={Tab.REPORT}
+            selectedTab={selectedTab}
+            setSelectedTab={() => setSelectedTab(Tab.REPORT)}
+          >
+            Report Details
+          </TabbedButton>
+          <TabbedButton
             tabType={Tab.SEARCH}
             selectedTab={selectedTab}
             setSelectedTab={() => setSelectedTab(Tab.SEARCH)}
@@ -129,7 +138,7 @@ function SystemAdmin() {
           {selectedTab === Tab.USER && <UserAnalytics />}
           {selectedTab === Tab.APPOINT_ADMIN && <AppointAdmin />}
           {selectedTab === Tab.ADMIN && <AdminAnalytics />}
-
+          {selectedTab === Tab.REPORT && <ReportAnalytics />}
           {selectedTab === Tab.SEARCH && <AdminSearch />}
         </div>
       </div>

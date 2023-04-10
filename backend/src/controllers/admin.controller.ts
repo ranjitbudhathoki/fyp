@@ -3,7 +3,9 @@ import AppError from '../utils/appError';
 import prisma from '../services/prisma';
 import verifyPassword from '../utils/verifyPassword';
 import generateToken from '../utils/generateToken';
+import { NotificationType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { param } from 'express-validator';
 
 const months = [
   'January',
@@ -275,6 +277,55 @@ const deRegisterAdmin = catchAsync(async (req, res, next) => {
   });
 });
 
+const getAllRegisteredReport = catchAsync(async (req, res, next) => {
+  const { page } = req.query;
+  const pageCount = 10;
+  const registeredReport = await prisma.report.findMany({
+    skip: (Number(page) - 1) * pageCount,
+    take: pageCount,
+    include: { reportedUser: true },
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    data: registeredReport,
+  });
+});
+
+const getTotalReportCount = catchAsync(async (req, res, next) => {
+  const totalReport = await prisma.report.count();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      totalReport,
+    },
+  });
+});
+
+const createWarning = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
+
+  const {
+    admin: { id, username },
+  } = req.body;
+
+  console.log('id, username', id, username);
+  console.log('param', userId);
+
+  const notification = await prisma.notification.create({
+    data: {
+      type: NotificationType.WARNING,
+      message: `You have received a warning from  ${username}. As you have violated our terms and conditions. Please be careful next time.`,
+      senderAdminId: id,
+      receiverId: userId,
+    },
+  });
+  res.status(200).json({
+    status: 'success',
+    data: notification,
+  });
+});
+
 export {
   handleAdminLogin,
   getAllRegisteredUser,
@@ -288,4 +339,7 @@ export {
   appointAdmin,
   getAllRegisteredAdmin,
   deRegisterAdmin,
+  getAllRegisteredReport,
+  getTotalReportCount,
+  createWarning,
 };

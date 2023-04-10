@@ -3,6 +3,8 @@ import AppError from '../utils/appError';
 
 function verifyToken(req, res, next) {
   const header = req.headers && req.headers['authorization'];
+
+  console.log('from verify token', header);
   const token = header?.split(' ')[1];
   if (!token) {
     return next(new AppError('Access denied', 401));

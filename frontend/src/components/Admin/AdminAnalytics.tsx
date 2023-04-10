@@ -49,10 +49,11 @@ function DeRegisterCard({ email, userName, id, photo, page }: any) {
     {
       onSuccess: (data) => {
         queryClient.invalidateQueries(`admin-analytics-${page}`);
-
+        toast.success('Admin  deleted successfully');
         console.log(data);
       },
       onError: (error) => {
+        toast.error('Something went wrong..');
         console.log(error);
       },
     }
@@ -88,7 +89,7 @@ function DeRegisterCard({ email, userName, id, photo, page }: any) {
   );
 }
 
-async function fetchUserDetails(page: number, admin: any) {
+async function fetchAdminDetails(page: number, admin: any) {
   const res = await systemAxios.get(`/api/admin/admins/?page=${page}`, {
     headers: { authorization: `Bearer ${(admin as any).token}` },
   });
@@ -115,7 +116,7 @@ function AdminAnalytics() {
   const totalPage = Math.ceil(adminCount?.totalUser / pageCount);
 
   const { data, isLoading } = useQuery(`admin-analytics-${page}`, () =>
-    fetchUserDetails(page, admin)
+    fetchAdminDetails(page, admin)
   );
 
   const nextPageHandler = () => {
