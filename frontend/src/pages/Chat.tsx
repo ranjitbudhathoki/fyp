@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { FlagIcon } from '@heroicons/react/24/solid';
 import { ClipLoader } from 'react-spinners';
 import Welcome from '../components/chat/Welcome';
+import DeleteConfirmationModal from '../Modals/DeleteConfirmationModal';
 function Chat({ socket }) {
   console.log('renderd');
   const { user } = useSelector((state: any) => state.auth);
@@ -16,6 +17,7 @@ function Chat({ socket }) {
   const [message, setMessage] = useState('');
   const queryClient = useQueryClient();
   const messageCountRef = useRef<number>(0);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const scrollRef = useRef<any>(null);
 
@@ -129,6 +131,19 @@ function Chat({ socket }) {
     },
   });
 
+  const reportMutation = useMutation({
+    mutationFn: async (id) => {
+      const res = await axios.post(`api/users/${id}/report`);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success('User reported successfully');
+    },
+    onError: (error) => {
+      console.log({ error: error });
+    },
+  });
+
   if (isMessageLoading)
     return (
       <ClipLoader
@@ -160,6 +175,15 @@ function Chat({ socket }) {
         <div className="chatBoxWrapper bg-custom-light-dark">
           {currentChat ? (
             <>
+              <DeleteConfirmationModal
+                isVisible={showConfirmationModal}
+                message={`Do you want to report this User ?`}
+                onCancel={() => setShowConfirmationModal(false)}
+                onConfirm={() => {
+                  setShowConfirmationModal(false);
+                  reportMutation.mutate(currentChat?.id);
+                }}
+              />
               <div className="flex flex-row items-center p-2 ">
                 <img
                   src={currentChat?.photo}
@@ -173,7 +197,10 @@ function Chat({ socket }) {
                 >
                   Un Match
                 </button>
-                <FlagIcon className="h-8 w-8 hover:text-custom-light-green hover:cursor-pointer ml-auto" />
+                <FlagIcon
+                  onClick={() => setShowConfirmationModal(true)}
+                  className="h-8 w-8 hover:text-custom-light-green hover:cursor-pointer ml-auto"
+                />
               </div>
               <div className="chatBoxTop">
                 {allMessages?.map((msg) => (
