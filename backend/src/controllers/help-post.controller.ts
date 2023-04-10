@@ -53,17 +53,21 @@ const createHelpPost = catchAsync(async (req, res, next) => {
   const { title, body } = req.body;
   const tags = JSON.parse(req.body.tags);
 
-  if (!title || !body || !tags)
+  if (!title || !tags)
     return res.status(400).json({ message: 'Please fill all the fields' });
 
   const files = req.files!;
-  const file = files[Object.keys(files)[0]] as any;
+  let file;
+  if (files) {
+    file = files[Object.keys(files)[0]] as any;
 
-  const filePath = `./images/${file.name}`;
+    const filePath = `./images/${file.name}+ ${new Date()}`;
 
-  file.mv(filePath, (err: any) => {
-    if (err) return res.status(400).json({ message: 'Error Occured in Image' });
-  });
+    file.mv(filePath, (err: any) => {
+      if (err)
+        return res.status(400).json({ message: 'Error Occured in Image' });
+    });
+  }
 
   const post = await prisma.helpPost.create({
     data: {
@@ -71,7 +75,7 @@ const createHelpPost = catchAsync(async (req, res, next) => {
       body,
       tech_stack: tags,
       project_link: req.body.link,
-      image: `http://localhost:8000/images/${file.name}`,
+      image: file ? `http://localhost:8000/images/${file}` : '',
       userId: req.user.id,
       updatedAt: new Date(),
     },

@@ -48,6 +48,11 @@ const CreateHelpPost = ({ onSubmit }) => {
     if (selectedFile) {
       formData.append('image', selectedFile);
     }
+
+    if (!title || !tags) {
+      toast.warning('Please Povide title and tags');
+      return;
+    }
     onSubmit(formData);
   };
 

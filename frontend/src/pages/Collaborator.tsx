@@ -47,11 +47,7 @@ const Collaborator: React.FC = () => {
   const renderedPosts = (
     <div className="max-w-full h-screen ">
       {data?.data?.posts.map((post) => {
-        return (
-          <Link to={`/collaborator/posts/${post.id}`} key={post.id}>
-            <HelpPost post={post} />
-          </Link>
-        );
+        return <HelpPost post={post} key={post.id} />;
       })}
     </div>
   );

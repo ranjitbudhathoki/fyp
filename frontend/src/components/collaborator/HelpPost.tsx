@@ -4,6 +4,7 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import DeleteConfirmationModal from '../../Modals/DeleteConfirmationModal';
 import { TrashIcon } from '@heroicons/react/24/solid';
+import { Link } from 'react-router-dom';
 
 interface HelpPostProps {
   post: any;
@@ -60,36 +61,46 @@ function HelpPost({ post, mutation }: HelpPostProps) {
           )}
         </div>
 
-        <div className="flex flex-row mt-2">
-          {post?.tech_stack?.map((tech) => (
-            <div
-              key={tech}
-              className="bg-custom-light-green w-20 h-10 rounded-full flex flex-row items-center justify-center mr-2"
-            >
-              <p className="text-sm fond-bold w-50 text-custom-light-dark">
-                {tech}
-              </p>
+        <>
+          <Link to={`/collaborator/posts/${post.id}`}>
+            <div className="flex flex-row mt-2">
+              {post?.tech_stack?.map((tech) => (
+                <div
+                  key={tech}
+                  className="bg-custom-light-green w-20 h-10 rounded-full flex flex-row items-center justify-center mr-2"
+                >
+                  <p className="text-sm fond-bold w-50 text-custom-light-dark">
+                    {tech}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className="mt-7 whitespace-pre-wrap text-xl">{post.title}</div>
-        <div className="mt-7 whitespace-pre-wrap text-sm">{post.body}</div>
-        {post.project_link && (
-          <div className="mt-7 whitespace-pre-wrap text-sm text-blue-600 underline">
-            <a
-              href={`https://${post.project_link}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LINK
-            </a>
-          </div>
-        )}
+            <div className="mt-7 whitespace-pre-wrap text-xl">{post.title}</div>
+            <div className="mt-7 whitespace-pre-wrap text-sm">{post.body}</div>
+            {post.project_link && (
+              <div className="mt-7 whitespace-pre-wrap text-sm text-blue-600 underline">
+                <a
+                  href={`https://${post.project_link}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  LINK
+                </a>
+              </div>
+            )}
 
-        <div className="mt-7 ">
-          <img src={post.image} className="h-45 w-full bg-cover" alt="post" />
-        </div>
+            {post.image && (
+              <div className="mt-7 ">
+                <img
+                  src={post.image}
+                  className="h-45 w-full bg-cover"
+                  alt="post"
+                />
+              </div>
+            )}
+          </Link>
+        </>
       </div>
     </>
   );

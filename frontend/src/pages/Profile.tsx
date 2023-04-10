@@ -99,11 +99,7 @@ const Profile = () => {
     );
   });
   const renderedHelpPosts = helpost?.map((post) => {
-    return (
-      <Link to={`/collaborator/posts/${post.id}`} key={post.id}>
-        <HelpPost post={post} />
-      </Link>
-    );
+    return <HelpPost post={post} />;
   });
 
   const handleUpdateProfile = (body) => {
