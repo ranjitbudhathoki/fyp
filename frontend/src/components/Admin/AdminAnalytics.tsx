@@ -8,6 +8,7 @@ import { useSystemAdmin } from '../../context/AdminContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import DeleteConfirmationModal from '../../Modals/DeleteConfirmationModal';
 import { toast } from 'react-toastify';
+import CustomToastify from '../CustomToastify';
 
 const variants: Variants = {
   initial: {},
@@ -129,59 +130,63 @@ function AdminAnalytics() {
 
   if (isLoading) return <Spinner isLoading={isLoading} />;
   return (
-    <div className="flex flex-col gap-6  h-full">
-      <div className="flex-grow">
-        <motion.div
-          variants={variants}
-          initial="initial"
-          animate="animate"
-          className="grid grid-cols-responsive-todo gap-6"
-        >
-          <AnimatePresence>
-            {data.length > 0 ? (
-              data?.map((admin: any, index: number) => (
-                <DeRegisterCard
-                  key={admin.id}
-                  index={index}
-                  userName={admin.username}
-                  photo={
-                    admin.photoUrl ??
-                    'https://avatars.githubusercontent.com/u/55929607?v=4'
-                  }
-                  id={admin.id}
-                  page={page}
-                />
-              ))
-            ) : (
-              <h2 className=" col-start-1 col-end-5 text-center mt-12 text-2xl text-gray-500">
-                Not any Any registered in the system
-              </h2>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-      {data.length > 0 && (
-        <div className="flex flex-row items-center justify-center  gap-6">
-          <button
-            onClick={prevPageHandler}
-            className="w-10 h-10 rounded-full disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center bg-custom-light-green cursor-pointer"
-            disabled={page === 1}
+    <>
+      <CustomToastify />
+
+      <div className="flex flex-col gap-6  h-full">
+        <div className="flex-grow">
+          <motion.div
+            variants={variants}
+            initial="initial"
+            animate="animate"
+            className="grid grid-cols-responsive-todo gap-6"
           >
-            <ChevronLeftIcon className="h-5 w-5 text-white" />
-          </button>
-          <span className="text-custom-light-green">{page}</span>
-          {
-            <button
-              onClick={nextPageHandler}
-              className="w-10 h-10 bg-custom-light-green disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center rounded-full cursor-pointer"
-              disabled={page === totalPage}
-            >
-              <ChevronRightIcon className="h-5 w-5 text-white" />
-            </button>
-          }
+            <AnimatePresence>
+              {data.length > 0 ? (
+                data?.map((admin: any, index: number) => (
+                  <DeRegisterCard
+                    key={admin.id}
+                    index={index}
+                    userName={admin.username}
+                    photo={
+                      admin.photoUrl ??
+                      'https://avatars.githubusercontent.com/u/55929607?v=4'
+                    }
+                    id={admin.id}
+                    page={page}
+                  />
+                ))
+              ) : (
+                <h2 className=" col-start-1 col-end-5 text-center mt-12 text-2xl text-gray-500">
+                  Not any Any registered in the system
+                </h2>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </div>
-      )}
-    </div>
+        {data.length > 0 && (
+          <div className="flex flex-row items-center justify-center  gap-6">
+            <button
+              onClick={prevPageHandler}
+              className="w-10 h-10 rounded-full disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center bg-custom-light-green cursor-pointer"
+              disabled={page === 1}
+            >
+              <ChevronLeftIcon className="h-5 w-5 text-white" />
+            </button>
+            <span className="text-custom-light-green">{page}</span>
+            {
+              <button
+                onClick={nextPageHandler}
+                className="w-10 h-10 bg-custom-light-green disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center rounded-full cursor-pointer"
+                disabled={page === totalPage}
+              >
+                <ChevronRightIcon className="h-5 w-5 text-white" />
+              </button>
+            }
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 

@@ -4,6 +4,8 @@ import systemAxios from '../../api/systemAxios';
 import { motion } from 'framer-motion';
 import DeleteConfirmationModal from '../../Modals/DeleteConfirmationModal';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import CustomToastify from '../CustomToastify';
 
 export default function UserSearchResultsItem({
   userId,
@@ -26,15 +28,19 @@ export default function UserSearchResultsItem({
     {
       onSuccess: (data) => {
         queryClient.invalidateQueries(`user-search-results-${searchTerm}`);
+        toast.success('User deleted successfully');
+
         console.log(data);
       },
       onError: (error) => {
+        toast.error('Something went wrong..');
         console.log(error);
       },
     }
   );
   return (
     <>
+      <CustomToastify />
       <DeleteConfirmationModal
         isVisible={showConfirmationModal}
         message={`Do you want to delete this User ?`}
