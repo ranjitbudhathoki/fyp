@@ -2,6 +2,8 @@ import prisma from '../services/prisma';
 import AppError from '../utils/appError';
 import { catchAsync } from '../utils/catchAsnyc';
 
+import moment from 'moment';
+
 const getCurrentUser = catchAsync(async (req, res, next) => {
   const user = req.user;
   if (!user) {
@@ -9,6 +11,40 @@ const getCurrentUser = catchAsync(async (req, res, next) => {
   }
   res.status(200).json({
     user: user,
+  });
+});
+
+const createProfile = catchAsync(async (req, res, next) => {
+  console.log(req.body);
+  const { birthDate, gender, preferredGender } = req.body;
+
+  if (!birthDate || !gender || !preferredGender) {
+    return next(new AppError('Please fill all the required fields', 400));
+  }
+
+  const formattedBirthDate = moment(birthDate).format();
+  const age = moment().diff(formattedBirthDate, 'years');
+
+  if (age < 18) {
+    return next(
+      new AppError('You must be at least 18 years old to create a profile', 400)
+    );
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: req.user.id,
+    },
+    data: {
+      birthDate: formattedBirthDate,
+      gender: gender,
+      preferredGender: preferredGender,
+      updatedAt: new Date(),
+    },
+  });
+
+  res.status(200).json({
+    updatedUser,
   });
 });
 
@@ -90,4 +126,5 @@ export {
   getHelpPostByUserId,
   getMatchPostByUserId,
   getCurrentUser,
+  createProfile,
 };

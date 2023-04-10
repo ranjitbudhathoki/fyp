@@ -5,6 +5,7 @@ import {
   getHelpPostByUserId,
   getMatchPostByUserId,
   getCurrentUser,
+  createProfile,
 } from '../controllers/user.controllers';
 
 const router = express.Router();
@@ -12,6 +13,7 @@ const router = express.Router();
 router.get('/me', getCurrentUser);
 
 router.patch('/:id', updateProfile);
+router.patch('/:id/create', createProfile);
 
 router.get('/:id/help-posts/', getHelpPostByUserId);
 router.get('/:id/match-posts/', getMatchPostByUserId);
