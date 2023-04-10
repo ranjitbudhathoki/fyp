@@ -31,11 +31,6 @@ async function createImage(body) {
 const saveSolution = catchAsync(async (req, res, next) => {
   const { postId, code, userId, preferredGender, postOwnerId } = req.body;
 
-  console.log('from params', userId);
-  console.log('currentUser', req.user.id);
-
-  console.log(userId === req.user.id);
-
   console.log(preferredGender);
 
   if (!postId || !code || !userId) {
@@ -47,6 +42,18 @@ const saveSolution = catchAsync(async (req, res, next) => {
       id: userId,
     },
   });
+
+  const existingMatch = await prisma.match.findMany({
+    where: {
+      OR: [
+        { userId1: userId, userId2: postOwnerId },
+        { userId1: postOwnerId, userId2: userId },
+      ],
+    },
+  });
+  if (existingMatch[0]) {
+    return next(new AppError('You already have a match', 400));
+  }
 
   console.log('cureent ', currentUser.preferredGender);
 
