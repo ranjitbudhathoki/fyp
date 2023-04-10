@@ -32,6 +32,7 @@ model User {
   solutions             Solution[]
   senderNotifications   Notification[] @relation("sender-notifications")
   recieverNotifications Notification[] @relation("receiver-notifications")
+  Report                Report[]
 }
 
 model Admin {
@@ -130,10 +131,11 @@ model Message {
 }
 
 model Report {
-  id         String @id @default(uuid())
-  reason     String
-  reporterId String
-  targetId   String
+  id             String   @id @default(uuid())
+  count          Int      @default(1)
+  reportedUserId String
+  createdAt      DateTime @default(now())
+  reportedUser   User     @relation(fields: [reportedUserId], references: [id])
 }
 
 enum NotificationType {

@@ -121,10 +121,47 @@ const getMatchPostByUserId = catchAsync(async (req, res, next) => {
   });
 });
 
+const createReport = catchAsync(async (req, res, next) => {
+  const { reportedUserId } = req.params;
+
+  if (!reportedUserId) {
+    return next(new AppError('Please fill all the required fields', 400));
+  }
+
+  const existingReport = await prisma.report.findFirst({
+    where: {
+      reportedUserId: reportedUserId,
+    },
+  });
+
+  if (existingReport) {
+    // If an existing report is found, increment its report count
+    const updatedReport = await prisma.report.update({
+      where: { id: existingReport.id },
+      data: { count: existingReport.count + 1 },
+    });
+  }
+
+  if (!existingReport) {
+    // If no existing report is found, create a new report
+    const report = await prisma.report.create({
+      data: {
+        reportedUserId: reportedUserId,
+      },
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: reportedUserId,
+  });
+});
+
 export {
   updateProfile,
   getHelpPostByUserId,
   getMatchPostByUserId,
   getCurrentUser,
   createProfile,
+  createReport,
 };

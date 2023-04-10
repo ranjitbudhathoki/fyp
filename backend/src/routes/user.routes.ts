@@ -6,6 +6,7 @@ import {
   getMatchPostByUserId,
   getCurrentUser,
   createProfile,
+  createReport,
 } from '../controllers/user.controllers';
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.patch('/:id/create', createProfile);
 
 router.get('/:id/help-posts/', getHelpPostByUserId);
 router.get('/:id/match-posts/', getMatchPostByUserId);
+router.post('/:reportedUserId/report', createReport);
 
 export default router;
