@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import ProfileForm from '../components/Profile/ProfileForm';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const Home: React.FC = () => {
   const { user } = useSelector((state: any) => state.auth);

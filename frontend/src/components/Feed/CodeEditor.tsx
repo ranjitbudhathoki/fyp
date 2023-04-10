@@ -38,6 +38,10 @@ function CodeEditor({
       toast.error('Code is too long.');
       return;
     }
+    if (!value) {
+      toast.error('Code is empty.');
+      return;
+    }
     if (value) {
       createSolutionMutation.mutate({
         userId,

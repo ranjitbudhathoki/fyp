@@ -15,7 +15,6 @@ function Chat({ socket }) {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const queryClient = useQueryClient();
-  const [isTyping, setIsTyping] = useState(false);
   const messageCountRef = useRef<number>(0);
 
   const scrollRef = useRef<any>(null);
@@ -26,7 +25,7 @@ function Chat({ socket }) {
       const res = await axios(`api/matches/${user.id}`);
       return res.data;
     },
-    { refetchOnMount: true }
+    { refetchOnMount: true, refetchOnWindowFocus: true }
   );
 
   const matchedUsersData = data?.data?.matchedUsersData;
@@ -158,24 +157,24 @@ function Chat({ socket }) {
       </div>
 
       <div className="chatBox">
-        {currentChat && (
-          <div className="flex flex-row items-center p-2 ">
-            <img src={currentChat?.photo} className="h-8 w-8 mr-3 rounded-lg" />
-            <p className="ml-4 text-2xl">{currentChat?.username}</p>
-            <button
-              onClick={() => unmatchMutation.mutate()}
-              type="button"
-              className="focus:outline-none text-black bg-yellow-400 mt-0 pt-1 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900 ml-auto"
-            >
-              Un Match
-            </button>
-            <FlagIcon className="h-8 w-8 hover:text-custom-light-green hover:cursor-pointer ml-auto" />
-          </div>
-        )}
-
         <div className="chatBoxWrapper bg-custom-light-dark">
           {currentChat ? (
             <>
+              <div className="flex flex-row items-center p-2 ">
+                <img
+                  src={currentChat?.photo}
+                  className="h-8 w-8 mr-3 rounded-lg"
+                />
+                <p className="ml-4 text-2xl">{currentChat?.username}</p>
+                <button
+                  onClick={() => unmatchMutation.mutate()}
+                  type="button"
+                  className="focus:outline-none text-black bg-yellow-400 mt-0 pt-1 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900 ml-auto"
+                >
+                  Un Match
+                </button>
+                <FlagIcon className="h-8 w-8 hover:text-custom-light-green hover:cursor-pointer ml-auto" />
+              </div>
               <div className="chatBoxTop">
                 {allMessages?.map((msg) => (
                   <div key={msg.id} ref={scrollRef}>
