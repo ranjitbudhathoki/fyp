@@ -21,7 +21,8 @@ async function createImage(body) {
   ctx.fillStyle = '#000'; // set text color
   ctx.fillText(body, 10, 20);
   // Generate unique filename for image
-  const filename = `${nanoid()}.png`;
+  // const filename = `${nanoid()}.png`;
+  const filename = `${Date.now()}.png`;
 
   // Save image to images folder
   await writeFile(`./images/${filename}`, canvas.toBuffer());
