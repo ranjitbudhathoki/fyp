@@ -9,7 +9,7 @@ const Login: React.FC = () => {
   const redirectPath = location.state?.from?.pathname || '/home';
 
   const github = () => {
-    window.open(`${process.env.REACT_APP_SERVER_URL}/auth/github`, '_self');
+    window.open(`https://date-now.onrender.com/auth/github`, '_self');
   };
 
   if (user) {
