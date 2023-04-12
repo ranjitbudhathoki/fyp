@@ -69,13 +69,15 @@ const createHelpPost = catchAsync(async (req, res, next) => {
     });
   }
 
+  console.log('file');
+
   const post = await prisma.helpPost.create({
     data: {
       title,
       body,
       tech_stack: tags,
       project_link: req.body.link,
-      image: file ? `${process.env.SERVER_URL}/images/${file}` : '',
+      image: file ? `${process.env.SERVER_URL}/images/${file.name}` : '',
       userId: req.user.id,
       updatedAt: new Date(),
     },
