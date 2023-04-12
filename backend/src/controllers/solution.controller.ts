@@ -1,6 +1,5 @@
 import { createCanvas } from 'canvas';
 import { writeFile } from 'fs/promises';
-import { nanoid } from 'nanoid';
 import prisma from '../services/prisma';
 import { catchAsync } from '../utils/catchAsnyc';
 import AppError from '../utils/appError';
