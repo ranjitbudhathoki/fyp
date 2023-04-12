@@ -90,7 +90,7 @@ const saveSolution = catchAsync(async (req, res, next) => {
       body: code,
       postId,
       userId,
-      imgUrl: 'http://localhost:8000/images/' + filename,
+      imgUrl: `${process.env.SERVER_URL}/images/` + filename,
     },
   });
 

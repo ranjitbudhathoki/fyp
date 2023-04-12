@@ -9,7 +9,7 @@ const Login: React.FC = () => {
   const redirectPath = location.state?.from?.pathname || '/home';
 
   const github = () => {
-    window.open('http://localhost:8000/auth/github', '_self');
+    window.open(`${process.env.REACT_APP_SERVER_URL}/auth/github`, '_self');
   };
 
   if (user) {

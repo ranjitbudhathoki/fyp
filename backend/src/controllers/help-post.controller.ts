@@ -75,7 +75,7 @@ const createHelpPost = catchAsync(async (req, res, next) => {
       body,
       tech_stack: tags,
       project_link: req.body.link,
-      image: file ? `http://localhost:8000/images/${file}` : '',
+      image: file ? `${process.env.SERVER_URL}/images/${file}` : '',
       userId: req.user.id,
       updatedAt: new Date(),
     },

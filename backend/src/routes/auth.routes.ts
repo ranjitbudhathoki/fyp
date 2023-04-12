@@ -2,7 +2,6 @@ import Express from 'express';
 import passport from 'passport';
 
 const router = Express.Router();
-const CLIENT_URL = 'http://localhost:3000';
 
 router.get(
   '/github',
@@ -12,8 +11,8 @@ router.get(
 router.get(
   '/github/callback',
   passport.authenticate('github', {
-    successRedirect: `${CLIENT_URL}/home`,
-    failureRedirect: `${CLIENT_URL}/login`,
+    successRedirect: `${process.env.CLIENT_URL}/home`,
+    failureRedirect: `${process.env.CLIENT_URL}/login`,
   })
 );
 
