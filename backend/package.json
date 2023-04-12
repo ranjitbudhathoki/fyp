@@ -38,7 +38,8 @@
     "prismjs": "^1.29.0",
     "puppeteer": "^19.7.2",
     "socket.io": "^4.6.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.44",
