@@ -98,9 +98,8 @@ model Comment {
 }
 
 model Like {
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
   comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String
 
