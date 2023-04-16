@@ -1,0 +1,199 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  githubId String [unique]
+  username String [unique]
+  displayName String
+  bio String
+  gender String
+  preferredGender String
+  birthDate DateTime
+  photoUrl String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  posts HelpPost [not null]
+  comments Comment [not null]
+  matches1 Match [not null]
+  matches2 Match [not null]
+  msgSender Message [not null]
+  questions MatchPost [not null]
+  likes Like [not null]
+  solutions Solution [not null]
+  senderNotifications Notification [not null]
+  recieverNotifications Notification [not null]
+  Report Report [not null]
+}
+
+Table Admin {
+  id String [pk]
+  username String [unique, not null]
+  password String [not null]
+  isSuperAdmin Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  Notification Notification [not null]
+}
+
+Table HelpPost {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  title String [not null]
+  body String
+  tech_stack String[] [not null]
+  project_link String
+  image String
+  comments Comment [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Notification Notification [not null]
+}
+
+Table MatchPost {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  body String [not null]
+  language String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  solutions Solution [not null]
+}
+
+Table Solution {
+  id String [pk]
+  body String
+  post MatchPost [not null]
+  postId String [not null]
+  user User [not null]
+  userId String [not null]
+  imgUrl String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  notifications Notification [not null]
+}
+
+Table Comment {
+  id String [pk]
+  body String [not null]
+  user User [not null]
+  userId String [not null]
+  post HelpPost [not null]
+  postId String [not null]
+  parent Comment
+  parentId String
+  children Comment [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  likes Like [not null]
+}
+
+Table Like {
+  user User [not null]
+  userId String [not null]
+  comment Comment [not null]
+  commentId String [not null]
+
+  indexes {
+    (userId, commentId) [pk]
+  }
+}
+
+Table Match {
+  id String [pk]
+  user1 User [not null]
+  userId1 String [not null]
+  user2 User [not null]
+  userId2 String [not null]
+  unmatched Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  messages Message [not null]
+
+  indexes {
+    (userId1, userId2) [unique]
+  }
+}
+
+Table Message {
+  id Int [pk, increment]
+  match Match [not null]
+  matchId String [not null]
+  sender User [not null]
+  senderId String [not null]
+  text String [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Report {
+  id String [pk]
+  count Int [not null, default: 1]
+  reportedUserId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  reportedUser User [not null]
+}
+
+Table Notification {
+  id String [pk]
+  type NotificationType [not null, default: 'NORMAL']
+  message String [not null]
+  read Boolean [not null, default: false]
+  sender User
+  senderId String
+  senderAdmin Admin
+  senderAdminId String
+  receiver User [not null]
+  receiverId String [not null]
+  solution Solution
+  solutionId String
+  post HelpPost
+  postId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Enum NotificationType {
+  SEND_SOLUTION
+  WARNING
+  MATCHED
+  NORMAL
+  COMMENT
+}
+
+Ref: HelpPost.userId > User.id [delete: Cascade]
+
+Ref: MatchPost.userId > User.id [delete: Cascade]
+
+Ref: Solution.postId > MatchPost.id [delete: Cascade]
+
+Ref: Solution.userId > User.id [delete: Cascade]
+
+Ref: Comment.userId > User.id [delete: Cascade]
+
+Ref: Comment.postId > HelpPost.id [delete: Cascade]
+
+Ref: Comment.parentId - Comment.id [delete: Cascade]
+
+Ref: Like.userId > User.id [delete: Cascade]
+
+Ref: Like.commentId > Comment.id [delete: Cascade]
+
+Ref: Match.userId1 > User.id [delete: Cascade]
+
+Ref: Match.userId2 > User.id [delete: Cascade]
+
+Ref: Message.matchId > Match.id [delete: Cascade]
+
+Ref: Message.senderId > User.id [delete: Cascade]
+
+Ref: Report.reportedUserId > User.id
+
+Ref: Notification.senderId > User.id [delete: Set Null]
+
+Ref: Notification.senderAdminId > Admin.id [delete: Set Null]
+
+Ref: Notification.receiverId > User.id [delete: Set Null]
+
+Ref: Notification.solutionId > Solution.id [delete: Set Null]
+
+Ref: Notification.postId > HelpPost.id [delete: Set Null]
