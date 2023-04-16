@@ -62,6 +62,7 @@ const createHelpPost = catchAsync(async (req, res, next) => {
     file = files[Object.keys(files)[0]] as any;
 
     const filePath = `./images/${file.name}+ ${new Date()}`;
+    console.log(filePath);
 
     file.mv(filePath, (err: any) => {
       if (err)
