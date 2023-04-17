@@ -58,10 +58,11 @@ const createHelpPost = catchAsync(async (req, res, next) => {
 
   const files = req.files!;
   let file;
+
   if (files) {
     file = files[Object.keys(files)[0]] as any;
 
-    const filePath = `./images/${file.name}+ ${new Date()}`;
+    const filePath = `./images/${file.name}`;
     console.log(filePath);
 
     file.mv(filePath, (err: any) => {
@@ -76,7 +77,7 @@ const createHelpPost = catchAsync(async (req, res, next) => {
       body,
       tech_stack: tags,
       project_link: req.body.link,
-      image: file ? `${process.env.SERVER_URL}/images/${file}` : '',
+      image: file ? `${process.env.SERVER_URL}/images/${file.name}` : '',
       userId: req.user.id,
       updatedAt: new Date(),
     },

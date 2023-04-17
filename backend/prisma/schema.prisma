@@ -136,7 +136,7 @@ model Report {
   count          Int      @default(1)
   reportedUserId String
   createdAt      DateTime @default(now())
-  reportedUser   User     @relation(fields: [reportedUserId], references: [id])
+  reportedUser   User     @relation(fields: [reportedUserId], references: [id], onDelete: Cascade)
 }
 
 enum NotificationType {

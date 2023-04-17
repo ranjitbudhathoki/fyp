@@ -64,6 +64,7 @@ const Profile = () => {
       await axios.delete(`/api/match-posts/${id}`);
     },
     onSuccess: () => {
+      toast.success('Post deleted Successfully');
       queryClient.invalidateQueries(['user-match-posts']);
     },
   });
@@ -74,6 +75,7 @@ const Profile = () => {
       await axios.delete(`/api/help-posts/${id}`);
     },
     onSuccess: () => {
+      toast.success('Post deleted Successfully');
       queryClient.invalidateQueries(['user-help-posts']);
     },
   });
@@ -86,7 +88,7 @@ const Profile = () => {
       toast.success('Profile Updated Successfully');
       queryClient.invalidateQueries(['user-data']);
     },
-    onError: () => {
+    onError: (error) => {
       toast.error('Error Updating Profile');
     },
   });

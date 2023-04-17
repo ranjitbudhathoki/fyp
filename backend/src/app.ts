@@ -53,11 +53,11 @@ app.use('/api/matches', checkLoggedIn, matchRouter);
 app.use('/api/solutions', checkLoggedIn, solutionRouter);
 app.use('/notification', checkLoggedIn, notificationRouter);
 
-app.use(express.static(path.join(__dirname, '..', 'build')));
+// app.use(express.static(path.join(__dirname, '..', 'build')));
 
-app.get('/*', (req, res) => {
-  return res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
-});
+// app.get('/*', (req, res) => {
+//   return res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+// });
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));

@@ -12,6 +12,7 @@ export function CommentForm({
     console.log('this is from the handle submit');
     if (!message) return alert('Missing Required Fields');
     onSubmit({ body: message });
+    setMessage('');
   }
 
   return (
