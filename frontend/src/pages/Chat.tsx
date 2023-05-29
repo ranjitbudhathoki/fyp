@@ -9,6 +9,7 @@ import { FlagIcon } from '@heroicons/react/24/solid';
 import { ClipLoader } from 'react-spinners';
 import Welcome from '../components/chat/Welcome';
 import DeleteConfirmationModal from '../Modals/DeleteConfirmationModal';
+
 function Chat({ socket }) {
   console.log('renderd');
   const { user } = useSelector((state: any) => state.auth);

@@ -87,7 +87,15 @@ function Date() {
   };
 
   return (
-    <div className="dashboard mt-0">
+    <div
+      className="dashboard mt-0 flex justify-center items-center min-h-screen"
+      // style={{
+      //   display: 'flex',
+      //   justifyContent: 'center',
+      //   alignItems: 'center',
+      //   minHeight: '100vh',
+      // }}
+    >
       <div className="swipe-container">
         {!solutions ? (
           <NoContent

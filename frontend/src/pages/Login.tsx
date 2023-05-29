@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, Navigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 const Login: React.FC = () => {
   const { user } = useSelector((state: any) => state.auth);
@@ -9,7 +8,7 @@ const Login: React.FC = () => {
   const redirectPath = location.state?.from?.pathname || '/home';
 
   const github = () => {
-    window.open(`https://date-now.onrender.com/auth/github`, '_self');
+    window.open(`http://localhost:8000/auth/github`, '_self');
   };
 
   if (user) {

@@ -140,7 +140,7 @@ function AdminForm() {
   // );
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 min-w-[300px]">
       <h2
         className={`${
           attempts > 0 ? 'text-green-500' : 'text-red-500'

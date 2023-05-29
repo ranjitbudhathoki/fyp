@@ -15,6 +15,7 @@ const HelpPostDetail = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
   const { data, isLoading } = useQuery(['single-post', id], async () => {
     const res = await axios.get(`/api/help-posts/${id}`);
     return res.data;

@@ -195,6 +195,7 @@ const handleLikeUpdate = catchAsync(async (req, res, next) => {
   }
   return res.status(200).json({ message: 'Toggled Successfully' });
 });
+
 export {
   updateComment,
   createComment,

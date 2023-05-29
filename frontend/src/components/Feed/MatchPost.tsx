@@ -75,7 +75,7 @@ function MatchPost({ post, mutation }: MatchPostProps) {
         <Modal onClick={() => setIsOpen(false)}>
           <SendSolutionModal
             onSubmit={setIsOpen}
-            postId={post.id}
+          postId={post.id}
             postOwnerId={post.user.id}
             preferredGender={post.user.preferredGender}
             userId={user.id}

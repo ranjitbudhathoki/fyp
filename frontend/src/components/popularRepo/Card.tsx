@@ -10,7 +10,7 @@ export default function Card({
   children,
 }) {
   return (
-    <div className="card bg-white h-full min-w-[400px]">
+    <div className="card bg-white h-full min-w-[360px] m-3 ">
       <h4 className="header-lg center-text">{header}</h4>
       <img className="avatar" src={avatar} alt={`Avatar for ${name}`} />
       {subheader && <h4 className="center-text text-sm">{subheader}</h4>}
