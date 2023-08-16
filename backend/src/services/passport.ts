@@ -1,6 +1,6 @@
-import passport from 'passport';
-import { Strategy as GithubStrategy } from 'passport-github2';
-import prisma from '../services/prisma';
+import passport from "passport";
+import { Strategy as GithubStrategy } from "passport-github2";
+import prisma from "../services/prisma";
 
 passport.serializeUser((user: any, done) => {
   done(null, user.id);
@@ -23,7 +23,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      callbackURL: '/auth/github/callback',
+      callbackURL: "/auth/github/callback",
     },
 
     async function (access, _: any, profile: any, done: Function) {
@@ -31,6 +31,7 @@ passport.use(
         where: { githubId: profile.id },
       });
 
+      console.log("existing user", existingUser);
       if (existingUser) {
         done(null, existingUser);
       } else {

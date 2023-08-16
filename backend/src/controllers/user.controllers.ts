@@ -1,13 +1,14 @@
-import prisma from '../services/prisma';
-import AppError from '../utils/appError';
-import { catchAsync } from '../utils/catchAsnyc';
+import prisma from "../services/prisma";
+import AppError from "../utils/appError";
+import { catchAsync } from "../utils/catchAsnyc";
 
-import moment from 'moment';
+import moment from "moment";
 
 const getCurrentUser = catchAsync(async (req, res, next) => {
+  console.log(req.user, "from current user");
   const user = req.user;
   if (!user) {
-    return new AppError('The user is not logged in yet.', 403);
+    return new AppError("The user is not logged in yet.", 403);
   }
   res.status(200).json({
     user: user,
@@ -19,15 +20,15 @@ const createProfile = catchAsync(async (req, res, next) => {
   const { birthDate, gender, preferredGender } = req.body;
 
   if (!birthDate || !gender || !preferredGender) {
-    return next(new AppError('Please fill all the required fields', 400));
+    return next(new AppError("Please fill all the required fields", 400));
   }
 
   const formattedBirthDate = moment(birthDate).format();
-  const age = moment().diff(formattedBirthDate, 'years');
+  const age = moment().diff(formattedBirthDate, "years");
 
   if (age < 18) {
     return next(
-      new AppError('You must be at least 18 years old to create a profile', 400)
+      new AppError("You must be at least 18 years old to create a profile", 400)
     );
   }
 
@@ -51,7 +52,7 @@ const createProfile = catchAsync(async (req, res, next) => {
 const updateProfile = catchAsync(async (req, res, next) => {
   const { bio, preferredGender } = req.body;
   if (!req.body) {
-    return next(new AppError('Please update something', 400));
+    return next(new AppError("Please update something", 400));
   }
 
   const updatedUser = await prisma.user.update({
@@ -74,7 +75,7 @@ const getHelpPostByUserId = catchAsync(async (req, res, next) => {
 
   if (id !== req.user.id) {
     return next(
-      new AppError('You are not authorized to access this resource', 403)
+      new AppError("You are not authorized to access this resource", 403)
     );
   }
 
@@ -88,7 +89,7 @@ const getHelpPostByUserId = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       posts,
     },
@@ -100,7 +101,7 @@ const getMatchPostByUserId = catchAsync(async (req, res, next) => {
 
   if (id !== req.user.id) {
     return next(
-      new AppError('You are not authorized to access this resource', 403)
+      new AppError("You are not authorized to access this resource", 403)
     );
   }
 
@@ -114,7 +115,7 @@ const getMatchPostByUserId = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       posts,
     },
@@ -125,7 +126,7 @@ const createReport = catchAsync(async (req, res, next) => {
   const { reportedUserId } = req.params;
 
   if (!reportedUserId) {
-    return next(new AppError('Please fill all the required fields', 400));
+    return next(new AppError("Please fill all the required fields", 400));
   }
 
   const existingReport = await prisma.report.findFirst({
@@ -152,7 +153,7 @@ const createReport = catchAsync(async (req, res, next) => {
   }
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: reportedUserId,
   });
 });

@@ -1,40 +1,40 @@
-import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import NotFound from './pages/404';
-import Chat from './pages/Chat';
-import Date from './pages/Date';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import { useDispatch } from 'react-redux';
-import { useQuery } from 'react-query';
-import { updateUser } from './redux/slice/authSlice';
-import axios from './utils/axios-instance';
-import Collaborator from './pages/Collaborator';
-import Profile from './pages/Profile';
-import AdminLogin from './pages/AdminLogin';
-import Feed from './pages/Feed';
-import HelpPostDetail from './pages/HelpPostDetail';
-import 'react-toastify/dist/ReactToastify.css';
-import Popular from './pages/Popular';
-import Admin from './pages/Admin';
-import './styles/comment.css';
-import NestedLayout from './components/NestedLayout';
-import Battle from './pages/Battle';
-import Results from './components/battle/Results';
-import { useLocation } from 'react-router-dom';
-import socket from './api/socket';
+import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import NotFound from "./pages/404";
+import Chat from "./pages/Chat";
+import Date from "./pages/Date";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import { useDispatch } from "react-redux";
+import { useQuery } from "react-query";
+import { updateUser } from "./redux/slice/authSlice";
+import axios from "./utils/axios-instance";
+import Collaborator from "./pages/Collaborator";
+import Profile from "./pages/Profile";
+import AdminLogin from "./pages/AdminLogin";
+import Feed from "./pages/Feed";
+import HelpPostDetail from "./pages/HelpPostDetail";
+import "react-toastify/dist/ReactToastify.css";
+import Popular from "./pages/Popular";
+import Admin from "./pages/Admin";
+import "./styles/comment.css";
+import NestedLayout from "./components/NestedLayout";
+import Battle from "./pages/Battle";
+import Results from "./components/battle/Results";
+import { useLocation } from "react-router-dom";
+import socket from "./api/socket";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
 
   const { data } = useQuery({
-    queryKey: ['user-data'],
+    queryKey: ["user-data"],
     queryFn: async function ({ queryKey }) {
       const res = await axios.get(`/api/users/me`);
       return res.data;
     },
     /*eslint-disable */
-    enabled: !location.pathname.includes('system'),
+    enabled: !location.pathname.includes("system"),
   });
 
   useEffect(() => {
