@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { useQuery, useMutation, QueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
-import TinderCard from 'react-tinder-card';
-import axios from '../utils/axios-instance';
-import { toast } from 'react-toastify';
-import { debounce } from 'lodash';
-import NoContent from '../components/NoContent';
+import { useEffect, useRef, useState } from "react";
+import { useQuery, useMutation, QueryClient } from "react-query";
+import { useSelector } from "react-redux";
+import TinderCard from "react-tinder-card";
+import axios from "../utils/axios-instance";
+import { toast } from "react-toastify";
+import { debounce } from "lodash";
+import NoContent from "../components/NoContent";
 
 function Date() {
   const [lastDirection, setLastDirection] = useState();
@@ -17,7 +17,7 @@ function Date() {
   const queryClient = new QueryClient();
 
   const { data: posts, isLoading: loadingPost } = useQuery({
-    queryKey: ['posts'],
+    queryKey: ["posts"],
     queryFn: async () => {
       const response = await axios.get(`/api/match-posts/user/${user.id}`);
       return response.data;
@@ -27,7 +27,7 @@ function Date() {
   const post = posts?.data?.post;
 
   const { data: solutions, isLoading } = useQuery({
-    queryKey: ['solutions'],
+    queryKey: ["solutions"],
     queryFn: async function () {
       const res = await axios.get(`/api/solutions/${posts?.data?.post.id}`);
       return res.data;
@@ -37,16 +37,16 @@ function Date() {
   });
 
   const matchMutation = useMutation({
-    mutationKey: ['match'],
+    mutationKey: ["match"],
     mutationFn: async ({ swipedUser, swipedSoln }: any) => {
-      await axios.post('/api/matches', {
+      await axios.post("/api/matches", {
         matchedUserId: swipedUser,
         solutionId: swipedSoln,
       });
     },
     onSuccess: () => {
       toast.success(`Matched `);
-      queryClient.invalidateQueries('solutions');
+      queryClient.invalidateQueries("solutions");
     },
     onError: (error: any) => {
       toast.error(error.response.data.message);
@@ -54,36 +54,36 @@ function Date() {
   });
 
   const deleteSolutionMutation = useMutation({
-    mutationKey: ['deleteSolution'],
+    mutationKey: ["deleteSolution"],
     mutationFn: async (solutionId: any) => {
       await axios.delete(`/api/solutions/${solutionId}`);
     },
     onSuccess: () => {
       toast(`Solution rejected`);
-      queryClient.invalidateQueries('solutions');
+      queryClient.invalidateQueries("solutions");
     },
     onError: (error: any) => {
-      console.log('from delete mutation', error.response.data.message);
+      console.log("from delete mutation", error.response.data.message);
       toast.error(error.response.data.message);
     },
   });
 
-  console.log('from solutions', solutions?.data);
+  console.log("from solutions", solutions?.data);
 
   const swiped = (direction, swipedUser, swipedSoln) => {
-    console.log('from swiped', currentSolution);
-    if (direction === 'right') {
-      console.log('inside right swipe');
+    console.log("from swiped", currentSolution);
+    if (direction === "right") {
+      console.log("inside right swipe");
       matchMutation.mutate({ swipedUser, swipedSoln });
     }
-    if (direction === 'left') {
+    if (direction === "left") {
       deleteSolutionMutation.mutate(swipedSoln);
     }
     setLastDirection(direction);
   };
 
   const outOfFrame = (name) => {
-    console.log(name + ' left the screen!');
+    console.log(name + " left the screen!");
   };
 
   return (
@@ -101,7 +101,7 @@ function Date() {
           <NoContent
             username={user.displayName}
             content={
-              ' 😢Nothing to show. Wait until someone sends you solution...'
+              " 😢Nothing to show. Wait until someone sends you solution..."
             }
           />
         ) : (
@@ -113,7 +113,7 @@ function Date() {
           <NoContent
             username={user.displayName}
             content={
-              ' 😢Nothing to show. Wait until someone sends you solution...'
+              " 😢Nothing to show. Wait until someone sends you solution..."
             }
           />
         )}
@@ -126,18 +126,18 @@ function Date() {
                 setCurrentSolution(soln);
                 swiped(dir, soln?.user?.id, soln.id);
               }}
-              preventSwipe={['up', 'down']}
+              preventSwipe={["up", "down"]}
               onCardLeftScreen={() => outOfFrame(soln.id)}
             >
               <div
                 className="relative w-full h-full bg-cover "
                 style={{
-                  backgroundImage: 'url(' + `${soln.imgUrl}` + ')',
-                  backgroundSize: 'contain',
+                  backgroundImage: "url(" + `${soln.imgUrl}` + ")",
+                  backgroundSize: "contain",
 
-                  width: '900px',
-                  height: '440px',
-                  backgroundRepeat: 'no-repeat',
+                  width: "900px",
+                  height: "440px",
+                  backgroundRepeat: "no-repeat",
                 }}
               ></div>
               <div className="absolute bottom-0 flex flex-row p-2">

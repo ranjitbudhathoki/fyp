@@ -6,6 +6,7 @@ import {
   UserIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
+
 import { updateUser } from '../redux/slice/authSlice';
 import { useDispatch } from 'react-redux';
 
